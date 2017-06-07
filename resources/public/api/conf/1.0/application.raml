@@ -23,15 +23,15 @@ mediaType: [ application/json, application/hal+json ]
 
 types:
   ChargeType:
-    pattern: "\W{1,64}"
+    pattern: "[a-zA-Z0-9]+"
   ExportId:
-    pattern: "[\W-]{64}"
+    pattern: "[a-zA-Z0-9]+"
 
 /epaye:
   /charges:
     /totals:
       get:
-        is: [headers.acceptHeader]
+        is: [ headers.acceptHeader ]
         displayName: Retrieve totals for charges
         description: This allows you to retrieve the totals for all outstanding charges
         (annotations.scope): "read:epaye"
@@ -49,7 +49,7 @@ types:
           description: The charge identifier
           example: "apprenticeshipLevy"
       get:
-        is: [headers.acceptHeader]
+        is: [ headers.acceptHeader ]
         displayName: Retrieve charges of specific type
         description: This allows you to retrieve all charges of a specific charge type that make up the total for that type, e.g. Apprenticeship Levy
         (annotations.scope): "read:epaye"
@@ -58,11 +58,11 @@ types:
           200:
             body:
               application/json:
-              type: !include schemas/ByType.get.schema.array.json
-              example: !include example/ByType.get.array.json
+                type: !include schemas/ByType.get.schema.array.json
+                example: !include examples/ByType.get.array.json
   /statements:
     get:
-      is: [headers.acceptHeader]
+      is: [ headers.acceptHeader ]
       displayName: Retrieve statements
       description: This allows you to retrieve your current account statement which includes charges, payments and balance for each tax month.
       (annotations.scope): "read:epaye"
@@ -75,8 +75,26 @@ types:
               example: !include examples/Statements.get.array.json
 
   /employees:
+    /{exportId}:
+      uriParameters:
+        exportId:
+          type: ExportId
+          description: The ID for the data export
+          example: "79f22d835c1a4dcc86d8a34b5a7891c0"
+      get:
+        is: [ headers.acceptHeader ]
+        displayName: Retrieve employee data
+        description: This allows you to download employee level data once the data export has finished
+        (annotations.scope): "read:epaye"
+        securedBy: [ sec.oauth_2_0: { scopes: [ "read:epaye" ] } ]
+        responses:
+          200:
+            body:
+              application/json:
+                type: !include schemas/EmployeeData.get.schema.json
+                example: !include examples/EmployeeData.get.json
     post:
-      is: [headers.acceptHaeder]
+      is: [ headers.acceptHeader ]
       displayName: Generate employee data
       description: This allows you to start a data export of employee level data
       (annotations.scope): "read:epaye"
@@ -87,21 +105,3 @@ types:
             application/json:
               type: !include schemas/EmployeeData.post.schema.json
               example: !include examples/EmployeeData.post.json
-    /{exportId}:
-      uriParameters:
-        exportId:
-          type: ExportId
-          description: The ID for the data export
-          example: "79f22d83-5c1a-4dcc-86d8-a34b5a7891c0"
-      get:
-        is: [headers.acceptHeader]
-        displayName: Retrieve employee data
-        description: This allows you to download employee level data once the data export has finished
-        (annotations.scope): "read:epaye"
-        securedBy: [ sec.oauth_2_0: { scopes: [ "read:epaye" ] } ]
-          responses:
-            200:
-              body:
-                application/json:
-                  type: !include schemas/EmployeeData.get.schema.json
-                  example: !include examples/EmployeeData.get.json

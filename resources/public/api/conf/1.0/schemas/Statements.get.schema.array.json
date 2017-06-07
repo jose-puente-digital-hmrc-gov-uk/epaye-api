@@ -7,16 +7,16 @@
       "items": {
         "properties": {
           "balance": {
-            "default": 700,
+            "default": 700.0,
             "description": "An explanation about the purpose of this instance.",
             "title": "The Balance Schema",
-            "type": "integer"
+            "type": "number"
           },
           "charges": {
-            "default": 1000,
+            "default": 1000.0,
             "description": "An explanation about the purpose of this instance.",
             "title": "The Charges Schema",
-            "type": "integer"
+            "type": "number"
           },
           "endDate": {
             "default": "2017-06-05",
@@ -25,10 +25,10 @@
             "type": "string"
           },
           "payments": {
-            "default": 300,
+            "default": 300.0,
             "description": "An explanation about the purpose of this instance.",
             "title": "The Payments Schema",
-            "type": "integer"
+            "type": "number"
           },
           "startDate": {
             "default": "2017-05-06",

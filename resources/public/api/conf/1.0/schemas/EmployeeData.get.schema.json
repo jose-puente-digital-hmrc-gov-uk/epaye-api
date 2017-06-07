@@ -13,10 +13,10 @@
       "items": {
         "properties": {
           "atLel": {
-            "default": 100,
+            "default": 100.0,
             "description": "An explanation about the purpose of this instance.",
             "title": "The Atlel Schema",
-            "type": "integer"
+            "type": "number"
           },
           "employeeNic": {
             "default": "321321",
@@ -43,10 +43,10 @@
             "type": "number"
           },
           "lelToPt": {
-            "default": 100,
+            "default": 100.0,
             "description": "An explanation about the purpose of this instance.",
             "title": "The Leltopt Schema",
-            "type": "integer"
+            "type": "number"
           },
           "payrollId": {
             "default": "abc",
@@ -55,10 +55,10 @@
             "type": "string"
           },
           "ptToUap": {
-            "default": 100,
+            "default": 100.0,
             "description": "An explanation about the purpose of this instance.",
             "title": "The Pttouap Schema",
-            "type": "integer"
+            "type": "number"
           },
           "studentLoans": {
             "items": {
@@ -75,10 +75,10 @@
             "type": "array"
           },
           "taxablePayToDate": {
-            "default": 100,
+            "default": 100.0,
             "description": "An explanation about the purpose of this instance.",
             "title": "The Taxablepaytodate Schema",
-            "type": "integer"
+            "type": "number"
           },
           "taxpayerName": {
             "default": "John Smith",
@@ -87,10 +87,10 @@
             "type": "string"
           },
           "totalTax": {
-            "default": 1,
+            "default": 1.0,
             "description": "An explanation about the purpose of this instance.",
             "title": "The Totaltax Schema",
-            "type": "integer"
+            "type": "number"
           },
           "type": {
             "default": "abc",
@@ -99,10 +99,10 @@
             "type": "string"
           },
           "uapToUel": {
-            "default": 100,
+            "default": 100.0,
             "description": "An explanation about the purpose of this instance.",
             "title": "The Uaptouel Schema",
-            "type": "integer"
+            "type": "number"
           }
         },
         "type": "object"

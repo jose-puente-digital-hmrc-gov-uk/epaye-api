@@ -1,0 +1,28 @@
+{
+  "results": [
+    {
+      "balance": 700.0,
+      "charges": 1000.0,
+      "payments": 300.00,
+      "startDate": "2017-04-06",
+      "endDate": "2017-05-05",
+      "taxMonth": 1
+    },
+    {
+      "balance": 700.0,
+      "charges": 1000.0,
+      "payments": 300.00,
+      "startDate": "2017-05-06",
+      "endDate": "2017-06-05",
+      "taxMonth": 2
+    },
+    {
+      "balance": 700.0,
+      "charges": 1000.0,
+      "payments": 300.00,
+      "startDate": "2017-06-06",
+      "endDate": "2017-07-05",
+      "taxMonth": 3
+    }
+  ]
+}
