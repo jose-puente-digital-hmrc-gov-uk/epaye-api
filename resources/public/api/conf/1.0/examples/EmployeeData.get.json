@@ -1,0 +1,43 @@
+{
+  "page": 1,
+  "results": [
+    {
+      "employeeReference": "abc",
+      "taxpayerName": "John Smith",
+      "payrollId": "abc",
+      "type": "abc",
+      "taxablePayToDate": 100.00,
+      "totalTax": 1.00,
+      "studentLoans": [
+        {"name": "foo"},
+        {"name": "bar"}
+      ],
+      "employerNic": "123123",
+      "employeeNic": "321321",
+      "grossEarning": 12300.321,
+      "atLel": 100.0,
+      "lelToPt": 100.0,
+      "ptToUap": 100.0,
+      "uapToUel": 100.0
+    },
+    {
+      "employeeReference": "abc",
+      "taxpayerName": "Joe Bloggs",
+      "payrollId": "abc",
+      "type": "abc",
+      "taxablePayToDate": 100.00,
+      "totalTax": 1.00,
+      "studentLoans": [
+        {"name": "foo"},
+        {"name": "bar"}
+      ],
+      "employerNic": "123123",
+      "employeeNic": "321321",
+      "grossEarning": 12300.321,
+      "atLel": 100.0,
+      "lelToPt": 100.0,
+      "ptToUap": 100.0,
+      "uapToUel": 100.0
+    }
+  ]
+}

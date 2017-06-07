@@ -1,0 +1,164 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "definitions": {},
+  "id": "http://example.com/example.json",
+  "properties": {
+    "page": {
+      "default": 1,
+      "description": "An explanation about the purpose of this instance.",
+      "title": "The Page Schema",
+      "type": "integer"
+    },
+    "results": {
+      "items": {
+        "properties": {
+          "_links": {
+            "properties": {
+              "self": {
+                "default": "/epaye/charges/apprenticeshipLevy",
+                "description": "An explanation about the purpose of this instance.",
+                "title": "The Self Schema",
+                "type": "string"
+              }
+            },
+            "type": "object"
+          },
+          "accruedInterest": {
+            "default": 41.66,
+            "description": "An explanation about the purpose of this instance.",
+            "title": "The Accruedinterest Schema",
+            "type": "number"
+          },
+          "dueDate": {
+            "default": "2017-12-31",
+            "description": "An explanation about the purpose of this instance.",
+            "title": "The Duedate Schema",
+            "type": "string"
+          },
+          "endDate": {
+            "default": "2017-12-31",
+            "description": "An explanation about the purpose of this instance.",
+            "title": "The Enddate Schema",
+            "type": "string"
+          },
+          "identifier": {
+            "default": "apprenticeshipLevy",
+            "description": "An explanation about the purpose of this instance.",
+            "title": "The Identifier Schema",
+            "type": "string"
+          },
+          "name": {
+            "default": "Apprenticeship Levy",
+            "description": "An explanation about the purpose of this instance.",
+            "title": "The Name Schema",
+            "type": "string"
+          },
+          "outstandingAmount": {
+            "default": 5458.77,
+            "description": "An explanation about the purpose of this instance.",
+            "title": "The Outstandingamount Schema",
+            "type": "number"
+          },
+          "references": {
+            "items": {
+              "default": "22d2e724-92d4-4934-ab41-d6c72dfc109f",
+              "description": "An explanation about the purpose of this instance.",
+              "title": "The Empty Schema",
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "startDate": {
+            "default": "2017-06-06",
+            "description": "An explanation about the purpose of this instance.",
+            "title": "The Startdate Schema",
+            "type": "string"
+          },
+          "totalAmount": {
+            "default": 5500.43,
+            "description": "An explanation about the purpose of this instance.",
+            "title": "The Totalamount Schema",
+            "type": "number"
+          }
+        },
+        "type": "object"
+      },
+      "type": "array"
+    }
+  },
+  "type": "object"
+}{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "definitions": {
+    "ISO8601-Date": {
+      "id": "full-date",
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+      "example": "2017-05-05"
+    }
+  },
+  "properties": {
+    "page": {
+      "id": "/properties/page",
+      "type": "integer"
+    },
+    "results": {
+      "id": "/properties/results",
+      "items": {
+        "id": "/properties/results/items",
+        "properties": {
+          "_links": {
+            "id": "/properties/results/items/properties/_links",
+            "properties": {
+              "self": {
+                "id": "/properties/results/items/properties/_links/properties/self",
+                "type": "string"
+              }
+            },
+            "type": "object"
+          },
+          "accruedInterest": {
+            "id": "/properties/results/items/properties/accruedInterest",
+            "type": "number"
+          },
+          "dueDate": {
+            "$ref": "#/definitions/ISO8601-Date"
+          },
+          "endDate": {
+            "$ref": "#/definitions/ISO8601-Date"
+          },
+          "identifier": {
+            "id": "/properties/results/items/properties/identifier",
+            "type": "string"
+          },
+          "name": {
+            "id": "/properties/results/items/properties/name",
+            "type": "string"
+          },
+          "outstandingAmount": {
+            "id": "/properties/results/items/properties/outstandingAmount",
+            "type": "number"
+          },
+          "references": {
+            "id": "/properties/results/items/properties/references",
+            "items": {
+              "id": "/properties/results/items/properties/references/items",
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "startDate": {
+            "$ref": "#/definitions/ISO8601-Date"
+          },
+          "totalAmount": {
+            "id": "/properties/results/items/properties/totalAmount",
+            "type": "number"
+          }
+        },
+        "type": "object"
+      },
+      "type": "array"
+    }
+  },
+  "type": "object"
+}

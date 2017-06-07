@@ -1,0 +1,114 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "definitions": {},
+  "id": "http://example.com/example.json",
+  "properties": {
+    "page": {
+      "default": 1,
+      "description": "An explanation about the purpose of this instance.",
+      "title": "The Page Schema",
+      "type": "integer"
+    },
+    "results": {
+      "items": {
+        "properties": {
+          "atLel": {
+            "default": 100,
+            "description": "An explanation about the purpose of this instance.",
+            "title": "The Atlel Schema",
+            "type": "integer"
+          },
+          "employeeNic": {
+            "default": "321321",
+            "description": "An explanation about the purpose of this instance.",
+            "title": "The Employeenic Schema",
+            "type": "string"
+          },
+          "employeeReference": {
+            "default": "abc",
+            "description": "An explanation about the purpose of this instance.",
+            "title": "The Employeereference Schema",
+            "type": "string"
+          },
+          "employerNic": {
+            "default": "123123",
+            "description": "An explanation about the purpose of this instance.",
+            "title": "The Employernic Schema",
+            "type": "string"
+          },
+          "grossEarning": {
+            "default": 12300.321,
+            "description": "An explanation about the purpose of this instance.",
+            "title": "The Grossearning Schema",
+            "type": "number"
+          },
+          "lelToPt": {
+            "default": 100,
+            "description": "An explanation about the purpose of this instance.",
+            "title": "The Leltopt Schema",
+            "type": "integer"
+          },
+          "payrollId": {
+            "default": "abc",
+            "description": "An explanation about the purpose of this instance.",
+            "title": "The Payrollid Schema",
+            "type": "string"
+          },
+          "ptToUap": {
+            "default": 100,
+            "description": "An explanation about the purpose of this instance.",
+            "title": "The Pttouap Schema",
+            "type": "integer"
+          },
+          "studentLoans": {
+            "items": {
+              "properties": {
+                "name": {
+                  "default": "foo",
+                  "description": "An explanation about the purpose of this instance.",
+                  "title": "The Name Schema",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "taxablePayToDate": {
+            "default": 100,
+            "description": "An explanation about the purpose of this instance.",
+            "title": "The Taxablepaytodate Schema",
+            "type": "integer"
+          },
+          "taxpayerName": {
+            "default": "John Smith",
+            "description": "An explanation about the purpose of this instance.",
+            "title": "The Taxpayername Schema",
+            "type": "string"
+          },
+          "totalTax": {
+            "default": 1,
+            "description": "An explanation about the purpose of this instance.",
+            "title": "The Totaltax Schema",
+            "type": "integer"
+          },
+          "type": {
+            "default": "abc",
+            "description": "An explanation about the purpose of this instance.",
+            "title": "The Type Schema",
+            "type": "string"
+          },
+          "uapToUel": {
+            "default": 100,
+            "description": "An explanation about the purpose of this instance.",
+            "title": "The Uaptouel Schema",
+            "type": "integer"
+          }
+        },
+        "type": "object"
+      },
+      "type": "array"
+    }
+  },
+  "type": "object"
+}

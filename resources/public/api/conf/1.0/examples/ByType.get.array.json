@@ -1,0 +1,33 @@
+{
+  "page": 1,
+  "results": [
+    {
+      "identifier": "apprenticeshipLevy",
+      "reference": "22d2e724-92d4-4934-ab41-d6c72dfc109f",
+      "name": "Apprenticeship Levy",
+      "outstandingAmount": 5458.77,
+      "accruedInterest": 41.66,
+      "totalAmount": 5500.43,
+      "dueDate": "2017-12-31",
+      "startDate": "2017-06-06",
+      "endDate": "2017-12-31",
+      "_links": {
+        "self": "/epaye/charges/apprenticeshipLevy"
+      }
+    },
+    {
+      "identifier": "apprenticeshipLevy",
+      "reference": "93c7b77e-e373-41a0-9da6-1b91e0a9202b",
+      "name": "Apprenticeship Levy",
+      "outstandingAmount": 1212.00,
+      "accruedInterest": 0.0,
+      "totalAmount": 1212.00,
+      "dueDate": "2017-12-31",
+      "startDate": "2017-06-06",
+      "endDate": "2017-12-31",
+      "_links": {
+        "self": "/epaye/charges/apprenticeshipLevy"
+      }
+    }
+  ]
+}
