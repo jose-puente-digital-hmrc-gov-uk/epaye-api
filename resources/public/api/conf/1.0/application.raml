@@ -28,8 +28,19 @@ types:
     pattern: "[a-zA-Z0-9]+"
 
 /epaye:
+  get:
+    is: [ headers.acceptHeader ]
+    displayName: Entry point to the API
+    description: This allows you to retrieve all the EmpRefs you have access to
+    securedBy: [ sec.oauth_2_0: { scopes: [ "read:epaye" ] } ]
+    responses:
+      200:
+        body:
+          application/json:
+            type: !include schemas/Epaye.get.schema.array.json
+            example: !include examples/Epaye.get.array.json
   /charges:
-    /totals:
+    /summary:
       get:
         is: [ headers.acceptHeader ]
         displayName: Retrieve totals for charges
@@ -42,7 +53,7 @@ types:
               application/json:
                 type: !include schemas/Totals.get.schema.array.json
                 example: !include examples/Totals.get.array.json
-    /byType/{chargeType}:
+    /{chargeType}:
       uriParameters:
         chargeType:
           type: ChargeType

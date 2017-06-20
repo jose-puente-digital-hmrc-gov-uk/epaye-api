@@ -1,0 +1,4 @@
+# microservice specific routes
+
+GET        /hello-world        uk.gov.hmrc.epayeapi.controllers.MicroserviceHelloWorld.hello
+GET        /charges            @controllers.RtiChargesController.getCharges()
