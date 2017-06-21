@@ -1,2 +1,2 @@
-GET        /api/definition                 @uk.gov.hmrc.epayeapi.controllers.DocumentationController.definition()
-GET        /api/conf/:version/*file        @uk.gov.hmrc.epayeapi.controllers.DocumentationController.raml(version, file)
+GET        /api/definition                 @uk.gov.hmrc.epayeapi.controllers.Documentation.definition()
+GET        /api/conf/:version/*file        @uk.gov.hmrc.epayeapi.controllers.Documentation.raml(version, file)

@@ -18,19 +18,19 @@ package uk.gov.hmrc.epayeapi.config
 
 import javax.inject.{Inject, Singleton}
 
+import play.api.{Configuration, Environment}
 import uk.gov.hmrc.play.config.inject.DefaultServicesConfig
 
 @Singleton
 case class AppContext @Inject() (config: DefaultServicesConfig) {
-  val current = config.runModeConfiguration
-  val env = config.environment
+  val current: Configuration = config.runModeConfiguration
+  val env = config.environment.mode
 
-  val appName = current.getString("appName").getOrElse(throw new RuntimeException("appName is not configured"))
-  val appUrl = current.getString("appUrl").getOrElse(throw new RuntimeException("appUrl is not configured"))
+  val appName: String = current.getString("appName").getOrElse(throw new RuntimeException("appName is not configured"))
+  val appUrl: String = current.getString("appUrl").getOrElse(throw new RuntimeException("appUrl is not configured"))
   val serviceLocatorUrl: String = config.baseUrl("service-locator")
-  val apiContext = current.getString(s"api.context").getOrElse(throw new RuntimeException(s"Missing Key $env.api.context"))
-  val baseUrl = current.getString(s"$env.baseUrl").getOrElse(throw new RuntimeException(s"Missing Key $env.baseUrl"))
-  val apiStatus = current.getString("api.status").getOrElse(throw new RuntimeException(s"Missing Key $env.api.status"))
-  val desAuthToken = current.getString("desauthtoken").getOrElse(throw new RuntimeException(s"Missing Key $env.desauthtoken"))
-  val desUrlHeaderEnv: String = current.getString("environment").getOrElse(throw new RuntimeException(s"Missing Key $env.environment"))
+  val apiContext: String = current.getString(s"api.context").getOrElse(throw new RuntimeException(s"Missing Key $env.api.context"))
+  val apiStatus: String = current.getString("api.status").getOrElse(throw new RuntimeException(s"Missing Key $env.api.status"))
+
+
 }

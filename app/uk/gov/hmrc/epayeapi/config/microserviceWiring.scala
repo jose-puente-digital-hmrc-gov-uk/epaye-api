@@ -14,23 +14,43 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.epayeapi
+package uk.gov.hmrc.epayeapi.config
 
+import javax.inject.{Inject, Singleton}
+
+import play.api.{Environment, Logger}
 import uk.gov.hmrc.play.audit.http.config.LoadAuditingConfig
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.auth.microservice.connectors.AuthConnector
-import uk.gov.hmrc.play.config.{AppName, RunMode, ServicesConfig}
+import uk.gov.hmrc.play.config.inject.ServicesConfig
+import uk.gov.hmrc.play.config.inject.RunMode
 import uk.gov.hmrc.play.http.hooks.HttpHook
 import uk.gov.hmrc.play.http.ws._
 
-object WSHttp extends WSGet with WSPut with WSPost with WSDelete with WSPatch with AppName {
+@Singleton
+case class WSHttpImpl @Inject() (context: AppContext)
+  extends WSHttp
+  with WSGet
+  with WSPut
+  with WSDelete
+  with WSPatch {
+  Logger.info(s"Starting: ${getClass.getName}")
   override val hooks: Seq[HttpHook] = NoneRequired
 }
 
-object MicroserviceAuditConnector extends AuditConnector with RunMode {
+@Singleton
+case class MicroserviceAuditConnector @Inject() (
+  mode: RunMode,
+  environment: Environment
+)
+  extends AuditConnector {
+  Logger.info(s"Starting: ${getClass.getName}")
   override lazy val auditingConfig = LoadAuditingConfig(s"auditing")
 }
 
-object MicroserviceAuthConnector extends AuthConnector with ServicesConfig {
-  override val authBaseUrl = baseUrl("auth")
+@Singleton
+case class MicroserviceAuthConnector @Inject() (servicesConfig: ServicesConfig)
+  extends AuthConnector {
+  Logger.info(s"Starting: ${getClass.getName}")
+  override val authBaseUrl: String = servicesConfig.baseUrl("auth")
 }

@@ -55,3 +55,5 @@ case class ServiceLocatorConnector @Inject() (
     }
   }
 }
+
+object ServiceRegistered

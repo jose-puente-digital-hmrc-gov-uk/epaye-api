@@ -21,24 +21,26 @@ import javax.inject.{Inject, Singleton}
 import play.api.http.HttpErrorHandler
 import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.api.controllers.{DocumentationController => ApiDocsController}
-import uk.gov.hmrc.epayeapi.config.AppContext
+import uk.gov.hmrc.epayeapi.config.{AppContext, Startup}
 
 @Singleton
-case class DocumentationController @Inject() (
+case class Documentation @Inject() (
   httpErrorHandler: HttpErrorHandler,
-  context: AppContext
+  context: AppContext,
+  startup: Startup
 )
   extends ApiDocsController(httpErrorHandler) {
 
-  override def documentation(version: String, endpointName: String): Action[AnyContent] = {
-    super.at(s"/public/api/documentation/$version", s"${endpointName.replaceAll(" ", "-")}.xml")
-  }
+  // Leave here. This registers the service with service locator. We can't
+  // run this in the body of 'Startup' due to a `import Play.current`
+  // line in `WSRequest`
+  startup.start()
 
   override def definition(): Action[AnyContent] = Action {
     Ok(views.txt.definition(context.apiContext, context.apiStatus))
+      .as("application/json")
   }
 
-  def raml(version: String, file: String): Action[AnyContent] = {
-    super.at(s"/public/api/conf/$version", file)
-  }
+  def raml(version: String, file: String): Action[AnyContent] =
+    conf(version, file)
 }

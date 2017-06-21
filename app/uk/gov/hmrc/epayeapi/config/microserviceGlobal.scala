@@ -14,53 +14,119 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.epayeapi
+package uk.gov.hmrc.epayeapi.config
+
+import javax.inject.{Inject, Singleton}
 
 import com.typesafe.config.Config
-import play.api.{Application, Configuration, Play}
+import net.ceedubs.ficus.Ficus._
+import play.api.inject.ApplicationLifecycle
+import play.api.{Application, Configuration, Logger}
+import uk.gov.hmrc.epayeapi.connectors.ServiceLocatorConnector
 import uk.gov.hmrc.play.audit.filters.AuditFilter
 import uk.gov.hmrc.play.auth.controllers.AuthParamsControllerConfig
-import uk.gov.hmrc.play.config.{AppName, ControllerConfig, RunMode}
+import uk.gov.hmrc.play.auth.microservice.filters.AuthorisationFilter
+import uk.gov.hmrc.play.config.ControllerConfig
+import uk.gov.hmrc.play.config.inject.RunMode
+import uk.gov.hmrc.play.filters.MicroserviceFilterSupport
+import uk.gov.hmrc.play.http.HeaderCarrier
 import uk.gov.hmrc.play.http.logging.filters.LoggingFilter
 import uk.gov.hmrc.play.microservice.bootstrap.DefaultMicroserviceGlobal
-import uk.gov.hmrc.play.auth.microservice.filters.AuthorisationFilter
-import net.ceedubs.ficus.Ficus._
-import uk.gov.hmrc.play.filters.MicroserviceFilterSupport
-import play.api.i18n.Messages.Implicits._
-import play.api.Play.current
 
+import scala.concurrent.Future
 
-object ControllerConfiguration extends ControllerConfig {
-  lazy val controllerConfigs = Play.current.configuration.underlying.as[Config]("controllers")
+@Singleton
+case class ControllerConfiguration @Inject() (config: Configuration)
+  extends ControllerConfig {
+  Logger.info(s"Starting: ${getClass.getName}")
+  lazy val controllerConfigs: Config = config.underlying.as[Config]("controllers")
 }
 
-object AuthParamsControllerConfiguration extends AuthParamsControllerConfig {
-  lazy val controllerConfigs = ControllerConfiguration.controllerConfigs
+@Singleton
+case class AuthParamsControllerConfiguration @Inject() (config: ControllerConfiguration)
+  extends AuthParamsControllerConfig {
+  Logger.info(s"Starting: ${getClass.getName}")
+  lazy val controllerConfigs: Config = config.controllerConfigs
 }
 
-object MicroserviceAuditFilter extends AuditFilter with AppName with MicroserviceFilterSupport {
-  override val auditConnector = MicroserviceAuditConnector
-  override def controllerNeedsAuditing(controllerName: String) = ControllerConfiguration.paramsForController(controllerName).needsAuditing
+@Singleton
+case class MicroserviceAuditFilter @Inject() (
+  context: AppContext,
+  config: ControllerConfiguration,
+  auditConnector: MicroserviceAuditConnector
+) extends AuditFilter
+  with MicroserviceFilterSupport {
+  Logger.info(s"Starting: ${getClass.getName}")
+  val appName: String = context.appName
+  def controllerNeedsAuditing(controllerName: String): Boolean =
+    config.paramsForController(controllerName).needsAuditing
 }
 
-object MicroserviceLoggingFilter extends LoggingFilter with MicroserviceFilterSupport {
-  override def controllerNeedsLogging(controllerName: String) = ControllerConfiguration.paramsForController(controllerName).needsLogging
+@Singleton
+case class MicroserviceLoggingFilter @Inject() (
+  config: ControllerConfiguration
+)
+  extends LoggingFilter
+  with MicroserviceFilterSupport {
+  Logger.info(s"Starting: ${getClass.getName}")
+  def controllerNeedsLogging(controllerName: String): Boolean =
+    config.paramsForController(controllerName).needsLogging
 }
 
-object MicroserviceAuthFilter extends AuthorisationFilter with MicroserviceFilterSupport {
-  override lazy val authParamsConfig = AuthParamsControllerConfiguration
-  override lazy val authConnector = MicroserviceAuthConnector
-  override def controllerNeedsAuth(controllerName: String): Boolean = ControllerConfiguration.paramsForController(controllerName).needsAuth
+@Singleton
+case class MicroserviceAuthFilter @Inject() (
+  config: ControllerConfiguration,
+  authParamsConfig: AuthParamsControllerConfiguration,
+  authConnector: MicroserviceAuthConnector
+) extends AuthorisationFilter
+  with MicroserviceFilterSupport {
+  Logger.info(s"Starting: ${getClass.getName}")
+  def controllerNeedsAuth(controllerName: String): Boolean =
+    config.paramsForController(controllerName).needsAuth
 }
 
-object MicroserviceGlobal extends DefaultMicroserviceGlobal with RunMode with MicroserviceFilterSupport {
-  override val auditConnector = MicroserviceAuditConnector
+@Singleton
+case class MicroserviceGlobal @Inject() (
+  mode: RunMode,
+  auditConnector: MicroserviceAuditConnector,
+  authFilterPure: MicroserviceAuthFilter,
+  loggingFilter: MicroserviceLoggingFilter,
+  microserviceAuditFilter: MicroserviceAuditFilter,
+  context: AppContext,
+  config: Configuration
+) extends DefaultMicroserviceGlobal
+  with MicroserviceFilterSupport {
+  Logger.info(s"Starting: ${getClass.getName}")
+  // Overriding values so they don't use Play.current and crash our app on
+  // startup
+  override lazy val appName: String = context.appName
+  override lazy val loggerDateFormat: Option[String] = config.getString("logger.json.dateformat")
+  val authFilter = Some(authFilterPure)
+  def microserviceMetricsConfig(implicit app: Application): Option[Configuration] =
+    app.configuration.getConfig(s"microservice.metrics")
+}
 
-  override def microserviceMetricsConfig(implicit app: Application): Option[Configuration] = app.configuration.getConfig(s"microservice.metrics")
+trait Startup {
+  def start(): Unit
+}
 
-  override val loggingFilter = MicroserviceLoggingFilter
-
-  override val microserviceAuditFilter = MicroserviceAuditFilter
-
-  override val authFilter = Some(MicroserviceAuthFilter)
+case class AppStartup @Inject() (
+  controllerConfiguration: ControllerConfiguration,
+  authParamsControllerConfiguration: AuthParamsControllerConfiguration,
+  microserviceAuditFilter: MicroserviceAuditFilter,
+  microserviceLoggingFilter: MicroserviceLoggingFilter,
+  microserviceAuthFilter: MicroserviceAuthFilter,
+  microserviceGlobal: MicroserviceGlobal,
+  serviceLocator: ServiceLocatorConnector,
+  app: Application,
+  lifecycle: ApplicationLifecycle
+) extends Startup {
+  lifecycle.addStopHook(() => Future.successful(microserviceGlobal.onStop(app)))
+  microserviceGlobal.onStart(app)
+  def start(): Unit = {
+    // Makes an HTTP request that requires Play.current. While starting up
+    // Play.current is not available so we defer a call to .start into a
+    // controller.
+    serviceLocator.register(HeaderCarrier())
+  }
 }
