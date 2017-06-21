@@ -32,8 +32,8 @@ import scala.util.Random
 case class RtiChargesController @Inject() (implicit val ec: ExecutionContext) extends BaseController {
 
   private def getRandomCharge = {
-    val outstandingAmount = BigDecimal(Random.nextFloat() * 10000).setScale(2, BigDecimal.RoundingMode.HALF_UP)
-    val interest = BigDecimal(Random.nextFloat() * 100).setScale(2, BigDecimal.RoundingMode.HALF_UP)
+    val outstandingAmount = BigDecimal((Random.nextFloat() * 10000).toDouble).setScale(2, BigDecimal.RoundingMode.HALF_UP)
+    val interest = BigDecimal((Random.nextFloat() * 100).toDouble).setScale(2, BigDecimal.RoundingMode.HALF_UP)
     val total = outstandingAmount + interest
     val links = Json.obj(
       "self" -> s"/epaye/self/charge/${UUID.randomUUID()}"
