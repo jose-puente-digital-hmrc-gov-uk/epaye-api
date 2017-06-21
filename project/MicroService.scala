@@ -48,6 +48,9 @@ trait MicroService {
         Resolver.bintrayRepo("hmrc", "releases"),
         Resolver.jcenterRepo
       ))
+    .settings(
+      scalacOptions ++= Seq("-unchecked", "-deprecation", "-feature", "-Xfatal-warnings")
+    )
 }
 
 private object TestPhases {
