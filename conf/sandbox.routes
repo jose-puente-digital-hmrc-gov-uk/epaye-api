@@ -1,4 +1,4 @@
 # microservice specific routes
 
 GET        /sandbox/hello-world        uk.gov.hmrc.epayeapi.controllers.MicroserviceHelloWorld.hello
-GET        /sandbox/charges            @controllers.RtiChargesController.getCharges()
+GET        /sandbox/charges            @uk.gov.hmrc.epayeapi.controllers.RtiChargesController.getCharges()

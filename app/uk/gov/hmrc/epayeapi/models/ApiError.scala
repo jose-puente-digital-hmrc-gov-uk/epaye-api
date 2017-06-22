@@ -14,22 +14,13 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.epayeapi
+package uk.gov.hmrc.epayeapi.models
 
-import play.api.test.FakeRequest
-import uk.gov.hmrc.epayeapi.controllers.RtiChargesController
-import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
+case class ApiError(code: String, message: String)
 
-import scala.concurrent.ExecutionContext
-
-class RtiChargesControllerSpec extends UnitSpec with WithFakeApplication {
-
-  "GET /" should {
-    "return 200" in {
-      val result = RtiChargesController()(
-        fakeApplication.injector.instanceOf[ExecutionContext]
-      ).getCharges()(FakeRequest())
-      status(result) shouldBe 200
-    }
-  }
+object ApiError {
+  object InsufficientEnrolments extends ApiError(
+    "INSUFFICIENT_ENROLMENTS",
+    "You are not currently enrolled for ePAYE"
+  )
 }

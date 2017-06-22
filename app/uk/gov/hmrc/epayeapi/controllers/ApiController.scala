@@ -14,22 +14,12 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.epayeapi
+package uk.gov.hmrc.epayeapi.controllers
 
-import play.api.test.FakeRequest
-import uk.gov.hmrc.epayeapi.controllers.RtiChargesController
-import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
+import uk.gov.hmrc.auth.core.{AuthConnector, AuthorisedFunctions, Enrolment}
+import uk.gov.hmrc.play.microservice.controller.BaseController
 
-import scala.concurrent.ExecutionContext
-
-class RtiChargesControllerSpec extends UnitSpec with WithFakeApplication {
-
-  "GET /" should {
-    "return 200" in {
-      val result = RtiChargesController()(
-        fakeApplication.injector.instanceOf[ExecutionContext]
-      ).getCharges()(FakeRequest())
-      status(result) shouldBe 200
-    }
-  }
+trait ApiController extends BaseController with AuthorisedFunctions {
+  val epayeEnrolment = Enrolment("IR-PAYE")
+  def authConnector: AuthConnector
 }

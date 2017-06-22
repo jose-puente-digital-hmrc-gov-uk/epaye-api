@@ -14,22 +14,16 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.epayeapi
+package uk.gov.hmrc.epayeapi.models
 
-import play.api.test.FakeRequest
-import uk.gov.hmrc.epayeapi.controllers.RtiChargesController
-import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
+import play.api.libs.json.{Format, Json}
 
-import scala.concurrent.ExecutionContext
-
-class RtiChargesControllerSpec extends UnitSpec with WithFakeApplication {
-
-  "GET /" should {
-    "return 200" in {
-      val result = RtiChargesController()(
-        fakeApplication.injector.instanceOf[ExecutionContext]
-      ).getCharges()(FakeRequest())
-      status(result) shouldBe 200
-    }
-  }
+trait Formats {
+  implicit val linkFormat: Format[Link] = Json.format[Link]
+  implicit val empRefLinksFormat: Format[EmpRefLinks] = Json.format[EmpRefLinks]
+  implicit val empRefItemFormat: Format[EmpRefItem] = Json.format[EmpRefItem]
+  implicit val empRefsResponseFormat: Format[EmpRefsResponse] = Json.format[EmpRefsResponse]
+  implicit val apiErrorFormat: Format[ApiError] = Json.format[ApiError]
 }
+
+object Formats extends Formats

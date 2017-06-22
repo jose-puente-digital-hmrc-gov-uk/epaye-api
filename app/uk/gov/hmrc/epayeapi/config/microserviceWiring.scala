@@ -19,11 +19,13 @@ package uk.gov.hmrc.epayeapi.config
 import javax.inject.{Inject, Singleton}
 
 import play.api.{Environment, Logger}
+import uk.gov.hmrc.auth.core.{PlayAuthConnector => CoreAuthConnector}
+import uk.gov.hmrc.play.auth.microservice.connectors.{AuthConnector => PlayAuthConnector}
 import uk.gov.hmrc.play.audit.http.config.LoadAuditingConfig
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
-import uk.gov.hmrc.play.auth.microservice.connectors.AuthConnector
 import uk.gov.hmrc.play.config.inject.ServicesConfig
 import uk.gov.hmrc.play.config.inject.RunMode
+import uk.gov.hmrc.play.http.HttpPost
 import uk.gov.hmrc.play.http.hooks.HttpHook
 import uk.gov.hmrc.play.http.ws._
 
@@ -31,6 +33,7 @@ import uk.gov.hmrc.play.http.ws._
 case class WSHttpImpl @Inject() (context: AppContext)
   extends WSHttp
   with WSGet
+  with WSPost
   with WSPut
   with WSDelete
   with WSPatch {
@@ -50,7 +53,16 @@ case class MicroserviceAuditConnector @Inject() (
 
 @Singleton
 case class MicroserviceAuthConnector @Inject() (servicesConfig: ServicesConfig)
-  extends AuthConnector {
+  extends PlayAuthConnector {
   Logger.info(s"Starting: ${getClass.getName}")
   override val authBaseUrl: String = servicesConfig.baseUrl("auth")
+}
+
+@Singleton
+case class ActualAuthConnector @Inject() (
+  servicesConfig: ServicesConfig,
+  http: HttpPost
+)
+  extends CoreAuthConnector {
+  val serviceUrl: String = servicesConfig.baseUrl("auth")
 }

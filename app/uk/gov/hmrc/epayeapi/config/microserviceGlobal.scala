@@ -54,7 +54,8 @@ case class MicroserviceAuditFilter @Inject() (
   context: AppContext,
   config: ControllerConfiguration,
   auditConnector: MicroserviceAuditConnector
-) extends AuditFilter
+)
+  extends AuditFilter
   with MicroserviceFilterSupport {
   Logger.info(s"Starting: ${getClass.getName}")
   val appName: String = context.appName
@@ -78,7 +79,8 @@ case class MicroserviceAuthFilter @Inject() (
   config: ControllerConfiguration,
   authParamsConfig: AuthParamsControllerConfiguration,
   authConnector: MicroserviceAuthConnector
-) extends AuthorisationFilter
+)
+  extends AuthorisationFilter
   with MicroserviceFilterSupport {
   Logger.info(s"Starting: ${getClass.getName}")
   def controllerNeedsAuth(controllerName: String): Boolean =
@@ -94,7 +96,8 @@ case class MicroserviceGlobal @Inject() (
   microserviceAuditFilter: MicroserviceAuditFilter,
   context: AppContext,
   config: Configuration
-) extends DefaultMicroserviceGlobal
+)
+  extends DefaultMicroserviceGlobal
   with MicroserviceFilterSupport {
   Logger.info(s"Starting: ${getClass.getName}")
   // Overriding values so they don't use Play.current and crash our app on
