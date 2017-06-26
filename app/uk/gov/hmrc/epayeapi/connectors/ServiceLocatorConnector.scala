@@ -21,27 +21,20 @@ import javax.inject.{Inject, Singleton}
 import play.api.Logger
 import uk.gov.hmrc.api.domain.Registration
 import uk.gov.hmrc.epayeapi.config.AppContext
-import uk.gov.hmrc.play.http.HeaderCarrier
+import uk.gov.hmrc.play.http.{HeaderCarrier, HttpPost}
 import uk.gov.hmrc.play.http.ws.WSHttp
 
 import scala.concurrent.{ExecutionContext, Future}
 
-@Singleton
-case class ServiceLocatorConnector @Inject() (
-  context: AppContext,
-  http: WSHttp,
-  implicit val ec: ExecutionContext
-) {
-  val appName: String = context.appName
-  val appUrl: String = context.appUrl
-  val serviceUrl: String = context.serviceLocatorUrl
-  val handlerOK: () => Unit = () => Logger.info("Service is registered on the service locator")
-  val handlerError: Throwable => Unit = { error =>
-    Logger.error(s"Service could not register on the service locator", error)
-  }
-
-  val metadata: Option[Map[String, String]] = Some(Map("third-party-api" -> "true"))
-
+trait ServiceLocatorConnectorTrait {
+  def appName: String
+  def appUrl: String
+  def serviceUrl: String
+  def handlerOK: () => Unit
+  def handlerError: Throwable => Unit
+  def metadata: Option[Map[String, String]]
+  def http: HttpPost
+  implicit def executionContext: ExecutionContext
   def register(implicit hc: HeaderCarrier): Future[Boolean] = {
     val registration = Registration(appName, appUrl, metadata)
     http.POST(s"$serviceUrl/registration", registration, Seq("Content-Type" -> "application/json")) map {
@@ -54,6 +47,22 @@ case class ServiceLocatorConnector @Inject() (
         false
     }
   }
+}
+
+@Singleton
+case class ServiceLocatorConnector @Inject() (
+  context: AppContext,
+  http: WSHttp,
+  implicit val executionContext: ExecutionContext
+) extends ServiceLocatorConnectorTrait {
+  val appName: String = context.appName
+  val appUrl: String = context.appUrl
+  val serviceUrl: String = context.serviceLocatorUrl
+  val handlerOK: () => Unit = () => Logger.info("Service is registered on the service locator")
+  val handlerError: Throwable => Unit = { error =>
+    Logger.error(s"Service could not register on the service locator", error)
+  }
+  val metadata: Option[Map[String, String]] = Some(Map("third-party-api" -> "true"))
 }
 
 object ServiceRegistered
