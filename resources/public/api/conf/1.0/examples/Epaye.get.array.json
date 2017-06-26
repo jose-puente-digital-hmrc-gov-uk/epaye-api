@@ -1,18 +1,8 @@
 {
-  "results": [
+  "_embedded": [
     {
-      "taxOfficeNumber": "840",
-      "employeeReference": "MZ00064",
-      "links": {
-        "charges": "/epaye/840/MZ00064/charges/"
-      }
-    },
-    {
-      "taxOfficeNumber": "840",
-      "employeeReference": "MZ00064",
-      "links": {
-        "charges": "/epaye/840/MZ00064/charges/"
-      }
+      "empRef": "840/GZ00064",
+      "_links": {}
     }
   ]
 }
