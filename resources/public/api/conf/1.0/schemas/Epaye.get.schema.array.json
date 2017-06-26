@@ -7,15 +7,18 @@
       "id": "/properties/_embedded",
       "items": {
         "id": "/properties/_embedded/items",
+        "description": "An array of EmpRef objects which you can use to access more data",
         "properties": {
           "_links": {
             "id": "/properties/_embedded/items/properties/_links",
             "properties": {},
-            "type": "object"
+            "type": "object",
+            "description": "An object of links to explore further data"
           },
           "empRef": {
             "id": "/properties/_embedded/items/properties/empRef",
-            "type": "string"
+            "type": "string",
+            "description": "An EmpRef"
           }
         },
         "type": "object"
