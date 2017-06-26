@@ -33,7 +33,7 @@ types:
   get:
     is: [ headers.acceptHeader ]
     displayName: Entry point to the API
-    description: This allows you to retrieve all the EmpRefs you have access to
+    description: This resource is the entry point to the PAYE API and returns all accounts that you have access to.
     securedBy: [ sec.oauth_2_0: { scopes: [ "read:epaye" ] } ]
     responses:
       200:
