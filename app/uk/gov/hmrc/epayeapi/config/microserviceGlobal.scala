@@ -130,6 +130,9 @@ case class AppStartup @Inject() (
     // Makes an HTTP request that requires Play.current. While starting up
     // Play.current is not available so we defer a call to .start into a
     // controller.
-    serviceLocator.register(HeaderCarrier())
+    serviceLocator.register(HeaderCarrier()).foreach({
+      case true => Logger.info("Registered with service locator")
+      case false => Logger.error("Failed registering with service locator")
+    })
   }
 }
