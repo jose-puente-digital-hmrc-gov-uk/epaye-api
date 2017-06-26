@@ -1,4 +1,5 @@
 This API retrieves data about PAYE for employers. It provides the following information:
+
 * ePAYE balance including any interest owed
 * monthly totals of Real Time Information (RTI) charges
 * non-RTI charges
