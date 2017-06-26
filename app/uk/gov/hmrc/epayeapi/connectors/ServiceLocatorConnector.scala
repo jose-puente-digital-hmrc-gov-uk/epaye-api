@@ -65,4 +65,4 @@ case class ServiceLocatorConnector @Inject() (
   val metadata: Option[Map[String, String]] = Some(Map("third-party-api" -> "true"))
 }
 
-object ServiceRegistered
+
