@@ -33,7 +33,7 @@ import uk.gov.hmrc.play.http.HeaderCarrier
 import uk.gov.hmrc.play.http.logging.filters.LoggingFilter
 import uk.gov.hmrc.play.microservice.bootstrap.DefaultMicroserviceGlobal
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 case class ControllerConfiguration @Inject() (config: Configuration)
@@ -122,7 +122,8 @@ case class AppStartup @Inject() (
   microserviceGlobal: MicroserviceGlobal,
   serviceLocator: ServiceLocatorConnector,
   app: Application,
-  lifecycle: ApplicationLifecycle
+  lifecycle: ApplicationLifecycle,
+  implicit val ec: ExecutionContext
 ) extends Startup {
   lifecycle.addStopHook(() => Future.successful(microserviceGlobal.onStop(app)))
   microserviceGlobal.onStart(app)
