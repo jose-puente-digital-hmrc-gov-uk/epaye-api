@@ -32,8 +32,8 @@ types:
 /epaye:
   get:
     is: [ headers.acceptHeader ]
-    displayName: Entry point to the API
-    description: This resource is the entry point to the PAYE API and returns all accounts that you have access to.
+    displayName: Get access to ePAYE data
+    description: This resource is the entry point to the ePAYE API. It will return a set of URLs for each account you have access to, allowing you to access ePAYE data. This will include the employer's ePAYE balance, monthly totals of RTI charges, non-RTI charges and a breakdown of individual charges.
     securedBy: [ sec.oauth_2_0: { scopes: [ "read:epaye" ] } ]
     responses:
       200:
