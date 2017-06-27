@@ -48,7 +48,6 @@ class ConnectorSpec extends UnitSpec with MockitoSugar with ScalaFutures {
     val http = mock[HttpGet]
     val connector = TestConnector(http, global)
     val url = connector.url
-    //    val reader = ConnectorBase.responseReader(TestData.testDataFormat)
   }
 
   "ConnectorBase" should {
@@ -69,7 +68,7 @@ class ConnectorSpec extends UnitSpec with MockitoSugar with ScalaFutures {
           }
         }
 
-      connector.getData.futureValue shouldEqual ApiJsonError(JsError((JsPath \ "num"), "error.path.missing"))
+      connector.getData.futureValue shouldEqual ApiJsonError(JsError(JsPath \ "num", "error.path.missing"))
     }
 
     "return ApiNotFound on 404s from upstream" in new Setup {
