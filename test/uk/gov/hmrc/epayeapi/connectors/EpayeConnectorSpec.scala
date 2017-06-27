@@ -23,6 +23,7 @@ import play.api.http.Status
 import uk.gov.hmrc.domain.EmpRef
 import uk.gov.hmrc.epayeapi.models.api.ApiSuccess
 import uk.gov.hmrc.epayeapi.models.domain.AggregatedTotals
+import uk.gov.hmrc.play.http.ws.WSHttp
 import uk.gov.hmrc.play.http.{HeaderCarrier, HttpGet, HttpResponse}
 import uk.gov.hmrc.play.test.UnitSpec
 
@@ -34,7 +35,7 @@ class EpayeConnectorSpec extends UnitSpec with MockitoSugar with ScalaFutures {
 
   trait Setup {
     implicit val hc = HeaderCarrier()
-    val http = mock[HttpGet]
+    val http = mock[WSHttp]
     val config = EpayeApiConfig("https://EPAYE")
     val connector = EpayeConnector(config, http, global)
     val empRef = EmpRef("123", "456")
