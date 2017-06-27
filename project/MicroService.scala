@@ -49,7 +49,7 @@ trait MicroService {
         Resolver.jcenterRepo
       ))
     .settings(
-      scalacOptions ++= Seq("-unchecked", "-deprecation", "-feature", "-Xfatal-warnings"),
+      scalacOptions ++= Seq("-unchecked", "-deprecation", "-feature", "-Xfatal-warnings", "-language:implicitConversions"),
       unmanagedResourceDirectories in Compile += baseDirectory.value / "resources"
     )
 }
