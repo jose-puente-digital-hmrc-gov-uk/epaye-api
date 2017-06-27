@@ -20,11 +20,9 @@ import javax.inject.{Inject, Singleton}
 
 import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent}
-import uk.gov.hmrc.auth.core.Retrievals._
-import uk.gov.hmrc.auth.core.{AuthConnector, Enrolment, InsufficientEnrolments}
-import uk.gov.hmrc.domain.EmpRef
+import uk.gov.hmrc.auth.core.AuthConnector
+import uk.gov.hmrc.epayeapi.models.EmpRefsResponse
 import uk.gov.hmrc.epayeapi.models.Formats._
-import uk.gov.hmrc.epayeapi.models.{ApiError, EmpRefsResponse}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -35,27 +33,9 @@ case class GetEmpRefs @Inject() (
 )
   extends ApiController {
 
-  def getEmpRefs(): Action[AnyContent] = Action.async { implicit request =>
-    authorised(epayeEnrolment).retrieve(authorisedEnrolments) { enrolments =>
-      val empRefs = enrolments.enrolments.flatMap(enrolmentToEmpRef)
-
-      Future.successful {
-        Ok(Json.toJson(EmpRefsResponse.fromSeq(empRefs.toSeq)))
-      }
-    } recoverWith {
-      case ex: InsufficientEnrolments =>
-        Future.successful(Unauthorized(Json.toJson(ApiError.InsufficientEnrolments)))
-      case ex =>
-        Future.failed(ex)
-    }
-  }
-
-  def enrolmentToEmpRef(enrolment: Enrolment): Option[EmpRef] = {
-    for {
-      "IR-PAYE" <- Option(enrolment.key)
-      tn <- enrolment.identifiers.find(_.key == "TaxOfficeNumber")
-      tr <- enrolment.identifiers.find(_.key == "TaxOfficeReference")
-      if enrolment.isActivated
-    } yield EmpRef(tn.value, tr.value)
+  def getEmpRefs(): Action[AnyContent] = EmpRefsAction { empRefs => request =>
+    Future.successful(
+      Ok(Json.toJson(EmpRefsResponse.fromSeq(empRefs.toSeq)))
+    )
   }
 }
