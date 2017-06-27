@@ -7,7 +7,7 @@
       "id": "/properties/_embedded",
       "items": {
         "id": "/properties/_embedded/items",
-        "description": "An array of EmpRef objects which you can use to access more data",
+        "description": "An array of objects which you can use to access further data.",
         "properties": {
           "_links": {
             "id": "/properties/_embedded/items/properties/_links",
@@ -18,7 +18,7 @@
           "empRef": {
             "id": "/properties/_embedded/items/properties/empRef",
             "type": "string",
-            "description": "An EmpRef"
+            "description": "An EmpRef is a unique identifier composed of tax office number and tax office reference."
           }
         },
         "type": "object"
