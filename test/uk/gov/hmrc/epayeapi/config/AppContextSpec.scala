@@ -14,11 +14,10 @@
  * limitations under the License.
  */
 
-package unit.config
+package uk.gov.hmrc.epayeapi.config
 
 import play.api.{Application, Configuration, Mode}
 import play.api.inject.guice.GuiceApplicationBuilder
-import uk.gov.hmrc.epayeapi.config.AppContext
 import unit.AppSpec
 
 class AppContextSpec extends AppSpec {

@@ -14,7 +14,8 @@
  * limitations under the License.
  */
 
-package unit.controllers
+package uk.gov.hmrc.epayeapi.controllers
+
 import play.api.Application
 import play.api.libs.json.Json
 import play.api.mvc.Result
@@ -22,7 +23,6 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.auth.core._
 import uk.gov.hmrc.domain.EmpRef
-import uk.gov.hmrc.epayeapi.controllers.GetEmpRefs
 import uk.gov.hmrc.epayeapi.models.{ApiError, EmpRefsResponse}
 import uk.gov.hmrc.epayeapi.models.Formats._
 import unit.AppSpec
