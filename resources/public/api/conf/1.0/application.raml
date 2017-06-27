@@ -32,7 +32,7 @@ types:
 /epaye:
   get:
     is: [ headers.acceptHeader ]
-    displayName: Entry point to the API
+    displayName: Get ePAYE data
     description: This allows you to retrieve all the EmpRefs you have access to
     securedBy: [ sec.oauth_2_0: { scopes: [ "read:epaye" ] } ]
     responses:
