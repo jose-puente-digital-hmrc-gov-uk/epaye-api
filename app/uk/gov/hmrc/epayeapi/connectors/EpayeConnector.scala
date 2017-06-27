@@ -24,6 +24,7 @@ import uk.gov.hmrc.epayeapi.models.domain.AggregatedTotals
 import uk.gov.hmrc.play.http.{HeaderCarrier, HttpGet}
 import uk.gov.hmrc.epayeapi.models.Formats._
 import ConnectorBase._
+import uk.gov.hmrc.play.http.ws.WSHttp
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -32,7 +33,7 @@ case class EpayeApiConfig(baseUrl: String)
 @Singleton
 case class EpayeConnector @Inject() (
   config: EpayeApiConfig,
-  http: HttpGet,
+  http: WSHttp,
   implicit val ec: ExecutionContext
 ) extends ConnectorBase {
 

@@ -16,35 +16,22 @@
 
 package uk.gov.hmrc.epayeapi.models
 
-import play.api.libs.json.{Format, Json}
 import uk.gov.hmrc.domain.EmpRef
 import uk.gov.hmrc.epayeapi.controllers.routes
+import uk.gov.hmrc.epayeapi.models.domain.AggregatedTotals
 
-case class EmpRefsResponse(_embedded: Seq[EmpRefItem])
+case class TotalsResponse(
+  empRef: EmpRefItem,
+  credit: BigDecimal,
+  debit: BigDecimal,
+  _links: TotalsLinks
+)
 
-object EmpRefsResponse {
-  def fromSeq(seq: Seq[EmpRef]): EmpRefsResponse =
-    EmpRefsResponse(seq.map(EmpRefItem(_)))
-  def apply(empRef: EmpRef): EmpRefsResponse =
-    EmpRefsResponse(Seq(EmpRefItem(empRef)))
+object TotalsResponse {
+  def apply(empRef: EmpRef, totals: AggregatedTotals): TotalsResponse =
+    TotalsResponse(EmpRefItem(empRef), totals.credit, totals.debit, TotalsLinks())
 }
 
-case class EmpRefItem(empRef: EmpRef, _links: EmpRefLinks)
-
-object EmpRefItem {
-  def apply(empRef: EmpRef): EmpRefItem =
-    EmpRefItem(empRef, EmpRefLinks(empRef))
-}
-
-case class EmpRefLinks(totals: Link)
-
-object EmpRefLinks {
-  def apply(empRef: EmpRef): EmpRefLinks =
-    EmpRefLinks(Link(routes.GetTotals.getTotals(empRef).toString))
-}
-
-case class Link(href: String)
-
-
-
-
+case class TotalsLinks(
+  empRefs: Link = Link(routes.GetEmpRefs.getEmpRefs().toString)
+)

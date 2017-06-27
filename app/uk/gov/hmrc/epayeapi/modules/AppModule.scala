@@ -16,10 +16,12 @@
 
 package uk.gov.hmrc.epayeapi.modules
 
-import com.google.inject.AbstractModule
+import javax.inject.Singleton
+import com.google.inject.{AbstractModule, Provides}
 import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.play.auth.microservice.connectors.{AuthConnector => PlayAuthConnector}
 import uk.gov.hmrc.epayeapi.config._
+import uk.gov.hmrc.epayeapi.connectors.EpayeApiConfig
 import uk.gov.hmrc.play.http.HttpPost
 import uk.gov.hmrc.play.http.ws.WSHttp
 
@@ -30,5 +32,11 @@ class AppModule() extends AbstractModule {
     bind(classOf[AuthConnector]).to(classOf[ActualAuthConnector]).asEagerSingleton()
     bind(classOf[WSHttp]).to(classOf[WSHttpImpl]).asEagerSingleton()
     bind(classOf[Startup]).to(classOf[AppStartup]).asEagerSingleton()
+  }
+
+  @Provides
+  @Singleton
+  def provideEpayeApiConfig(context: AppContext): EpayeApiConfig = {
+    EpayeApiConfig(context.config.baseUrl("epaye"))
   }
 }
