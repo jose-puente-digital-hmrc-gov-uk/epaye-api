@@ -32,8 +32,8 @@ types:
 /epaye:
   get:
     is: [ headers.acceptHeader ]
-    displayName: Get ePAYE data
-    description: This allows you to retrieve all the EmpRefs you have access to
+    displayName: Get access to ePAYE data
+    description: This resource is the entry point to the ePAYE API. It will return a set of URLS for each account you have access to, giving you access to ePAYE data.
     securedBy: [ sec.oauth_2_0: { scopes: [ "read:epaye" ] } ]
     responses:
       200:
