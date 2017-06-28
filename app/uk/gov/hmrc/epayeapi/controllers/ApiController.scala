@@ -35,10 +35,11 @@ trait ApiController extends BaseController with AuthorisedFunctions {
   def authConnector: AuthConnector
   implicit def ec: ExecutionContext
 
-  def EnrolmentsAction(fn: Enrolments => RequestHeader => Future[Result]): Action[AnyContent] =
+
+  def EnrolmentsAction(action: Enrolments => RequestHeader => Future[Result]): Action[AnyContent] =
     Action.async { implicit request =>
       authorised(epayeEnrolment).retrieve(authorisedEnrolments) { enrolments =>
-        fn(enrolments)(request)
+        action(enrolments)(request)
       } recoverWith {
         case ex: InsufficientEnrolments =>
           insufficientEnrolments
@@ -47,15 +48,15 @@ trait ApiController extends BaseController with AuthorisedFunctions {
       }
     }
 
-  def EmpRefsAction(fn: Set[EmpRef] => RequestHeader => Future[Result]): Action[AnyContent] =
+  def EmpRefsAction(action: Set[EmpRef] => RequestHeader => Future[Result]): Action[AnyContent] =
     EnrolmentsAction { enrolments => request =>
-      fn(enrolments.enrolments.flatMap(enrolmentToEmpRef))(request)
+      action(enrolments.enrolments.flatMap(enrolmentToEmpRef))(request)
     }
 
-  def EmpRefAction(urlEmpRef: EmpRef)(fn: RequestHeader => Future[Result]): Action[AnyContent] = {
+  def EmpRefAction(urlEmpRef: EmpRef)(action: RequestHeader => Future[Result]): Action[AnyContent] = {
     EmpRefsAction { empRefs => request =>
       empRefs.find(_ == urlEmpRef) match {
-        case Some(empRef) => fn(request)
+        case Some(empRef) => action(request)
         case None => invalidEmpRef
       }
     }
