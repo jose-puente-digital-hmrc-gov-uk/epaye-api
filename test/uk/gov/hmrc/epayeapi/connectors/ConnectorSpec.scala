@@ -37,9 +37,7 @@ object TestData {
 case class TestConnector(http: HttpGet, implicit val ec: ExecutionContext) extends ConnectorBase {
   val url = "http://localhost/testdata"
   def getData(implicit hc: HeaderCarrier): Future[ApiResponse[TestData]] =
-    get[TestData](url, hc)(
-      ConnectorBase.responseReader(TestData.testDataFormat)
-    )
+    get[TestData](url, hc)
 }
 
 class ConnectorSpec extends UnitSpec with MockitoSugar with ScalaFutures {
