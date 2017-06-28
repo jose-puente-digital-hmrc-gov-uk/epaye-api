@@ -16,9 +16,7 @@
 
 package uk.gov.hmrc.epayeapi.models
 
-import play.api.libs.json.{Format, Json}
 import uk.gov.hmrc.domain.EmpRef
-import uk.gov.hmrc.epayeapi.controllers.routes
 
 case class EmpRefsResponse(_embedded: Seq[EmpRefItem])
 
