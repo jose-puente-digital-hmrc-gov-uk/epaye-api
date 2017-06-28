@@ -16,6 +16,8 @@
 
 package unit
 
+import akka.stream.Materializer
+import akka.util.ByteString
 import org.scalatest.concurrent.{Eventually, IntegrationPatience, ScalaFutures}
 import org.scalatest.mock.MockitoSugar
 import org.scalatest.{OptionValues, ShouldMatchers, fixture}
@@ -23,8 +25,11 @@ import org.scalatestplus.play.{MixedFixtures, WsScalaTestClient}
 import play.api.Application
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
+import play.api.libs.streams.Accumulator
+import play.api.mvc.Result
 import uk.gov.hmrc.auth.core.AuthConnector
 
+import scala.concurrent.Future
 import scala.reflect.ClassTag
 
 abstract class AppSpec
@@ -53,4 +58,11 @@ abstract class AppSpec
   }
 
   def builder: Builder = Builder(GuiceApplicationBuilder())
+
+  // Actions return Accumulators, but the helpers expect Future[Results]
+  implicit def accumulatorToFuture(acc: Accumulator[ByteString, Result])(implicit mat: Materializer): Future[Result] =
+    acc.run()
+
+  // Turning Accumulators into Futures requires materializers
+  implicit def materializer(implicit a: Application): Materializer = inject[Materializer]
 }

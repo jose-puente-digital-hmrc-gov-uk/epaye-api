@@ -18,8 +18,9 @@ package uk.gov.hmrc.epayeapi.controllers
 
 import javax.inject.{Inject, Singleton}
 
+import akka.stream.Materializer
 import play.api.libs.json.Json
-import play.api.mvc.{Action, AnyContent}
+import play.api.mvc.{Action, AnyContent, EssentialAction}
 import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.epayeapi.models.EmpRefsResponse
 import uk.gov.hmrc.epayeapi.models.Formats._
@@ -29,13 +30,15 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 case class GetEmpRefs @Inject() (
   authConnector: AuthConnector,
-  implicit val ec: ExecutionContext
+  implicit val ec: ExecutionContext,
+  implicit val mat: Materializer
 )
   extends ApiController {
 
-  def getEmpRefs(): Action[AnyContent] = EmpRefsAction { empRefs => request =>
-    Future.successful(
+  def getEmpRefs(): EssentialAction = EmpRefsAction { empRefs =>
+    Action { request =>
       Ok(Json.toJson(EmpRefsResponse.fromSeq(empRefs.toSeq)))
-    )
+    }
   }
+
 }

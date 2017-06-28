@@ -16,8 +16,11 @@
 
 package uk.gov.hmrc.epayeapi.controllers
 
+import akka.stream.Materializer
+import akka.util.ByteString
 import play.api.Application
 import play.api.libs.json.Json
+import play.api.libs.streams.Accumulator
 import play.api.mvc.Result
 import play.api.test.FakeRequest
 import play.api.test.Helpers._

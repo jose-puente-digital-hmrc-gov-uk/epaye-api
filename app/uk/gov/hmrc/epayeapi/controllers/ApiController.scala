@@ -16,6 +16,7 @@
 
 package uk.gov.hmrc.epayeapi.controllers
 
+import akka.stream.Materializer
 import play.api.libs.json.Json
 import play.api.libs.streams.Accumulator
 import play.api.mvc._
@@ -34,30 +35,36 @@ trait ApiController extends BaseController with AuthorisedFunctions {
   val epayeEnrolment = Enrolment("IR-PAYE")
   def authConnector: AuthConnector
   implicit def ec: ExecutionContext
+  implicit def mat: Materializer
+
+  def EnrolmentsAction(enrolment: Enrolment, retrieveEnrolments: Retrieval[Enrolments])(action: Enrolments => EssentialAction): EssentialAction = {
+    EssentialAction { implicit request =>
+      Accumulator.done {
+        authorised(enrolment).retrieve(retrieveEnrolments) { enrolments =>
+          action(enrolments)(request).run()
+        } recoverWith {
+          case ex: MissingBearerToken => missingBearerToken
+          case ex: InsufficientEnrolments => insufficientEnrolments
+        }
+      }
+    }
+  }
 
 
-  def EnrolmentsAction(action: Enrolments => RequestHeader => Future[Result]): Action[AnyContent] =
-    Action.async { implicit request =>
-      authorised(epayeEnrolment).retrieve(authorisedEnrolments) { enrolments =>
-        action(enrolments)(request)
-      } recoverWith {
-        case ex: InsufficientEnrolments =>
-          insufficientEnrolments
-        case ex: MissingBearerToken =>
-          missingBearerToken
+  def EmpRefsAction(action: Set[EmpRef] => EssentialAction): EssentialAction =
+    EnrolmentsAction(epayeEnrolment, authorisedEnrolments) { enrolments =>
+      EssentialAction { request =>
+        action(enrolments.enrolments.flatMap(enrolmentToEmpRef))(request)
       }
     }
 
-  def EmpRefsAction(action: Set[EmpRef] => RequestHeader => Future[Result]): Action[AnyContent] =
-    EnrolmentsAction { enrolments => request =>
-      action(enrolments.enrolments.flatMap(enrolmentToEmpRef))(request)
-    }
-
-  def EmpRefAction(urlEmpRef: EmpRef)(action: RequestHeader => Future[Result]): Action[AnyContent] = {
-    EmpRefsAction { empRefs => request =>
-      empRefs.find(_ == urlEmpRef) match {
-        case Some(empRef) => action(request)
-        case None => invalidEmpRef
+  def EmpRefAction(empRefFromUrl: EmpRef)(action: EssentialAction): EssentialAction = {
+    EmpRefsAction { empRefs =>
+      EssentialAction { request =>
+        empRefs.find(_ == empRefFromUrl) match {
+          case Some(empRef) => action(request)
+          case None => Accumulator.done(invalidEmpRef)
+        }
       }
     }
   }

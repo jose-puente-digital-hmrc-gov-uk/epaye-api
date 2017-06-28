@@ -18,9 +18,10 @@ package uk.gov.hmrc.epayeapi.controllers
 
 import javax.inject.{Inject, Singleton}
 
+import akka.stream.Materializer
 import play.api.Logger
 import play.api.libs.json.Json
-import play.api.mvc.{Action, AnyContent}
+import play.api.mvc.{Action, AnyContent, EssentialAction}
 import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.domain.EmpRef
 import uk.gov.hmrc.epayeapi.connectors.EpayeConnector
@@ -34,20 +35,23 @@ import scala.concurrent.ExecutionContext
 case class GetTotals @Inject() (
   authConnector: AuthConnector,
   epayeConnector: EpayeConnector,
-  implicit val ec: ExecutionContext
+  implicit val ec: ExecutionContext,
+  implicit val mat: Materializer
 )
   extends ApiController {
 
-  def getTotals(empRef: EmpRef): Action[AnyContent] = EmpRefAction(empRef) { request =>
-    epayeConnector.getTotals(empRef, hc(request)).map {
-      case ApiSuccess(totals) =>
-        Ok(Json.toJson(TotalsResponse(empRef, totals)))
-      case ApiJsonError(err) =>
-        Logger.error(s"Upstream returned invalid json: $err")
-        InternalServerError(Json.toJson(ApiError.InternalServerError))
-      case error =>
-        Logger.error(s"Error while fetching totals: $error")
-        InternalServerError(Json.toJson(ApiError.InternalServerError))
+  def getTotals(empRef: EmpRef): EssentialAction = EmpRefAction(empRef) {
+    Action.async { request =>
+      epayeConnector.getTotals(empRef, hc(request)).map {
+        case ApiSuccess(totals) =>
+          Ok(Json.toJson(TotalsResponse(empRef, totals)))
+        case ApiJsonError(err) =>
+          Logger.error(s"Upstream returned invalid json: $err")
+          InternalServerError(Json.toJson(ApiError.InternalServerError))
+        case error =>
+          Logger.error(s"Error while fetching totals: $error")
+          InternalServerError(Json.toJson(ApiError.InternalServerError))
+      }
     }
   }
 }
