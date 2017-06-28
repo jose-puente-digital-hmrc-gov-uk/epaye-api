@@ -21,7 +21,7 @@ import uk.gov.hmrc.epayeapi.controllers.routes
 import uk.gov.hmrc.epayeapi.models.domain.AggregatedTotals
 
 case class TotalsResponse(
-  empRef: EmpRefItem,
+  empRef: EmpRef,
   credit: BigDecimal,
   debit: BigDecimal,
   _links: TotalsLinks
@@ -29,7 +29,7 @@ case class TotalsResponse(
 
 object TotalsResponse {
   def apply(empRef: EmpRef, totals: AggregatedTotals): TotalsResponse =
-    TotalsResponse(EmpRefItem(empRef), totals.credit, totals.debit, TotalsLinks())
+    TotalsResponse(empRef, totals.credit, totals.debit, TotalsLinks())
 }
 
 case class TotalsLinks(
