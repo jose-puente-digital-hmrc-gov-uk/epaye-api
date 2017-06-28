@@ -27,7 +27,9 @@ import uk.gov.hmrc.play.test.UnitSpec
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future.{failed, successful}
+import scala.concurrent.duration.FiniteDuration
 import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.duration._
 
 case class TestData(num: Int)
 object TestData {
@@ -47,6 +49,9 @@ class ConnectorSpec extends UnitSpec with MockitoSugar with ScalaFutures {
     val connector = TestConnector(http, global)
     val url = connector.url
   }
+
+  override implicit val defaultTimeout: FiniteDuration = 5.seconds
+
 
   "ConnectorBase" should {
     "return ApiSuccess in case everything goes right" in new Setup {
