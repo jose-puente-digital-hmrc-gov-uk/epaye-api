@@ -17,7 +17,6 @@
 package uk.gov.hmrc.epayeapi.models
 
 import uk.gov.hmrc.domain.EmpRef
-import uk.gov.hmrc.epayeapi.controllers.routes
 import uk.gov.hmrc.epayeapi.models.domain.AggregatedTotals
 
 case class TotalsResponse(
@@ -33,5 +32,5 @@ object TotalsResponse {
 }
 
 case class TotalsLinks(
-  empRefs: Link = Link(routes.GetEmpRefs.getEmpRefs().toString)
+  empRefs: Link = Link("/")
 )
