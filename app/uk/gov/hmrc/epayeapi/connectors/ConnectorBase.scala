@@ -19,7 +19,9 @@ package uk.gov.hmrc.epayeapi.connectors
 import play.api.Logger
 import play.api.http.Status
 import play.api.libs.json.{JsError, JsSuccess, Reads}
+import uk.gov.hmrc.domain.EmpRef
 import uk.gov.hmrc.epayeapi.models.api._
+import uk.gov.hmrc.epayeapi.models.domain.AggregatedTotals
 import uk.gov.hmrc.epayeapi.syntax.json._
 import uk.gov.hmrc.play.http.{HeaderCarrier, HttpGet, HttpReads, HttpResponse}
 
@@ -29,12 +31,12 @@ trait ConnectorBase {
   def http: HttpGet
   implicit def ec: ExecutionContext
 
-  private[connectors] def get[A](url: String, headers: HeaderCarrier)(implicit reader: HttpReads[ApiResponse[A]]): Future[ApiResponse[A]] = {
+  private[connectors] def get[A](url: String, headers: HeaderCarrier)(implicit jsonReader: Reads[A]): Future[ApiResponse[A]] = {
     Logger.debug(s"ApiClient GET request: url=$url headers=$headers")
 
     val result = for {
       response <- http.GET[HttpResponse](url)(HttpReads.readRaw, headers)
-    } yield reader.read("GET", url, response)
+    } yield reader(jsonReader).read("GET", url, response)
 
     result.recover({
       case ex: Exception =>
@@ -42,17 +44,12 @@ trait ConnectorBase {
     })
   }
 
-}
-
-object ConnectorBase {
-  // HTTP response reader that wraps result in ApiResponse ADT.
-  // Requires JSON readers in scope.
-  implicit def responseReader[A](implicit jsonReads: Reads[A]): HttpReads[ApiResponse[A]] =
+  private def reader[A](jsonReader: Reads[A]): HttpReads[ApiResponse[A]] =
     new HttpReads[ApiResponse[A]] {
       def read(method: String, url: String, response: HttpResponse): ApiResponse[A] = {
         response.status match {
           case Status.OK =>
-            response.body.parseAndValidate[A](jsonReads) match {
+            response.body.parseAndValidate[A](jsonReader) match {
               case JsSuccess(obj, _) => ApiSuccess(obj)
               case err: JsError => ApiJsonError(err)
             }
@@ -64,3 +61,4 @@ object ConnectorBase {
       }
     }
 }
+
