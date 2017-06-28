@@ -23,7 +23,7 @@ import uk.gov.hmrc.epayeapi.models.api.ApiResponse
 import uk.gov.hmrc.epayeapi.models.domain.AggregatedTotals
 import uk.gov.hmrc.play.http.{HeaderCarrier, HttpGet}
 import uk.gov.hmrc.epayeapi.models.Formats._
-import ConnectorBase._
+import uk.gov.hmrc.epayeapi.models.Formats
 import uk.gov.hmrc.play.http.ws.WSHttp
 
 import scala.concurrent.{ExecutionContext, Future}
