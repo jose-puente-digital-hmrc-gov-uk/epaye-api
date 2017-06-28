@@ -40,7 +40,7 @@ case class EmpRefLinks(totals: Link)
 
 object EmpRefLinks {
   def apply(empRef: EmpRef): EmpRefLinks =
-    EmpRefLinks(Link(routes.GetTotals.getTotals(empRef).toString))
+    EmpRefLinks(Link(s"/${empRef.taxOfficeNumber}/${empRef.taxOfficeReference}/total"))
 }
 
 case class Link(href: String)
