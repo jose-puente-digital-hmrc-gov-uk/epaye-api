@@ -56,3 +56,29 @@ types:
                     "code" : "INSUFFICIENT_ENROLMENTS",
                     "message" : "You are not currently enrolled for ePAYE"
                   }
+
+/epaye/:EmpRef/total:
+  get:
+    is: [ headers.acceptHeader ]
+    displayName: Total balance
+    description: This resource returns the outstanding credits and debits on your account.
+    (annotations.scope): "read:epaye"
+    securedBy: [ sec.oauth_2_0: { scopes: [ "read:epaye" ] } ]
+    responses:
+      200:
+        body:
+          application/json:
+            type: !include schemas/Totals.get.schema.json
+            example: !include examples/Totals.get.json
+      401:
+        body:
+          application/json:
+            type: !include schemas/ErrorCodes.schema.json
+            examples:
+              notOpenStatus:
+                description: You don't have currently an ePAYE enrolment on this account.
+                value: |
+                  {
+                    "code" : "INSUFFICIENT_ENROLMENTS",
+                    "message" : "You are not currently enrolled for ePAYE"
+                  }
