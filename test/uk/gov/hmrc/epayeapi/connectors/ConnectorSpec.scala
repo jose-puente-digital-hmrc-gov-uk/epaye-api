@@ -50,8 +50,7 @@ class ConnectorSpec extends UnitSpec with MockitoSugar with ScalaFutures {
     val url = connector.url
   }
 
-  override implicit val defaultTimeout: FiniteDuration = 5.seconds
-
+  override implicit val patienceConfig: PatienceConfig = PatienceConfig(15.seconds, 15.milliseconds)
 
   "ConnectorBase" should {
     "return ApiSuccess in case everything goes right" in new Setup {
