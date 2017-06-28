@@ -3,6 +3,7 @@ title: ePAYE
 version: 1.0
 protocols: [ HTTPS ]
 baseUri: http://api.service.hmrc.gov.uk
+mediaType: [ application/json, application/hal+json ]
 
 documentation:
   - title: Overview
@@ -20,20 +21,22 @@ uses:
   sec: https://developer.service.hmrc.gov.uk/api-documentation/assets/common/modules/securitySchemes.raml
   headers: https://developer.service.hmrc.gov.uk/api-documentation/assets/common/modules/headers.raml
   annotations: https://developer.service.hmrc.gov.uk/api-documentation/assets/common/modules/annotations.raml
-
-mediaType: [ application/json, application/hal+json ]
+  types: https://developer.service.hmrc.gov.uk/api-documentation/assets/common/modules/types.raml
 
 types:
   ChargeType:
     pattern: "[a-zA-Z0-9]+"
   ExportId:
     pattern: "[a-zA-Z0-9]+"
+  EmpRef:
+    pattern: "[a-zA-Z0-9]{3}\/[a-zA-Z0-9]{7}"
 
 /epaye:
   get:
     is: [ headers.acceptHeader ]
     displayName: Get access to ePAYE data
     description: This resource is the entry point to the ePAYE API. It will return a set of URLs for each account you have access to, allowing you to access ePAYE data. This will include the employer's ePAYE balance, monthly totals of RTI charges, non-RTI charges and a breakdown of individual charges.
+    (annotations.scope): "read:epaye"
     securedBy: [ sec.oauth_2_0: { scopes: [ "read:epaye" ] } ]
     responses:
       200:

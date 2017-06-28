@@ -1,30 +1,24 @@
 {
-  "$schema": "http://json-schema.org/draft-04/schema#",
-  "definitions": {},
-  "id": "http://example.com/example.json",
+  "type": "object",
+  "description": "Wrapper object for individual EmpRefs",
   "properties": {
     "_embedded": {
-      "id": "/properties/_embedded",
+      "type": "array",
       "items": {
-        "id": "/properties/_embedded/items",
+        "type": "object",
         "description": "An array of objects which you can use to access further data.",
         "properties": {
           "_links": {
-            "id": "/properties/_embedded/items/properties/_links",
-            "properties": {},
             "type": "object",
-            "description": "An object of links to explore further data"
+            "description": "An object of links to explore further data",
+            "properties": {}
           },
           "empRef": {
-            "id": "/properties/_embedded/items/properties/empRef",
             "type": "string",
             "description": "An EmpRef is a unique identifier composed of tax office number and tax office reference."
           }
-        },
-        "type": "object"
-      },
-      "type": "array"
+        }
+      }
     }
-  },
-  "type": "object"
+  }
 }
