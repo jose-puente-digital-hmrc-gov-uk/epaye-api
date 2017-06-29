@@ -33,6 +33,7 @@ import scala.concurrent.{ExecutionContext, Future}
 
 trait ApiController extends BaseController with AuthorisedFunctions {
   val epayeEnrolment = Enrolment("IR-PAYE")
+  val epayeRetrieval = authorisedEnrolments
   def authConnector: AuthConnector
   implicit def ec: ExecutionContext
   implicit def mat: Materializer
@@ -52,7 +53,7 @@ trait ApiController extends BaseController with AuthorisedFunctions {
 
 
   def EmpRefsAction(action: Set[EmpRef] => EssentialAction): EssentialAction =
-    EnrolmentsAction(epayeEnrolment, authorisedEnrolments) { enrolments =>
+    EnrolmentsAction(epayeEnrolment, epayeRetrieval) { enrolments =>
       EssentialAction { request =>
         action(enrolments.enrolments.flatMap(enrolmentToEmpRef))(request)
       }

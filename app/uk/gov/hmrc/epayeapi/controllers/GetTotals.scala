@@ -28,6 +28,7 @@ import uk.gov.hmrc.epayeapi.connectors.EpayeConnector
 import uk.gov.hmrc.epayeapi.models.Formats._
 import uk.gov.hmrc.epayeapi.models.{ApiError, TotalsResponse}
 import uk.gov.hmrc.epayeapi.models.api.{ApiJsonError, ApiSuccess}
+import uk.gov.hmrc.epayeapi.models.domain.AggregatedTotals
 
 import scala.concurrent.ExecutionContext
 
@@ -54,4 +55,20 @@ case class GetTotals @Inject() (
       }
     }
   }
+
+  def sandbox(empRef: EmpRef): EssentialAction =
+    EnrolmentsAction(epayeEnrolment, epayeRetrieval) { _ =>
+      Action { _ =>
+        empRef match {
+          case EmpRef("001", "0000001") =>
+            Ok(Json.toJson(TotalsResponse(empRef, AggregatedTotals(debit = 10000, credit = 0))))
+          case EmpRef("002", "0000002") =>
+            Ok(Json.toJson(TotalsResponse(empRef, AggregatedTotals(debit = 0, credit = 10000))))
+          case EmpRef("003", "0000003") =>
+            Ok(Json.toJson(TotalsResponse(empRef, AggregatedTotals(debit = 0, credit = 0))))
+          case _ =>
+            Unauthorized(Json.toJson(ApiError.InvalidEmpRef))
+        }
+      }
+    }
 }

@@ -67,6 +67,8 @@ class GetTotalsSpec extends AppSpec with BeforeAndAfterEach {
 
   def request(implicit a: Application): Future[Result] =
     inject[GetTotals].getTotals(empRef)(FakeRequest())
+  def sandboxRequest(empRef: EmpRef)(implicit a: Application): Future[Result] =
+    inject[GetTotals].sandbox(empRef)(FakeRequest())
 
 
   override protected def beforeEach(): FixtureParam = {
@@ -88,6 +90,12 @@ class GetTotalsSpec extends AppSpec with BeforeAndAfterEach {
     }
     "return 401 Unauthorized with different enrolments" in new App(app.withAuth(differentEnrolment).build) {
       status(request) shouldBe UNAUTHORIZED
+    }
+  }
+
+  "The Totals sandbox endpoint" should {
+    "return 200 OK and a debit" in new App(app.withAuth(activeEnrolment).build){
+
     }
   }
 

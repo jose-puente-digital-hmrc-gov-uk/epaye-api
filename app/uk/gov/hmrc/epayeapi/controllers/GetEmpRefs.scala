@@ -22,6 +22,7 @@ import akka.stream.Materializer
 import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, EssentialAction}
 import uk.gov.hmrc.auth.core.AuthConnector
+import uk.gov.hmrc.domain.EmpRef
 import uk.gov.hmrc.epayeapi.models.EmpRefsResponse
 import uk.gov.hmrc.epayeapi.models.Formats._
 
@@ -40,5 +41,16 @@ case class GetEmpRefs @Inject() (
       Ok(Json.toJson(EmpRefsResponse.fromSeq(empRefs.toSeq)))
     }
   }
+
+  def sandbox(): EssentialAction =
+    EnrolmentsAction(epayeEnrolment, epayeRetrieval) { _ =>
+      Action { _ =>
+        Ok(Json.toJson(EmpRefsResponse.fromSeq(Seq(
+          EmpRef("001", "0000001"),
+          EmpRef("002", "0000002"),
+          EmpRef("003", "0000003")
+        ))))
+      }
+    }
 
 }
