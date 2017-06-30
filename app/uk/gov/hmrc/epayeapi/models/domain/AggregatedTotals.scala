@@ -14,25 +14,6 @@
  * limitations under the License.
  */
 
-package unit.config
+package uk.gov.hmrc.epayeapi.models.domain
 
-import play.api.{Application, Configuration, Mode}
-import play.api.inject.guice.GuiceApplicationBuilder
-import uk.gov.hmrc.epayeapi.config.AppContext
-import unit.AppSpec
-
-class AppContextSpec extends AppSpec {
-
-  def app: Application = GuiceApplicationBuilder()
-    .configure("run.mode" -> "Prod")
-    .in(Mode.Prod)
-    .build()
-
-  "AppContext" should {
-    "return the right service locator" in new App(app) {
-      val context = inject[AppContext]
-
-      context.serviceLocatorUrl shouldBe "http://service-locator.protected.mdtp:80"
-    }
-  }
-}
+case class AggregatedTotals(credit: BigDecimal, debit: BigDecimal)

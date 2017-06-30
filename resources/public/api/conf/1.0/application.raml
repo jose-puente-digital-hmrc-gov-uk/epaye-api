@@ -3,6 +3,7 @@ title: ePAYE
 version: 1.0
 protocols: [ HTTPS ]
 baseUri: http://api.service.hmrc.gov.uk
+mediaType: [ application/json, application/hal+json ]
 
 documentation:
   - title: Overview
@@ -20,14 +21,15 @@ uses:
   sec: https://developer.service.hmrc.gov.uk/api-documentation/assets/common/modules/securitySchemes.raml
   headers: https://developer.service.hmrc.gov.uk/api-documentation/assets/common/modules/headers.raml
   annotations: https://developer.service.hmrc.gov.uk/api-documentation/assets/common/modules/annotations.raml
-
-mediaType: [ application/json, application/hal+json ]
+  types: https://developer.service.hmrc.gov.uk/api-documentation/assets/common/modules/types.raml
 
 types:
   ChargeType:
     pattern: "[a-zA-Z0-9]+"
   ExportId:
     pattern: "[a-zA-Z0-9]+"
+  EmpRef:
+    pattern: "[a-zA-Z0-9]{3}/[a-zA-Z0-9]{7}"
 
 /epaye:
   get:
@@ -53,3 +55,33 @@ types:
                     "code" : "INSUFFICIENT_ENROLMENTS",
                     "message" : "You are not currently enrolled for ePAYE"
                   }
+  /{empRef}/total:
+    uriParameters:
+      empRef:
+        description: A unique identifier composed of tax office number and tax office reference
+        type: string
+        example: 111/A222222
+    get:
+      is: [ headers.acceptHeader ]
+      displayName: Total balance
+      description: This resource returns the outstanding credits and debits on your account.
+      (annotations.scope): "read:epaye"
+      securedBy: [ sec.oauth_2_0: { scopes: [ "read:epaye" ] } ]
+      responses:
+        200:
+          body:
+            application/json:
+              type: !include schemas/Totals.get.schema.json
+              example: !include examples/Totals.get.json
+        401:
+          body:
+            application/json:
+              type: !include schemas/ErrorCodes.schema.json
+              examples:
+                notOpenStatus:
+                  description: You don't have currently an ePAYE enrolment on this account.
+                  value: |
+                    {
+                      "code" : "INVALID_EMPREF",
+                      "message" : "Provided EmpRef is not associated with your account"
+                    }

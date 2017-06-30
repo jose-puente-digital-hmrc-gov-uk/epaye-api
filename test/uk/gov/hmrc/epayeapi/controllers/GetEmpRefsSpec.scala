@@ -14,15 +14,18 @@
  * limitations under the License.
  */
 
-package unit.controllers
+package uk.gov.hmrc.epayeapi.controllers
+
+import akka.stream.Materializer
+import akka.util.ByteString
 import play.api.Application
 import play.api.libs.json.Json
+import play.api.libs.streams.Accumulator
 import play.api.mvc.Result
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.auth.core._
 import uk.gov.hmrc.domain.EmpRef
-import uk.gov.hmrc.epayeapi.controllers.GetEmpRefs
 import uk.gov.hmrc.epayeapi.models.{ApiError, EmpRefsResponse}
 import uk.gov.hmrc.epayeapi.models.Formats._
 import unit.AppSpec
@@ -45,6 +48,9 @@ class GetEmpRefsSpec extends AppSpec {
 
   def request(implicit a: Application): Future[Result] =
     inject[GetEmpRefs].getEmpRefs()(FakeRequest())
+
+  def sandboxRequest(implicit a: Application): Future[Result] =
+    inject[GetEmpRefs].sandbox()(FakeRequest())
 
   "The EmpRefs endpoint" should {
     "return 200 OK on active enrolments" in new App(build(AuthOk(activeEnrolment))) {
@@ -70,6 +76,21 @@ class GetEmpRefsSpec extends AppSpec {
     }
     "explain the error on insufficient enrolments" in new App(build(AuthFail(new InsufficientEnrolments()))) {
       contentAsJson(request) shouldBe Json.toJson(ApiError.InsufficientEnrolments)
+    }
+  }
+
+  "The EmpRefs sandbox" should {
+    "return 200 OK with 3 empRefs" in new App(build(AuthOk(activeEnrolment))) {
+      contentAsJson(sandboxRequest).validate[EmpRefsResponse].asOpt shouldEqual Some(
+        EmpRefsResponse.fromSeq(Seq(
+          EmpRef("001", "0000001"),
+          EmpRef("002", "0000002"),
+          EmpRef("003", "0000003")
+        ))
+      )
+    }
+    "return 401 Unauthorized on insufficient enrolments" in new App(build(AuthFail(new InsufficientEnrolments))) {
+      status(sandboxRequest) shouldBe UNAUTHORIZED
     }
   }
 }

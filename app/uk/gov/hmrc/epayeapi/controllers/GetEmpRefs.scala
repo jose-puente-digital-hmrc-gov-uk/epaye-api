@@ -18,44 +18,39 @@ package uk.gov.hmrc.epayeapi.controllers
 
 import javax.inject.{Inject, Singleton}
 
+import akka.stream.Materializer
 import play.api.libs.json.Json
-import play.api.mvc.{Action, AnyContent}
-import uk.gov.hmrc.auth.core.Retrievals._
-import uk.gov.hmrc.auth.core.{AuthConnector, Enrolment, InsufficientEnrolments}
+import play.api.mvc.{Action, AnyContent, EssentialAction}
+import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.domain.EmpRef
+import uk.gov.hmrc.epayeapi.models.EmpRefsResponse
 import uk.gov.hmrc.epayeapi.models.Formats._
-import uk.gov.hmrc.epayeapi.models.{ApiError, EmpRefsResponse}
 
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 case class GetEmpRefs @Inject() (
   authConnector: AuthConnector,
-  implicit val ec: ExecutionContext
+  implicit val ec: ExecutionContext,
+  implicit val mat: Materializer
 )
   extends ApiController {
 
-  def getEmpRefs(): Action[AnyContent] = Action.async { implicit request =>
-    authorised(epayeEnrolment).retrieve(authorisedEnrolments) { enrolments =>
-      val empRefs = enrolments.enrolments.flatMap(enrolmentToEmpRef)
-
-      Future.successful {
-        Ok(Json.toJson(EmpRefsResponse.fromSeq(empRefs.toSeq)))
-      }
-    } recoverWith {
-      case ex: InsufficientEnrolments =>
-        Future.successful(Unauthorized(Json.toJson(ApiError.InsufficientEnrolments)))
-      case ex =>
-        Future.failed(ex)
+  def getEmpRefs(): EssentialAction = EmpRefsAction { empRefs =>
+    Action { request =>
+      Ok(Json.toJson(EmpRefsResponse.fromSeq(empRefs.toSeq)))
     }
   }
 
-  def enrolmentToEmpRef(enrolment: Enrolment): Option[EmpRef] = {
-    for {
-      "IR-PAYE" <- Option(enrolment.key)
-      tn <- enrolment.identifiers.find(_.key == "TaxOfficeNumber")
-      tr <- enrolment.identifiers.find(_.key == "TaxOfficeReference")
-      if enrolment.isActivated
-    } yield EmpRef(tn.value, tr.value)
-  }
+  def sandbox(): EssentialAction =
+    EnrolmentsAction(epayeEnrolment, epayeRetrieval) { _ =>
+      Action { _ =>
+        Ok(Json.toJson(EmpRefsResponse.fromSeq(Seq(
+          EmpRef("001", "0000001"),
+          EmpRef("002", "0000002"),
+          EmpRef("003", "0000003")
+        ))))
+      }
+    }
+
 }

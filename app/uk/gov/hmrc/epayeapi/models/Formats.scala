@@ -16,14 +16,24 @@
 
 package uk.gov.hmrc.epayeapi.models
 
-import play.api.libs.json.{Format, Json}
+import play.api.libs.json._
+import uk.gov.hmrc.domain.EmpRef
+import uk.gov.hmrc.epayeapi.models.domain.AggregatedTotals
 
 trait Formats {
+  implicit val empRefFormat: Writes[EmpRef] = new Writes[EmpRef] {
+    override def writes(o: EmpRef): JsValue = JsString(s"${o.taxOfficeNumber}/${o.taxOfficeReference}")
+  }
   implicit val linkFormat: Format[Link] = Json.format[Link]
   implicit val empRefLinksFormat: Format[EmpRefLinks] = Json.format[EmpRefLinks]
   implicit val empRefItemFormat: Format[EmpRefItem] = Json.format[EmpRefItem]
   implicit val empRefsResponseFormat: Format[EmpRefsResponse] = Json.format[EmpRefsResponse]
   implicit val apiErrorFormat: Format[ApiError] = Json.format[ApiError]
+  implicit val aggregatedTotalsFormat: Format[AggregatedTotals] = Json.format[AggregatedTotals]
+  implicit val totalsLinksFormat: Format[TotalsLinks] = Json.format[TotalsLinks]
+  implicit val totalsResponseFormat: Format[TotalsResponse] = Json.format[TotalsResponse]
+
+
 }
 
 object Formats extends Formats

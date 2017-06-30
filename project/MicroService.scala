@@ -3,6 +3,8 @@ import sbt.Tests.{SubProcess, Group}
 import sbt._
 import play.routes.compiler.StaticRoutesGenerator
 import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin._
+import play.sbt.PlayImport.PlayKeys._
+import play.sbt.routes.RoutesKeys._
 
 
 trait MicroService {
@@ -34,7 +36,8 @@ trait MicroService {
       libraryDependencies ++= appDependencies,
       retrieveManaged := true,
       evictionWarningOptions in update := EvictionWarningOptions.default.withWarnScalaVersionEviction(false),
-      routesGenerator := StaticRoutesGenerator
+      routesGenerator := StaticRoutesGenerator,
+      routesImport += "uk.gov.hmrc.epayeapi.controllers.ApiController._"
     )
     .configs(IntegrationTest)
     .settings(inConfig(IntegrationTest)(Defaults.itSettings): _*)
@@ -49,7 +52,13 @@ trait MicroService {
         Resolver.jcenterRepo
       ))
     .settings(
-      scalacOptions ++= Seq("-unchecked", "-deprecation", "-feature", "-Xfatal-warnings"),
+      scalacOptions ++= Seq(
+        "-unchecked",
+        "-deprecation",
+        "-feature",
+        "-Xfatal-warnings",
+        "-language:implicitConversions",
+        "-Ywarn-unused"),
       unmanagedResourceDirectories in Compile += baseDirectory.value / "resources"
     )
 }

@@ -1,4 +1,5 @@
 # microservice specific routes
 
-GET        /sandbox/hello-world        uk.gov.hmrc.epayeapi.controllers.MicroserviceHelloWorld.hello
-GET        /sandbox/charges            @uk.gov.hmrc.epayeapi.controllers.RtiChargesController.getCharges()
+GET        /:empRef/total        @uk.gov.hmrc.epayeapi.controllers.GetTotals.sandbox(empRef: uk.gov.hmrc.domain.EmpRef)
+GET        /                     @uk.gov.hmrc.epayeapi.controllers.GetEmpRefs.sandbox()
+

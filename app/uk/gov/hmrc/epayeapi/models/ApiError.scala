@@ -19,8 +19,22 @@ package uk.gov.hmrc.epayeapi.models
 case class ApiError(code: String, message: String)
 
 object ApiError {
+  object AuthorizationHeaderInvalid extends ApiError(
+    "AUTHORIZATION_HEADER_INVALID",
+    "You must provide a valid Bearer token in your header"
+  )
+
   object InsufficientEnrolments extends ApiError(
     "INSUFFICIENT_ENROLMENTS",
     "You are not currently enrolled for ePAYE"
+  )
+  object InvalidEmpRef extends ApiError(
+    "INVALID_EMPREF",
+    "Provided EmpRef is not associated with your account"
+  )
+
+  object InternalServerError extends ApiError(
+    "INTERNAL_SERVER_ERROR",
+    "We are currently experiencing problems. Please try again later."
   )
 }
