@@ -14,7 +14,7 @@ Submissions will appear on the ePAYE balance at different times, depending on wh
     </tr>
     <tr>
         <td>Full Payment Submission (FPS) late</td>
-        <td>See GOV.UK guide on payroll</td>
+ <td>See <a href="https://www.gov.uk/running-payroll/fps-after-payday#viewing-late-fps-reports-in-your-hmrc-online-account">GOV.UK guide on payroll</a></td>
     </tr>
     <tr>
         <td>Employer Payment Summary (EPS) received between 20th and 5th</td>
@@ -27,4 +27,4 @@ Submissions will appear on the ePAYE balance at different times, depending on wh
     </tbody>
 </table>
 
-Payments made to HMRC can take up to 6 working days to appear on the balance. 
+Payments made to HMRC can take up to 6 working days to appear on the balance.

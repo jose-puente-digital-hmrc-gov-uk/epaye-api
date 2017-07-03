@@ -22,7 +22,8 @@
         "ACCEPT_HEADER_INVALID",
         "NOT_FOUND",
         "BAD_REQUEST",
-        "INSUFFICIENT_ENROLMENTS"
+        "INSUFFICIENT_ENROLMENTS",
+        "INVALID_EMPREF"
       ]
     }
   }

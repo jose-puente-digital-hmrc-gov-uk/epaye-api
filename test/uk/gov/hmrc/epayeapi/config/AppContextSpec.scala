@@ -1,4 +1,4 @@
-@*
+/*
  * Copyright 2017 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,25 +12,26 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *@
-@(context : String, status: String)
-{
-  "scopes": [
-    {
-      "key": "read:epaye",
-      "name": "access epaye information",
-      "description": "Access ePAYE information"
+ */
+
+package uk.gov.hmrc.epayeapi.config
+
+import play.api.{Application, Configuration, Mode}
+import play.api.inject.guice.GuiceApplicationBuilder
+import unit.AppSpec
+
+class AppContextSpec extends AppSpec {
+
+  def app: Application = GuiceApplicationBuilder()
+    .configure("run.mode" -> "Prod")
+    .in(Mode.Prod)
+    .build()
+
+  "AppContext" should {
+    "return the right service locator" in new App(app) {
+      val context = inject[AppContext]
+
+      context.serviceLocatorUrl shouldBe "http://service-locator.protected.mdtp:80"
     }
-  ],
-  "api": {
-    "name": "ePAYE",
-    "description": "The ePAYE API provides data about PAYE for employers",
-    "context": "@context",
-    "versions": [
-      {
-        "version": "1.0",
-        "status": "@status"
-      }
-    ]
   }
 }
