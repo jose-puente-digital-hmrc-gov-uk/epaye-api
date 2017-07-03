@@ -63,7 +63,7 @@ types:
         example: 111/A222222
     get:
       is: [ headers.acceptHeader ]
-      displayName: Total balance
+      displayName: Get ePAYE total balance 
       description: This resource returns the outstanding credits and debits on your account.
       (annotations.scope): "read:epaye"
       securedBy: [ sec.oauth_2_0: { scopes: [ "read:epaye" ] } ]
