@@ -1,6 +1,6 @@
 {
   "type": "object",
-  "description": "An object containing the outstanding debits and outstanding credits",
+  "description": "An object containing the outstanding debits and credits",
   "properties": {
     "_links": {
       "type": "object",
