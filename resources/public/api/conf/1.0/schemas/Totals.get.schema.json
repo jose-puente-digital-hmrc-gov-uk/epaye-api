@@ -20,11 +20,11 @@
     },
     "credit": {
       "type": "integer",
-      "description": "The currently outstanding credits on your account."
+      "description": "The current credits on your account."
     },
     "debit": {
       "type": "integer",
-      "description": "The currently outstanding debits on your account."
+      "description": "The current debits on your account."
     }
   }
 }
