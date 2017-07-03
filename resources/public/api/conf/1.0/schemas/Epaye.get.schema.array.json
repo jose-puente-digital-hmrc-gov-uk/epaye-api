@@ -6,7 +6,7 @@
       "type": "array",
       "items": {
         "type": "object",
-        "description": "An array of objects which you can use to access further data.",
+        "description": "An array of objects which you can use to access further data",
         "properties": {
           "_links": {
             "type": "object",
