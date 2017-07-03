@@ -24,7 +24,7 @@
   ],
   "api": {
     "name": "ePAYE",
-    "description": "The ePAYE API allows for retrieval of ePAYE charges",
+    "description": "The ePAYE API provides data about PAYE for employers",
     "context": "@context",
     "versions": [
       {
