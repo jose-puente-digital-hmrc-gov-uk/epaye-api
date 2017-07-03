@@ -15,7 +15,7 @@
           },
           "empRef": {
             "type": "string",
-            "description": "An EmpRef is an employer reference number, made up of a tax office number and a tax office reference."
+            "description": "A unique identifier made up of tax office number and tax office reference"
           }
         }
       }
