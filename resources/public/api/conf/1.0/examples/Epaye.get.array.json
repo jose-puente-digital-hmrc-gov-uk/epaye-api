@@ -1,8 +1,12 @@
 {
   "_embedded": [
     {
-      "empRef": "840/GZ00064",
-      "_links": {}
+      "empRef": "001/AB00001",
+      "_links": {
+        "totals": {
+          "href": "/001%2AB00001/total"
+        }
+      }
     }
   ]
 }
