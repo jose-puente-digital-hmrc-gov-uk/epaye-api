@@ -14,21 +14,12 @@
  * limitations under the License.
  */
 
-package unit
+package unit.auth
 
-import uk.gov.hmrc.auth.core._
-import uk.gov.hmrc.play.http.HeaderCarrier
+import uk.gov.hmrc.auth.core.{AuthorisationException, Enrolment, Enrolments}
+import uk.gov.hmrc.epayeapi.connectors.stub.FakeAuthConnector
 
-import scala.concurrent.Future
-
-trait FakeAuthConnector {
-  trait FakeAuthConnector extends AuthConnector {
-    def success: Any = ()
-    def exception: Option[AuthorisationException] = None
-    def authorise[A](predicate: Predicate, retrieval: Retrieval[A])(implicit hc: HeaderCarrier): Future[A] = {
-      exception.fold(Future.successful(success.asInstanceOf[A]))(Future.failed(_))
-    }
-  }
+object AuthComponents {
   case class AuthOk(data: Enrolment) extends FakeAuthConnector {
     override val success = Enrolments(Set(data))
   }
