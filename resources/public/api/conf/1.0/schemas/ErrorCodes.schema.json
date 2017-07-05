@@ -23,7 +23,8 @@
         "NOT_FOUND",
         "BAD_REQUEST",
         "INSUFFICIENT_ENROLMENTS",
-        "INVALID_EMPREF"
+        "INVALID_EMPREF",
+        "EMPREF_NOT_FOUND"
       ]
     }
   }
