@@ -17,23 +17,17 @@
 package uk.gov.hmrc.epayeapi.models
 
 import uk.gov.hmrc.domain.EmpRef
-import uk.gov.hmrc.epayeapi.models.domain.AggregatedTotals
+import uk.gov.hmrc.play.test.UnitSpec
 
-case class TotalsResponse(
-  credit: BigDecimal,
-  debit: BigDecimal,
-  _links: TotalsLinks
-)
+class LinkSpecs extends UnitSpec {
+  "Links" should {
+    "generate the right empRefs link" in {
+      Link.empRefsLink(EmpRef("123", "1231231")) shouldEqual Link("/employers-paye/")
+    }
 
-object TotalsResponse {
-  def apply(empRef: EmpRef, totals: AggregatedTotals): TotalsResponse =
-    TotalsResponse(totals.credit, totals.debit, TotalsLinks(empRef))
-}
+    "generate the total link" in {
+      Link.totalLink(EmpRef("123", "1231231")) shouldEqual Link("/employers-paye/123/1231231/total")
+    }
+  }
 
-case class TotalsLinks(
-  empRefs: Link
-)
-
-object TotalsLinks {
-  def apply(empRef: EmpRef): TotalsLinks = TotalsLinks(Link.empRefsLink(empRef))
 }

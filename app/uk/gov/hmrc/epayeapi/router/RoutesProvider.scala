@@ -14,26 +14,18 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.epayeapi.models
+package uk.gov.hmrc.epayeapi.router
 
-import uk.gov.hmrc.domain.EmpRef
-import uk.gov.hmrc.epayeapi.models.domain.AggregatedTotals
+import javax.inject.{Inject, Singleton}
 
-case class TotalsResponse(
-  credit: BigDecimal,
-  debit: BigDecimal,
-  _links: TotalsLinks
-)
+import com.google.inject.Provider
+import play.api.http.HttpConfiguration
+import play.api.routing.Router
 
-object TotalsResponse {
-  def apply(empRef: EmpRef, totals: AggregatedTotals): TotalsResponse =
-    TotalsResponse(totals.credit, totals.debit, TotalsLinks(empRef))
-}
+@Singleton
+class RoutesProvider @Inject()(
+  apiRouter: ApiRouter,
+  httpConfig: HttpConfiguration) extends Provider[Router] {
 
-case class TotalsLinks(
-  empRefs: Link
-)
-
-object TotalsLinks {
-  def apply(empRef: EmpRef): TotalsLinks = TotalsLinks(Link.empRefsLink(empRef))
+  lazy val get = apiRouter.withPrefix(httpConfig.context)
 }

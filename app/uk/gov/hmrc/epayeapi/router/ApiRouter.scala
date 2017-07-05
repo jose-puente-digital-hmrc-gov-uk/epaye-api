@@ -14,26 +14,27 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.epayeapi.models
+package uk.gov.hmrc.epayeapi.router
 
+import javax.inject.{Inject, Singleton}
+
+import play.api.routing.Router.Routes
+import play.api.routing.{Router, SimpleRouter}
+import play.api.routing.sird._
 import uk.gov.hmrc.domain.EmpRef
-import uk.gov.hmrc.epayeapi.models.domain.AggregatedTotals
+import uk.gov.hmrc.epayeapi.controllers.GetTotals
 
-case class TotalsResponse(
-  credit: BigDecimal,
-  debit: BigDecimal,
-  _links: TotalsLinks
-)
 
-object TotalsResponse {
-  def apply(empRef: EmpRef, totals: AggregatedTotals): TotalsResponse =
-    TotalsResponse(totals.credit, totals.debit, TotalsLinks(empRef))
-}
+@Singleton
+case class ApiRouter @Inject() (
+  prodRoutes: prod.Routes,
+  getTotalsController: GetTotals
+) extends SimpleRouter {
 
-case class TotalsLinks(
-  empRefs: Link
-)
+  val appRoutes = Router.from {
+    case GET(p"/$taxOfficeNumber/$taxOfficeReference/total") =>
+      getTotalsController.getTotals(EmpRef(taxOfficeNumber, taxOfficeReference))
+  }
 
-object TotalsLinks {
-  def apply(empRef: EmpRef): TotalsLinks = TotalsLinks(Link.empRefsLink(empRef))
+  val routes: Routes = appRoutes.routes.orElse(prodRoutes.routes)
 }

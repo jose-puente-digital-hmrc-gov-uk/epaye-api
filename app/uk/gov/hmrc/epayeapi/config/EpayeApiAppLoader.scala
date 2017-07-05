@@ -14,26 +14,17 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.epayeapi.models
+package uk.gov.hmrc.epayeapi.config
 
-import uk.gov.hmrc.domain.EmpRef
-import uk.gov.hmrc.epayeapi.models.domain.AggregatedTotals
+import play.api.ApplicationLoader
+import play.api.inject.bind
+import play.api.inject.guice.{GuiceApplicationLoader, GuiceableModule}
+import play.api.routing.Router
+import uk.gov.hmrc.epayeapi.router.RoutesProvider
 
-case class TotalsResponse(
-  credit: BigDecimal,
-  debit: BigDecimal,
-  _links: TotalsLinks
-)
+class EpayeApiAppLoader extends GuiceApplicationLoader {
+  protected override def overrides(context: ApplicationLoader.Context): Seq[GuiceableModule] = {
+    super.overrides(context) :+ (bind[Router].toProvider[RoutesProvider]: GuiceableModule)
+  }
 
-object TotalsResponse {
-  def apply(empRef: EmpRef, totals: AggregatedTotals): TotalsResponse =
-    TotalsResponse(totals.credit, totals.debit, TotalsLinks(empRef))
-}
-
-case class TotalsLinks(
-  empRefs: Link
-)
-
-object TotalsLinks {
-  def apply(empRef: EmpRef): TotalsLinks = TotalsLinks(Link.empRefsLink(empRef))
 }

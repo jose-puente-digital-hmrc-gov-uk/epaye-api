@@ -32,8 +32,6 @@ trait Formats {
   implicit val aggregatedTotalsFormat: Format[AggregatedTotals] = Json.format[AggregatedTotals]
   implicit val totalsLinksFormat: Format[TotalsLinks] = Json.format[TotalsLinks]
   implicit val totalsResponseFormat: Format[TotalsResponse] = Json.format[TotalsResponse]
-
-
 }
 
 object Formats extends Formats
