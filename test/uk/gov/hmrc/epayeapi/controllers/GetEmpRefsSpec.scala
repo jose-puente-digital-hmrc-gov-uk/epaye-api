@@ -29,6 +29,7 @@ import uk.gov.hmrc.domain.EmpRef
 import uk.gov.hmrc.epayeapi.models.{ApiError, EmpRefsResponse}
 import uk.gov.hmrc.epayeapi.models.Formats._
 import unit.AppSpec
+import unit.auth.AuthComponents.{AuthFail, AuthOk}
 
 import scala.concurrent.Future
 

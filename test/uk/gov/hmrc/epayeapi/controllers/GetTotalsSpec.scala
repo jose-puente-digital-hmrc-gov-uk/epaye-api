@@ -16,33 +16,23 @@
 
 package uk.gov.hmrc.epayeapi.controllers
 
-import uk.gov.hmrc.auth.core.{ConfidenceLevel, Enrolment, EnrolmentIdentifier}
+import org.mockito.Matchers._
+import org.mockito.Mockito.{reset, when}
+import org.scalatest.BeforeAndAfterEach
 import play.api.Application
-import play.api.libs.json.Json
+import play.api.inject.bind
 import play.api.mvc.Result
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import uk.gov.hmrc.auth.core._
+import uk.gov.hmrc.auth.core.{ConfidenceLevel, Enrolment, EnrolmentIdentifier}
 import uk.gov.hmrc.domain.EmpRef
-import uk.gov.hmrc.epayeapi.models.{ApiError, EmpRefsResponse}
-import uk.gov.hmrc.epayeapi.models.Formats._
 import uk.gov.hmrc.play.http.ws.WSHttp
+import uk.gov.hmrc.play.http.{HeaderCarrier, HttpResponse}
 import unit.AppSpec
+import unit.auth.AuthComponents.AuthOk
 
 import scala.concurrent.Future
-import org.mockito.Mockito.{reset, when}
-import org.mockito.Matchers._
-import org.scalatest.BeforeAndAfterEach
-import org.scalatest.concurrent.ScalaFutures
-import org.scalatest.mock.MockitoSugar
-import play.api.http.Status
-import play.api.libs.json.{JsError, JsPath, Json}
-import uk.gov.hmrc.epayeapi.models.api._
-import uk.gov.hmrc.play.http.{HeaderCarrier, HttpGet, HttpReads, HttpResponse}
-import uk.gov.hmrc.play.test.UnitSpec
-import play.api.inject.bind
-import uk.gov.hmrc.epayeapi.connectors.EpayeApiConfig
-import Future.successful
+import scala.concurrent.Future.successful
 
 class GetTotalsSpec extends AppSpec with BeforeAndAfterEach {
   val ton = EnrolmentIdentifier("TaxOfficeNumber", "840")
@@ -50,7 +40,7 @@ class GetTotalsSpec extends AppSpec with BeforeAndAfterEach {
   val empRef = EmpRef(ton.value, tor.value)
 
   implicit val hc = HeaderCarrier()
-  val http   = mock[WSHttp]
+  val http = mock[WSHttp]
 
   val app = builder
     .update(_.overrides(bind(classOf[WSHttp]).toInstance(http)))
@@ -64,12 +54,10 @@ class GetTotalsSpec extends AppSpec with BeforeAndAfterEach {
   val differentEnrolment =
     AuthOk(Enrolment("IR-Else", Seq(ton, tor), "activated", ConfidenceLevel.L300))
 
-
   def request(implicit a: Application): Future[Result] =
     inject[GetTotals].getTotals(empRef)(FakeRequest())
   def sandboxRequest(empRef: EmpRef)(implicit a: Application): Future[Result] =
     inject[GetTotals].sandbox(empRef)(FakeRequest())
-
 
   override protected def beforeEach(): FixtureParam = {
     reset(http)
@@ -90,12 +78,6 @@ class GetTotalsSpec extends AppSpec with BeforeAndAfterEach {
     }
     "return 401 Unauthorized with different enrolments" in new App(app.withAuth(differentEnrolment).build) {
       status(request) shouldBe UNAUTHORIZED
-    }
-  }
-
-  "The Totals sandbox endpoint" should {
-    "return 200 OK and a debit" in new App(app.withAuth(activeEnrolment).build){
-
     }
   }
 

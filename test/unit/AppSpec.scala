@@ -29,6 +29,7 @@ import play.api.libs.streams.Accumulator
 import play.api.mvc.Result
 import uk.gov.hmrc.auth.core.AuthConnector
 
+
 import scala.concurrent.Future
 import scala.reflect.ClassTag
 
@@ -41,8 +42,7 @@ abstract class AppSpec
   with MixedFixtures
   with Eventually
   with IntegrationPatience
-  with WsScalaTestClient
-  with FakeAuthConnector {
+  with WsScalaTestClient{
   def inject[A: ClassTag](implicit a: Application): A = a.injector.instanceOf[A]
 
   def build(auth: AuthConnector): Application =
