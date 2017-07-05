@@ -31,5 +31,5 @@ object TotalsResponse {
 }
 
 case class TotalsLinks(
-  empRefs: Link = Link("/")
+  empRefs: Link = Link("/employers-paye/")
 )
