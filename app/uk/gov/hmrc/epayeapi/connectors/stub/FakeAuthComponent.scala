@@ -17,6 +17,7 @@
 package uk.gov.hmrc.epayeapi.connectors.stub
 
 import uk.gov.hmrc.auth.core._
+import uk.gov.hmrc.domain.EmpRef
 import uk.gov.hmrc.play.http.HeaderCarrier
 
 import scala.concurrent.Future
@@ -29,4 +30,22 @@ trait FakeAuthConnector extends AuthConnector {
   }
 }
 
+object SandboxAuthConnector extends FakeAuthConnector {
+  private def enrolment(empRef: EmpRef, activated: Boolean = true) = {
+    new Enrolment("IR-PAYE", Seq(
+      EnrolmentIdentifier("TaxOfficeNumber", empRef.taxOfficeNumber),
+      EnrolmentIdentifier("TaxOfficeReference", empRef.taxOfficeReference)
+    ),
+      if (activated) "activated" else "inactive", ConfidenceLevel.L300)
+  }
+
+  override val success = new Enrolments(
+    Set(
+      enrolment(EmpRef("001", "0000001")),
+      enrolment(EmpRef("002", "0000002")),
+      enrolment(EmpRef("003", "0000003")),
+      enrolment(EmpRef("004", "0000004"), activated = false)
+    )
+  )
+}
 
