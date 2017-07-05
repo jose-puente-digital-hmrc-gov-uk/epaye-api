@@ -31,6 +31,5 @@ case class AppContext @Inject() (config: DefaultServicesConfig) {
   val serviceLocatorUrl: String = config.baseUrl("service-locator")
   val apiContext: String = current.getString(s"api.context").getOrElse(throw new RuntimeException(s"Missing Key $env.api.context"))
   val apiStatus: String = current.getString("api.status").getOrElse(throw new RuntimeException(s"Missing Key $env.api.status"))
-
-
+  val useSandboxConnectors: Boolean = current.getBoolean("useSandboxConnectors").getOrElse(false)
 }

@@ -17,11 +17,14 @@
 package uk.gov.hmrc.epayeapi.modules
 
 import javax.inject.Singleton
+
 import com.google.inject.{AbstractModule, Provides}
 import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.play.auth.microservice.connectors.{AuthConnector => PlayAuthConnector}
 import uk.gov.hmrc.epayeapi.config._
 import uk.gov.hmrc.epayeapi.connectors.EpayeApiConfig
+import uk.gov.hmrc.epayeapi.connectors.stub.FakeAuthConnector
+import uk.gov.hmrc.play.config.inject.ServicesConfig
 import uk.gov.hmrc.play.http.HttpPost
 import uk.gov.hmrc.play.http.ws.WSHttp
 
@@ -29,7 +32,6 @@ class AppModule() extends AbstractModule {
   def configure(): Unit = {
     bind(classOf[HttpPost]).to(classOf[WSHttpImpl]).asEagerSingleton()
     bind(classOf[PlayAuthConnector]).to(classOf[MicroserviceAuthConnector]).asEagerSingleton()
-    bind(classOf[AuthConnector]).to(classOf[ActualAuthConnector]).asEagerSingleton()
     bind(classOf[WSHttp]).to(classOf[WSHttpImpl]).asEagerSingleton()
     bind(classOf[Startup]).to(classOf[AppStartup]).asEagerSingleton()
   }
@@ -38,5 +40,12 @@ class AppModule() extends AbstractModule {
   @Singleton
   def provideEpayeApiConfig(context: AppContext): EpayeApiConfig = {
     EpayeApiConfig(context.config.baseUrl("epaye"))
+  }
+
+  @Provides
+  @Singleton
+  def provideAuthConnector(context: AppContext, servicesConfig: ServicesConfig, http: WSHttp): AuthConnector = {
+    if(context.useSandboxConnectors) new FakeAuthConnector {}
+    else ActualAuthConnector(servicesConfig, http)
   }
 }
