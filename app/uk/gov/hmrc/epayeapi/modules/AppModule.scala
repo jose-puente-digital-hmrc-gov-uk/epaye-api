@@ -19,11 +19,11 @@ package uk.gov.hmrc.epayeapi.modules
 import javax.inject.Singleton
 
 import com.google.inject.{AbstractModule, Provides}
-import uk.gov.hmrc.auth.core.AuthConnector
+import uk.gov.hmrc.auth.core._
 import uk.gov.hmrc.play.auth.microservice.connectors.{AuthConnector => PlayAuthConnector}
 import uk.gov.hmrc.epayeapi.config._
 import uk.gov.hmrc.epayeapi.connectors.EpayeApiConfig
-import uk.gov.hmrc.epayeapi.connectors.stub.FakeAuthConnector
+import uk.gov.hmrc.epayeapi.connectors.stub.{FakeAuthConnector, SandboxAuthConnector}
 import uk.gov.hmrc.play.config.inject.ServicesConfig
 import uk.gov.hmrc.play.http.HttpPost
 import uk.gov.hmrc.play.http.ws.WSHttp
@@ -45,7 +45,11 @@ class AppModule() extends AbstractModule {
   @Provides
   @Singleton
   def provideAuthConnector(context: AppContext, servicesConfig: ServicesConfig, http: WSHttp): AuthConnector = {
-    if(context.useSandboxConnectors) new FakeAuthConnector {}
-    else ActualAuthConnector(servicesConfig, http)
+    if (context.useSandboxConnectors) {
+      SandboxAuthConnector
+    }
+    else {
+      ActualAuthConnector(servicesConfig, http)
+    }
   }
 }
