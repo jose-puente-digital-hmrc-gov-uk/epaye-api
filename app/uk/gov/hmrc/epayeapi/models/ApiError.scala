@@ -28,10 +28,17 @@ object ApiError {
     "INSUFFICIENT_ENROLMENTS",
     "You are not currently enrolled for ePAYE"
   )
+
   object InvalidEmpRef extends ApiError(
     "INVALID_EMPREF",
     "Provided EmpRef is not associated with your account"
   )
+
+  object EmpRefNotFound extends ApiError(
+    "EMPREF_NOT_FOUND",
+    "Provided EmpRef wasn't found."
+  )
+
 
   object InternalServerError extends ApiError(
     "INTERNAL_SERVER_ERROR",

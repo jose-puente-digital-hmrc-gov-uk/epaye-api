@@ -37,7 +37,7 @@ class EpayeConnectorSpec extends UnitSpec with MockitoSugar with ScalaFutures {
     implicit val hc = HeaderCarrier()
     val http = mock[WSHttp]
     val config = EpayeApiConfig("https://EPAYE")
-    val connector = EpayeConnector(config, http, global)
+    val connector = ActualEpayeConnector(config, http, global)
     val empRef = EmpRef("123", "456")
     val url = s"${config.baseUrl}/epaye/${empRef.encodedValue}/api/v1/totals"
   }
