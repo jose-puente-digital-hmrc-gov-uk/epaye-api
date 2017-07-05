@@ -56,8 +56,7 @@ class GetTotalsSpec extends AppSpec with BeforeAndAfterEach {
 
   def request(implicit a: Application): Future[Result] =
     inject[GetTotals].getTotals(empRef)(FakeRequest())
-  def sandboxRequest(empRef: EmpRef)(implicit a: Application): Future[Result] =
-    inject[GetTotals].sandbox(empRef)(FakeRequest())
+
 
   override protected def beforeEach(): FixtureParam = {
     reset(http)
@@ -70,7 +69,6 @@ class GetTotalsSpec extends AppSpec with BeforeAndAfterEach {
           HttpResponse(200, responseString = Some(""" {"credit": 100, "debit": 0} """))
         }
       }
-
       status(request) shouldBe OK
     }
     "return 403 Forbidden on inactive enrolments" in new App(app.withAuth(inactiveEnrolment).build) {
