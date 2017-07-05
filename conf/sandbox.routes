@@ -1,5 +1,0 @@
-# microservice specific routes
-
-GET        /:empRef/total        @uk.gov.hmrc.epayeapi.controllers.GetTotals.sandbox(empRef: uk.gov.hmrc.domain.EmpRef)
-
-
