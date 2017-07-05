@@ -74,9 +74,9 @@ trait ApiController extends BaseController with AuthorisedFunctions {
   def missingBearerToken: Future[Result] =
     Future.successful(Unauthorized(Json.toJson(ApiError.AuthorizationHeaderInvalid)))
   def insufficientEnrolments: Future[Result] =
-    Future.successful(Unauthorized(Json.toJson(ApiError.InsufficientEnrolments)))
+    Future.successful(Forbidden(Json.toJson(ApiError.InsufficientEnrolments)))
   def invalidEmpRef: Future[Result] =
-    Future.successful(Unauthorized(Json.toJson(ApiError.InvalidEmpRef)))
+    Future.successful(Forbidden(Json.toJson(ApiError.InvalidEmpRef)))
 
   private def enrolmentToEmpRef(enrolment: Enrolment): Option[EmpRef] = {
     for {

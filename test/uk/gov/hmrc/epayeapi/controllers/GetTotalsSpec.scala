@@ -73,11 +73,11 @@ class GetTotalsSpec extends AppSpec with BeforeAndAfterEach {
 
       status(request) shouldBe OK
     }
-    "return 401 Unauthorized on inactive enrolments" in new App(app.withAuth(inactiveEnrolment).build) {
-      status(request) shouldBe UNAUTHORIZED
+    "return 403 Forbidden on inactive enrolments" in new App(app.withAuth(inactiveEnrolment).build) {
+      status(request) shouldBe FORBIDDEN
     }
-    "return 401 Unauthorized with different enrolments" in new App(app.withAuth(differentEnrolment).build) {
-      status(request) shouldBe UNAUTHORIZED
+    "return 403 Forbidden with different enrolments" in new App(app.withAuth(differentEnrolment).build) {
+      status(request) shouldBe FORBIDDEN
     }
   }
 

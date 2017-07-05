@@ -45,7 +45,7 @@ types:
             application/json:
               type: !include schemas/Epaye.get.schema.array.json
               example: !include examples/Epaye.get.array.json
-        401:
+        403:
           body:
             application/json:
               type: !include schemas/ErrorCodes.schema.json
@@ -75,7 +75,7 @@ types:
             application/json:
               type: !include schemas/Totals.get.schema.json
               example: !include examples/Totals.get.json
-        401:
+        403:
           body:
             application/json:
               type: !include schemas/ErrorCodes.schema.json
