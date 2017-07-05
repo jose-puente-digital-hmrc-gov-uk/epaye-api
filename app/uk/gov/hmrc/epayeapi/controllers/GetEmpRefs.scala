@@ -41,15 +41,4 @@ case class GetEmpRefs @Inject() (
       Ok(Json.toJson(EmpRefsResponse.fromSeq(empRefs.toSeq)))
     }
   }
-
-  def sandbox(): EssentialAction =
-    EnrolmentsAction(epayeEnrolment, epayeRetrieval) { _ =>
-      Action { _ =>
-        Ok(Json.toJson(EmpRefsResponse.fromSeq(Seq(
-          EmpRef("001", "0000001"),
-          EmpRef("002", "0000002"),
-          EmpRef("003", "0000003")
-        ))))
-      }
-    }
 }

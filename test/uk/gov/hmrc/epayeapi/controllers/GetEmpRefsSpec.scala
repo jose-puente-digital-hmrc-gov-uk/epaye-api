@@ -50,9 +50,6 @@ class GetEmpRefsSpec extends AppSpec {
   def request(implicit a: Application): Future[Result] =
     inject[GetEmpRefs].getEmpRefs()(FakeRequest())
 
-  def sandboxRequest(implicit a: Application): Future[Result] =
-    inject[GetEmpRefs].sandbox()(FakeRequest())
-
   "The EmpRefs endpoint" should {
     "return 200 OK on active enrolments" in new App(build(AuthOk(activeEnrolment))) {
       status(request) shouldBe OK
@@ -80,18 +77,4 @@ class GetEmpRefsSpec extends AppSpec {
     }
   }
 
-  "The EmpRefs sandbox" should {
-    "return 200 OK with 3 empRefs" in new App(build(AuthOk(activeEnrolment))) {
-      contentAsJson(sandboxRequest).validate[EmpRefsResponse].asOpt shouldEqual Some(
-        EmpRefsResponse.fromSeq(Seq(
-          EmpRef("001", "0000001"),
-          EmpRef("002", "0000002"),
-          EmpRef("003", "0000003")
-        ))
-      )
-    }
-    "return 401 Unauthorized on insufficient enrolments" in new App(build(AuthFail(new InsufficientEnrolments))) {
-      status(sandboxRequest) shouldBe UNAUTHORIZED
-    }
-  }
 }
