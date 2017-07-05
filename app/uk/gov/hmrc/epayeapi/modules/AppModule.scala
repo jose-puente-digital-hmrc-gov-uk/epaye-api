@@ -20,13 +20,15 @@ import javax.inject.Singleton
 
 import com.google.inject.{AbstractModule, Provides}
 import uk.gov.hmrc.auth.core._
-import uk.gov.hmrc.play.auth.microservice.connectors.{AuthConnector => PlayAuthConnector}
 import uk.gov.hmrc.epayeapi.config._
-import uk.gov.hmrc.epayeapi.connectors.EpayeApiConfig
-import uk.gov.hmrc.epayeapi.connectors.stub.{FakeAuthConnector, SandboxAuthConnector}
+import uk.gov.hmrc.epayeapi.connectors.stub.{SandboxAuthConnector, SandboxEpayeConnector}
+import uk.gov.hmrc.epayeapi.connectors.{ActualEpayeConnector, EpayeApiConfig, EpayeConnector}
+import uk.gov.hmrc.play.auth.microservice.connectors.{AuthConnector => PlayAuthConnector}
 import uk.gov.hmrc.play.config.inject.ServicesConfig
 import uk.gov.hmrc.play.http.HttpPost
 import uk.gov.hmrc.play.http.ws.WSHttp
+
+import scala.concurrent.ExecutionContext
 
 class AppModule() extends AbstractModule {
   def configure(): Unit = {
@@ -50,6 +52,18 @@ class AppModule() extends AbstractModule {
     }
     else {
       ActualAuthConnector(servicesConfig, http)
+    }
+  }
+
+  @Provides
+  @Singleton
+  def provideEpayeConnector(context: AppContext, config: EpayeApiConfig,
+    http: WSHttp,
+    ec: ExecutionContext): EpayeConnector = {
+    if(context.useSandboxConnectors) {
+      SandboxEpayeConnector
+    } else {
+      ActualEpayeConnector(config, http, ec)
     }
   }
 }

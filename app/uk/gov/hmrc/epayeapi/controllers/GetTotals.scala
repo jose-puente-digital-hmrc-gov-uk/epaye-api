@@ -21,14 +21,13 @@ import javax.inject.{Inject, Singleton}
 import akka.stream.Materializer
 import play.api.Logger
 import play.api.libs.json.Json
-import play.api.mvc.{Action, AnyContent, EssentialAction}
+import play.api.mvc.{Action, EssentialAction}
 import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.domain.EmpRef
-import uk.gov.hmrc.epayeapi.connectors.EpayeConnector
+import uk.gov.hmrc.epayeapi.connectors.{ActualEpayeConnector, EpayeConnector}
 import uk.gov.hmrc.epayeapi.models.Formats._
+import uk.gov.hmrc.epayeapi.models.api.{ApiJsonError, ApiNotFound, ApiSuccess}
 import uk.gov.hmrc.epayeapi.models.{ApiError, TotalsResponse}
-import uk.gov.hmrc.epayeapi.models.api.{ApiJsonError, ApiSuccess}
-import uk.gov.hmrc.epayeapi.models.domain.AggregatedTotals
 
 import scala.concurrent.ExecutionContext
 
@@ -49,6 +48,8 @@ case class GetTotals @Inject() (
         case ApiJsonError(err) =>
           Logger.error(s"Upstream returned invalid json: $err")
           InternalServerError(Json.toJson(ApiError.InternalServerError))
+        case ApiNotFound() =>
+          NotFound(Json.toJson(ApiError.EmpRefNotFound))
         case error =>
           Logger.error(s"Error while fetching totals: $error")
           InternalServerError(Json.toJson(ApiError.InternalServerError))
