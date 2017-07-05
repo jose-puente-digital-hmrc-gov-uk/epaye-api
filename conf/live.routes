@@ -1,4 +1,5 @@
 # microservice specific routes
 
-GET        /:empRef/total      @uk.gov.hmrc.epayeapi.controllers.GetTotals.getTotals(empRef: uk.gov.hmrc.domain.EmpRef)
-GET        /                   @uk.gov.hmrc.epayeapi.controllers.GetEmpRefs.getEmpRefs()
+GET        /        @uk.gov.hmrc.epayeapi.controllers.GetEmpRefs.getEmpRefs()
+
+

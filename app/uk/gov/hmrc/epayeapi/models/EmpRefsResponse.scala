@@ -38,10 +38,22 @@ case class EmpRefLinks(totals: Link)
 
 object EmpRefLinks {
   def apply(empRef: EmpRef): EmpRefLinks =
-    EmpRefLinks(Link(s"/employers-paye/${empRef.encodedValue}/total"))
+    EmpRefLinks(Link.totalLink(empRef))
 }
 
-case class Link(href: String)
+case class Link (href: String)
+
+object Link {
+  val prefix = "/employers-paye"
+
+  private def apply(empRef: EmpRef, path: String): Link =
+    Link(s"$prefix/${empRef.taxOfficeNumber}/${empRef.taxOfficeReference}/$path")
+
+  def totalLink(empRef: EmpRef): Link = apply(empRef, "total")
+  def empRefsLink(empRef: EmpRef): Link = Link(s"$prefix/")
+}
+
+
 
 
 

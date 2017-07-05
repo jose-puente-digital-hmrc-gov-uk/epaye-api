@@ -24,7 +24,7 @@ import play.api.libs.json.Json
 import play.api.mvc.{Action, EssentialAction}
 import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.domain.EmpRef
-import uk.gov.hmrc.epayeapi.connectors.{ActualEpayeConnector, EpayeConnector}
+import uk.gov.hmrc.epayeapi.connectors.EpayeConnector
 import uk.gov.hmrc.epayeapi.models.Formats._
 import uk.gov.hmrc.epayeapi.models.api.{ApiJsonError, ApiNotFound, ApiSuccess}
 import uk.gov.hmrc.epayeapi.models.{ApiError, TotalsResponse}
