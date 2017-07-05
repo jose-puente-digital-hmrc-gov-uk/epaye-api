@@ -23,7 +23,7 @@
     }
   ],
   "api": {
-    "name": "ePAYE",
+    "name": "Pay As You Earn for employers",
     "description": "The ePAYE API provides data about PAYE for employers",
     "context": "@context",
     "versions": [
