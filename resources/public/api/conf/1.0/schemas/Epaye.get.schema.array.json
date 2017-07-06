@@ -11,7 +11,17 @@
           "_links": {
             "type": "object",
             "description": "An object of links to explore further data.",
-            "properties": {}
+            "properties": {
+              "totals": {
+                "type": "object",
+                "description": "Link to total balance endpoint.",
+                "properties": {
+                  "href": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
           },
           "empRef": {
             "type": "string",
