@@ -21,6 +21,8 @@ import javax.inject.{Inject, Singleton}
 import play.api.{Configuration, Environment, Logger}
 import uk.gov.hmrc.play.config.inject.DefaultServicesConfig
 
+import scala.util.Try
+
 @Singleton
 case class AppContext @Inject() (config: DefaultServicesConfig) {
   val current: Configuration = config.runModeConfiguration
@@ -31,17 +33,22 @@ case class AppContext @Inject() (config: DefaultServicesConfig) {
   val serviceLocatorUrl: String = config.baseUrl("service-locator")
   val apiContext: String = current.getString(s"api.context").getOrElse(throw new RuntimeException(s"Missing Key $env.api.context"))
   val apiStatus: String = current.getString("api.status").getOrElse(throw new RuntimeException(s"Missing Key $env.api.status"))
-  val useSandboxConnectors: Boolean = current.getBoolean("useSandboxConnectors").getOrElse(false)
+  val useSandboxConnectors: Boolean =
+    Try(current.getString("useSandboxConnectors").getOrElse("false").toBoolean)
+      .getOrElse(false)
   val whitelistedApplications: Seq[String] =
-    current.getString("whitelistedApplications").getOrElse("").split(",").filter(_.nonEmpty).map(_.trim)
+    current.getString("whitelistedApplications").getOrElse("")
+      .split(",").filter(_.nonEmpty).map(_.trim)
 
-  Logger.info(s"AppContext startup: " +
-              s"env=$env " +
-              s"appName=$appName " +
-              s"appUrl=$appUrl " +
-              s"serviceLocatorUrl=$serviceLocatorUrl " +
-              s"apiContext=$apiContext " +
-              s"apiStatus=$apiStatus " +
-              s"useSandboxConnectors=$useSandboxConnectors " +
-              s"whitelistedApplications=$whitelistedApplications")
+  Logger.info(
+    s"AppContext startup: " +
+      s"env=$env " +
+      s"appName=$appName " +
+      s"appUrl=$appUrl " +
+      s"serviceLocatorUrl=$serviceLocatorUrl " +
+      s"apiContext=$apiContext " +
+      s"apiStatus=$apiStatus " +
+      s"useSandboxConnectors=$useSandboxConnectors " +
+      s"whitelistedApplications=$whitelistedApplications"
+  )
 }
