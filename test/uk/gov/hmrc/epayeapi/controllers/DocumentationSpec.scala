@@ -23,7 +23,7 @@ import play.api.test.Helpers._
 
 class DocumentationSpec extends AppSpec {
   "The API definition endpoint" should {
-    "include whitelisted applications" in new App(builder.withConfig("whitelistedApplications" -> Seq("my-application-id", "my-other-application-id")).build) {
+    "include whitelisted applications" in new App(builder.withConfig("whitelistedApplications" -> "my-application-id, my-other-application-id").build) {
       val result = contentAsJson(inject[Documentation].definition()(FakeRequest()))
 
       val lookupResult = (result \\ "whitelistedApplicationIds" ).head
