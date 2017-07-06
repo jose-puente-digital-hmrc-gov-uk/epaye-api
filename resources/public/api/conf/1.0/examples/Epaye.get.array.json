@@ -4,7 +4,7 @@
       "empRef": "001/AB00001",
       "_links": {
         "totals": {
-          "href": "/employers-paye/001/AB00001/total"
+          "href": "/paye-for-employers/001/AB00001/total"
         }
       }
     }

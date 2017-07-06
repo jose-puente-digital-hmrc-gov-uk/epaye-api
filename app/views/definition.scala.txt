@@ -18,13 +18,13 @@
   "scopes": [
     {
       "key": "read:epaye",
-      "name": "access epaye information",
-      "description": "Access ePAYE information"
+      "name": "Access ePAYE data",
+      "description": "Access ePAYE data"
     }
   ],
   "api": {
-    "name": "Pay As You Earn for employers",
-    "description": "The ePAYE API provides data about PAYE for employers",
+    "name": "PAYE for employers",
+    "description": "This API provides information about PAYE for employers.",
     "context": "@context",
     "versions": [
       {

@@ -22,11 +22,11 @@ import uk.gov.hmrc.play.test.UnitSpec
 class LinkSpecs extends UnitSpec {
   "Links" should {
     "generate the right empRefs link" in {
-      Link.empRefsLink(EmpRef("123", "1231231")) shouldEqual Link("/employers-paye/")
+      Link.empRefsLink(EmpRef("123", "1231231")) shouldEqual Link("/paye-for-employers/")
     }
 
     "generate the total link" in {
-      Link.totalLink(EmpRef("123", "1231231")) shouldEqual Link("/employers-paye/123/1231231/total")
+      Link.totalLink(EmpRef("123", "1231231")) shouldEqual Link("/paye-for-employers/123/1231231/total")
     }
   }
 

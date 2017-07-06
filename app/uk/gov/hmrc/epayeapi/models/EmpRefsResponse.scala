@@ -44,7 +44,7 @@ object EmpRefLinks {
 case class Link (href: String)
 
 object Link {
-  val prefix = "/employers-paye"
+  val prefix = "/paye-for-employers"
 
   private def apply(empRef: EmpRef, path: String): Link =
     Link(s"$prefix/${empRef.taxOfficeNumber}/${empRef.taxOfficeReference}/$path")
