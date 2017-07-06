@@ -18,7 +18,7 @@ package uk.gov.hmrc.epayeapi.config
 
 import javax.inject.{Inject, Singleton}
 
-import play.api.{Configuration, Environment}
+import play.api.{Configuration, Environment, Logger}
 import uk.gov.hmrc.play.config.inject.DefaultServicesConfig
 
 @Singleton
@@ -33,4 +33,14 @@ case class AppContext @Inject() (config: DefaultServicesConfig) {
   val apiStatus: String = current.getString("api.status").getOrElse(throw new RuntimeException(s"Missing Key $env.api.status"))
   val useSandboxConnectors: Boolean = current.getBoolean("useSandboxConnectors").getOrElse(false)
   val whitelistedApplications: Seq[String] = current.getStringSeq("whitelistedApplications").getOrElse(Seq.empty[String])
+
+  Logger.info(s"AppContext startup: " +
+              s"env=$env " +
+              s"appName=$appName " +
+              s"appUrl=$appUrl " +
+              s"serviceLocatorUrl=$serviceLocatorUrl " +
+              s"apiContext=$apiContext " +
+              s"apiStatus=$apiStatus " +
+              s"useSandboxConnectors=$useSandboxConnectors " +
+              s"whitelistedApplications=$whitelistedApplications")
 }
