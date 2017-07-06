@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *@
-@(context : String, status: String)
+@(context : String, status: String, whitelistedApplications: Seq[String])
 {
   "scopes": [
     {
@@ -32,7 +32,11 @@
         "status": "@status",
         "access": {
           "type": "PRIVATE",
-          "whitelistedApplicationIds":[]
+          "whitelistedApplicationIds": [
+            @whitelistedApplications.map{ id =>
+              "@id"
+            }.mkString(",\n")
+          ]
         }
       }
     ]

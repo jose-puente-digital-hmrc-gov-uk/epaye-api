@@ -37,7 +37,7 @@ case class Documentation @Inject() (
   startup.start()
 
   override def definition(): Action[AnyContent] = Action {
-    Ok(views.txt.definition(context.apiContext, context.apiStatus))
+    Ok(views.txt.definition(context.apiContext, context.apiStatus, context.whitelistedApplications))
       .as("application/json")
   }
 
