@@ -30,6 +30,10 @@ types:
     pattern: "[a-zA-Z0-9]+"
   EmpRef:
     pattern: "[a-zA-Z0-9]{3}/[a-zA-Z0-9]{7}"
+  TaxOfficeNumber:
+    pattern: "[a-zA-Z0-9]{3}"
+  TaxOfficeReference:
+    pattern: "[a-zA-Z0-9]{7}"
 
 /paye-for-employers:
   /:
@@ -57,12 +61,16 @@ types:
                       "code" : "INSUFFICIENT_ENROLMENTS",
                       "message" : "You are not currently enrolled for ePAYE"
                     }
-  /{empRef}/total:
+  /{taxOfficeNumber}/{taxOfficeReference}/total:
     uriParameters:
-      empRef:
-        description: A unique identifier made up of tax office number and tax office reference.
+      taxOfficeNumber:
+        description: A unique identifier made up of tax office number
         type: string
-        example: 111/A222222
+        example: "001"
+      taxOfficeReference:
+        description: A unique identifier made up of the tax office reference
+        type: string
+        example: "A000001"
     get:
       is: [ headers.acceptHeader ]
       displayName: Get ePAYE total balance
