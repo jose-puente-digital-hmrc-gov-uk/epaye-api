@@ -30,7 +30,6 @@ trait Formats {
   implicit val empRefsResponseFormat: Format[EmpRefsResponse] = Json.format[EmpRefsResponse]
   implicit val apiErrorFormat: Format[ApiError] = Json.format[ApiError]
   implicit val aggregatedTotalsFormat: Format[AggregatedTotals] = Json.format[AggregatedTotals]
-  implicit val creditAndDebitFormat: Format[CreditAndDebit] = Json.format[CreditAndDebit]
   implicit val aggregatedTotalsByTypeFormat: Format[AggregatedTotalsByType] = Json.format[AggregatedTotalsByType]
   implicit val totalsLinksFormat: Format[TotalsLinks] = Json.format[TotalsLinks]
   implicit val totalsResponseFormat: Format[TotalsResponse] = Json.format[TotalsResponse]
