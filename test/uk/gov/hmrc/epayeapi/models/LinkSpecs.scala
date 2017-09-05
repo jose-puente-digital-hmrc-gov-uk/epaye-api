@@ -26,7 +26,11 @@ class LinkSpecs extends UnitSpec {
     }
 
     "generate the total link" in {
-      Link.totalLink(EmpRef("123", "1231231")) shouldEqual Link("/paye-for-employers/123/1231231/total")
+      Link.totalLink(EmpRef("123", "1231231")) shouldEqual Link("/paye-for-employers/123/1231231/total/")
+    }
+
+    "generate the totals by type link" in {
+      Link.totalBreakdownLink(EmpRef("123", "1231231")) shouldEqual Link("/paye-for-employers/123/1231231/total/by-type/")
     }
   }
 
