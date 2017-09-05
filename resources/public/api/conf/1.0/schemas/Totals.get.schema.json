@@ -3,20 +3,7 @@
   "description": "An object containing the outstanding debits and credits.",
   "properties": {
     "_links": {
-      "type": "object",
-      "description": "An object of links to explore further data.",
-      "properties": {
-        "empRefs": {
-          "type": "object",
-          "description": "An object holding the link back to the entry endpoint.",
-          "properties": {
-            "href": {
-              "type": "string",
-              "description": "Link to the entry endpoint."
-            }
-          }
-        }
-      }
+      "$ref": "./Links.schema.json"
     },
     "credit": {
       "type": "integer",
