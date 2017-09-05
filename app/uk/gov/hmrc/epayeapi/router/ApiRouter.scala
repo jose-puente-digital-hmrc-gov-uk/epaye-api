@@ -22,14 +22,13 @@ import play.api.routing.Router.Routes
 import play.api.routing.{Router, SimpleRouter}
 import play.api.routing.sird._
 import uk.gov.hmrc.domain.EmpRef
-import uk.gov.hmrc.epayeapi.controllers.{GetTotals, GetTotalsByType}
-
+import uk.gov.hmrc.epayeapi.controllers.{GetTotalsController, GetTotalsByTypeController}
 
 @Singleton
 case class ApiRouter @Inject() (
   prodRoutes: prod.Routes,
-  getTotalsController: GetTotals,
-  getTotalsByTypeController: GetTotalsByType
+  getTotalsController: GetTotalsController,
+  getTotalsByTypeController: GetTotalsByTypeController
 ) extends SimpleRouter {
 
   val appRoutes = Router.from {

@@ -55,7 +55,7 @@ class GetTotalsByTypeSpec extends AppSpec with BeforeAndAfterEach {
     AuthOk(Enrolment("IR-Else", Seq(ton, tor), "activated", ConfidenceLevel.L300))
 
   def request(implicit a: Application): Future[Result] =
-    inject[GetTotalsByType].getTotalsByType(empRef)(FakeRequest())
+    inject[GetTotalsByTypeController].getTotalsByType(empRef)(FakeRequest())
 
   override protected def beforeEach(): FixtureParam = {
     reset(http)

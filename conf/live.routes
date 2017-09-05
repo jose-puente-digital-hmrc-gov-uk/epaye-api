@@ -1,5 +1,5 @@
 # microservice specific routes
 
-GET        /        @uk.gov.hmrc.epayeapi.controllers.GetEmpRefs.getEmpRefs()
+GET        /        @uk.gov.hmrc.epayeapi.controllers.GetEmpRefsController.getEmpRefs()
 
 
