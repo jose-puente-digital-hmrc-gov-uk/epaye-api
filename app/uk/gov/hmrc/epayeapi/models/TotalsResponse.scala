@@ -17,7 +17,10 @@
 package uk.gov.hmrc.epayeapi.models
 
 import uk.gov.hmrc.domain.EmpRef
-import uk.gov.hmrc.epayeapi.models.domain.{AggregatedTotals, AggregatedTotalsByType}
+
+case class AggregatedTotals(credit: BigDecimal, debit: BigDecimal)
+
+case class AggregatedTotalsByType(rti: AggregatedTotals)
 
 case class TotalsResponse(
   credit: BigDecimal,

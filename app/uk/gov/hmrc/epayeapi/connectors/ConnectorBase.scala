@@ -21,7 +21,7 @@ import play.api.http.Status
 import play.api.libs.json.{JsError, JsSuccess, Reads}
 import uk.gov.hmrc.domain.EmpRef
 import uk.gov.hmrc.epayeapi.models.api._
-import uk.gov.hmrc.epayeapi.models.domain.AggregatedTotals
+import uk.gov.hmrc.epayeapi.models.AggregatedTotals
 import uk.gov.hmrc.epayeapi.syntax.json._
 import uk.gov.hmrc.play.http.{HeaderCarrier, HttpGet, HttpReads, HttpResponse}
 

@@ -18,7 +18,6 @@ package uk.gov.hmrc.epayeapi.models
 
 import play.api.libs.json._
 import uk.gov.hmrc.domain.EmpRef
-import uk.gov.hmrc.epayeapi.models.domain.{AggregatedTotals, AggregatedTotalsByType}
 
 trait Formats {
   implicit val empRefFormat: Writes[EmpRef] = new Writes[EmpRef] {
