@@ -19,7 +19,7 @@ package uk.gov.hmrc.epayeapi.connectors.stub
 import uk.gov.hmrc.domain.EmpRef
 import uk.gov.hmrc.epayeapi.connectors.EpayeConnector
 import uk.gov.hmrc.epayeapi.models.api.{ApiNotFound, ApiResponse, ApiSuccess}
-import uk.gov.hmrc.epayeapi.models.domain.AggregatedTotals
+import uk.gov.hmrc.epayeapi.models.domain.{AggregatedTotals, AggregatedTotalsByType}
 import uk.gov.hmrc.play.http.HeaderCarrier
 
 import scala.concurrent.Future
@@ -35,6 +35,18 @@ object SandboxEpayeConnector extends EpayeConnector {
         Future.successful(ApiSuccess(AggregatedTotals(debit = 0, credit = 0)))
       case _ =>
         Future.successful(ApiNotFound[AggregatedTotals]())
+    }
+  }
+  def getTotalsByType(empRef: EmpRef, headers: HeaderCarrier): Future[ApiResponse[AggregatedTotalsByType]] = {
+    empRef match {
+      case EmpRef("001", "0000001") =>
+        Future.successful(ApiSuccess(AggregatedTotalsByType(rti = AggregatedTotals(debit = 10000, credit = 0))))
+      case EmpRef("002", "0000002") =>
+        Future.successful(ApiSuccess(AggregatedTotalsByType(rti = AggregatedTotals(debit = 0, credit = 10000))))
+      case EmpRef("003", "0000003") =>
+        Future.successful(ApiSuccess(AggregatedTotalsByType(rti = AggregatedTotals(debit = 0, credit = 0))))
+      case _ =>
+        Future.successful(ApiNotFound[AggregatedTotalsByType]())
     }
   }
 }

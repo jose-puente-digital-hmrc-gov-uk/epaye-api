@@ -17,3 +17,5 @@
 package uk.gov.hmrc.epayeapi.models.domain
 
 case class AggregatedTotals(credit: BigDecimal, debit: BigDecimal)
+
+case class AggregatedTotalsByType(rti: AggregatedTotals)

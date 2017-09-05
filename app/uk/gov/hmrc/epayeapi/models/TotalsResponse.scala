@@ -17,7 +17,7 @@
 package uk.gov.hmrc.epayeapi.models
 
 import uk.gov.hmrc.domain.EmpRef
-import uk.gov.hmrc.epayeapi.models.domain.AggregatedTotals
+import uk.gov.hmrc.epayeapi.models.domain.{AggregatedTotals, AggregatedTotalsByType}
 
 case class TotalsResponse(
   credit: BigDecimal,
@@ -28,6 +28,18 @@ case class TotalsResponse(
 object TotalsResponse {
   def apply(empRef: EmpRef, totals: AggregatedTotals): TotalsResponse =
     TotalsResponse(totals.credit, totals.debit, TotalsLinks(empRef))
+}
+
+case class CreditAndDebit(credit: BigDecimal, debit: BigDecimal)
+
+case class TotalsByTypeResponse(
+  rti: CreditAndDebit,
+  _links: TotalsLinks
+)
+
+object TotalsByTypeResponse {
+  def apply(empRef: EmpRef, totals: AggregatedTotalsByType): TotalsByTypeResponse =
+    TotalsByTypeResponse(CreditAndDebit(totals.rti.credit, totals.rti.debit), TotalsLinks(empRef))
 }
 
 case class TotalsLinks(

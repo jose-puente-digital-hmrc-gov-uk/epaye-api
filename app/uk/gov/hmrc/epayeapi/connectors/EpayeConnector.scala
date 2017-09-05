@@ -19,11 +19,10 @@ package uk.gov.hmrc.epayeapi.connectors
 import javax.inject.{Inject, Singleton}
 
 import uk.gov.hmrc.domain.EmpRef
-import uk.gov.hmrc.epayeapi.models.api.ApiResponse
-import uk.gov.hmrc.epayeapi.models.domain.AggregatedTotals
-import uk.gov.hmrc.play.http.{HeaderCarrier, HttpGet}
 import uk.gov.hmrc.epayeapi.models.Formats._
-import uk.gov.hmrc.epayeapi.models.Formats
+import uk.gov.hmrc.epayeapi.models.api.ApiResponse
+import uk.gov.hmrc.epayeapi.models.domain.{AggregatedTotals, AggregatedTotalsByType}
+import uk.gov.hmrc.play.http.HeaderCarrier
 import uk.gov.hmrc.play.http.ws.WSHttp
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -32,6 +31,7 @@ case class EpayeApiConfig(baseUrl: String)
 
 trait EpayeConnector {
   def getTotals(empRef: EmpRef, headers: HeaderCarrier): Future[ApiResponse[AggregatedTotals]]
+  def getTotalsByType(empRef: EmpRef, headers: HeaderCarrier): Future[ApiResponse[AggregatedTotalsByType]]
 }
 
 @Singleton
@@ -49,6 +49,16 @@ case class ActualEpayeConnector @Inject() (
       s"/api/v1/totals"
 
     get[AggregatedTotals](url, headers)
+  }
+
+  def getTotalsByType(empRef: EmpRef, headers: HeaderCarrier): Future[ApiResponse[AggregatedTotalsByType]] = {
+    val url =
+      s"${config.baseUrl}" +
+      s"/epaye" +
+      s"/${empRef.encodedValue}" +
+      s"/api/v1/totals/by-type"
+
+    get[AggregatedTotalsByType](url, headers)
   }
 }
 
