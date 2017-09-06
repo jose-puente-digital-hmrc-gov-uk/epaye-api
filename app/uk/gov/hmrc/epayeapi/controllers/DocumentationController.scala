@@ -24,7 +24,7 @@ import uk.gov.hmrc.api.controllers.{DocumentationController => ApiDocsController
 import uk.gov.hmrc.epayeapi.config.{AppContext, Startup}
 
 @Singleton
-case class Documentation @Inject() (
+case class DocumentationController @Inject()(
   httpErrorHandler: HttpErrorHandler,
   context: AppContext,
   startup: Startup

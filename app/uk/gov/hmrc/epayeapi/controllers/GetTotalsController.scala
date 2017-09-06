@@ -32,7 +32,7 @@ import uk.gov.hmrc.epayeapi.models.{ApiError, TotalsResponse}
 import scala.concurrent.ExecutionContext
 
 @Singleton
-case class GetTotals @Inject() (
+case class GetTotalsController @Inject()(
   authConnector: AuthConnector,
   epayeConnector: EpayeConnector,
   implicit val ec: ExecutionContext,

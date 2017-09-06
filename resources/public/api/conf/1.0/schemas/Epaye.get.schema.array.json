@@ -9,19 +9,7 @@
         "description": "An array of objects which you can use to access further data.",
         "properties": {
           "_links": {
-            "type": "object",
-            "description": "An object of links to explore further data.",
-            "properties": {
-              "totals": {
-                "type": "object",
-                "description": "Link to total balance endpoint.",
-                "properties": {
-                  "href": {
-                    "type": "string"
-                  }
-                }
-              }
-            }
+            "$ref": "./Links.schema.json"
           },
           "empRef": {
             "type": "string",

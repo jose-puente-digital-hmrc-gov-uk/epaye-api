@@ -1,0 +1,26 @@
+{
+  "type": "object",
+  "description": "An object of links to explore further data.",
+  "properties": {
+    "totals": {
+      "type": "object",
+      "description": "Link to total balance endpoint.",
+      "properties": {
+        "href": {
+          "type": "string",
+          "description": "Link to the entry endpoint."
+        }
+      }
+    },
+    "empRefs": {
+      "type": "object",
+      "description": "Link to the entry endpoint endpoint.",
+      "properties": {
+        "href": {
+          "type": "string",
+          "description": "Link to the entry endpoint."
+        }
+      }
+    }
+  }
+}

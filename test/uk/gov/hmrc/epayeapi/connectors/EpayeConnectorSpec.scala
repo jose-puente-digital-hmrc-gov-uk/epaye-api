@@ -21,14 +21,13 @@ import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.mock.MockitoSugar
 import play.api.http.Status
 import uk.gov.hmrc.domain.EmpRef
+import uk.gov.hmrc.epayeapi.models.{AggregatedTotals, AggregatedTotalsByType}
 import uk.gov.hmrc.epayeapi.models.api.ApiSuccess
-import uk.gov.hmrc.epayeapi.models.domain.AggregatedTotals
 import uk.gov.hmrc.play.http.ws.WSHttp
-import uk.gov.hmrc.play.http.{HeaderCarrier, HttpGet, HttpResponse}
+import uk.gov.hmrc.play.http.{HeaderCarrier, HttpResponse}
 import uk.gov.hmrc.play.test.UnitSpec
 
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
 import scala.concurrent.Future.successful
 
 class EpayeConnectorSpec extends UnitSpec with MockitoSugar with ScalaFutures {
@@ -37,14 +36,15 @@ class EpayeConnectorSpec extends UnitSpec with MockitoSugar with ScalaFutures {
     implicit val hc = HeaderCarrier()
     val http = mock[WSHttp]
     val config = EpayeApiConfig("https://EPAYE")
-    val connector = ActualEpayeConnector(config, http, global)
+    val connector = EpayeConnector(config, http, global)
     val empRef = EmpRef("123", "456")
-    val url = s"${config.baseUrl}/epaye/${empRef.encodedValue}/api/v1/totals"
+    val urlTotals = s"${config.baseUrl}/epaye/${empRef.encodedValue}/api/v1/totals"
+    val urlTotalsByType = s"${config.baseUrl}/epaye/${empRef.encodedValue}/api/v1/totals/by-type"
   }
 
   "EpayeConnector" should {
     "retrieve the total credit and debit for a given empRef" in new Setup {
-      when(connector.http.GET(url)).thenReturn {
+      when(connector.http.GET(urlTotals)).thenReturn {
         successful {
           HttpResponse(Status.OK, responseString = Some(""" {"credit": 100, "debit": 0} """))
         }
@@ -52,6 +52,16 @@ class EpayeConnectorSpec extends UnitSpec with MockitoSugar with ScalaFutures {
 
       connector.getTotals(empRef, hc).futureValue shouldBe
         ApiSuccess(AggregatedTotals(credit = BigDecimal(100), debit = BigDecimal(0)))
+    }
+    "retrieve the total by type for a given empRef" in new Setup {
+      when(connector.http.GET(urlTotalsByType)).thenReturn {
+        successful {
+          HttpResponse(Status.OK, responseString = Some(""" { "rti": {"credit": 100, "debit": 0} } """))
+        }
+      }
+
+      connector.getTotalsByType(empRef, hc).futureValue shouldBe
+        ApiSuccess(AggregatedTotalsByType(rti = AggregatedTotals(BigDecimal(100), debit = BigDecimal(0))))
     }
   }
 }

@@ -29,7 +29,7 @@ import uk.gov.hmrc.epayeapi.models.Formats._
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-case class GetEmpRefs @Inject() (
+case class GetEmpRefsController @Inject()(
   authConnector: AuthConnector,
   implicit val ec: ExecutionContext,
   implicit val mat: Materializer

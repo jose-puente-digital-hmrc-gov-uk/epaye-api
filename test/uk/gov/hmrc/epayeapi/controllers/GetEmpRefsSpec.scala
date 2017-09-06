@@ -48,7 +48,7 @@ class GetEmpRefsSpec extends AppSpec {
 
 
   def request(implicit a: Application): Future[Result] =
-    inject[GetEmpRefs].getEmpRefs()(FakeRequest())
+    inject[GetEmpRefsController].getEmpRefs()(FakeRequest())
 
   "The EmpRefs endpoint" should {
     "return 200 OK on active enrolments" in new App(build(AuthOk(activeEnrolment))) {

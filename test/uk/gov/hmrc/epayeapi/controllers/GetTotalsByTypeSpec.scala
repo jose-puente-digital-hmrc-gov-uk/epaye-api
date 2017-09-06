@@ -26,7 +26,8 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.auth.core.{ConfidenceLevel, Enrolment, EnrolmentIdentifier}
 import uk.gov.hmrc.domain.EmpRef
-import uk.gov.hmrc.epayeapi.models.{TotalsByTypeResponse, TotalsResponse}
+import uk.gov.hmrc.epayeapi.models.Formats._
+import uk.gov.hmrc.epayeapi.models.TotalsByTypeResponse
 import uk.gov.hmrc.play.http.ws.WSHttp
 import uk.gov.hmrc.play.http.{HeaderCarrier, HttpResponse}
 import unit.AppSpec
@@ -35,7 +36,7 @@ import unit.auth.AuthComponents.AuthOk
 import scala.concurrent.Future
 import scala.concurrent.Future.successful
 
-class GetTotalsSpec extends AppSpec with BeforeAndAfterEach {
+class GetTotalsByTypeSpec extends AppSpec with BeforeAndAfterEach {
   val ton = EnrolmentIdentifier("TaxOfficeNumber", "840")
   val tor = EnrolmentIdentifier("TaxOfficeReference", "GZ00064")
   val empRef = EmpRef(ton.value, tor.value)
@@ -56,22 +57,31 @@ class GetTotalsSpec extends AppSpec with BeforeAndAfterEach {
     AuthOk(Enrolment("IR-Else", Seq(ton, tor), "activated", ConfidenceLevel.L300))
 
   def request(implicit a: Application): Future[Result] =
-    inject[GetTotalsController].getTotals(empRef)(FakeRequest())
-
+    inject[GetTotalsByTypeController].getTotalsByType(empRef)(FakeRequest())
 
   override protected def beforeEach(): FixtureParam = {
     reset(http)
   }
 
-  "The Totals endpoint" should {
+  "The Totals By Type endpoint" should {
     "return 200 OK on active enrolments" in new App(app.withAuth(activeEnrolment).build) {
       when(http.GET[HttpResponse](anyString)(anyObject(), anyObject())).thenReturn {
         successful {
-          HttpResponse(200, responseString = Some(""" {"credit": 100, "debit": 0} """))
+          HttpResponse(200, responseString = Some(""" { "rti": {"credit": 100, "debit": 0} } """))
         }
       }
-      contentAsString(request) shouldBe """{"credit":100,"debit":0,"_links":{"empRefs":{"href":"/paye-for-employers/"}}}"""
+      contentAsString(request) shouldBe """{"rti":{"credit":100,"debit":0},"_links":{"empRefs":{"href":"/paye-for-employers/"}}}"""
       status(request) shouldBe OK
+    }
+    "return 500 Internal Server Error and error message body when incorrect json format" in new App(app.withAuth(activeEnrolment).build) {
+      when(http.GET[HttpResponse](anyString)(anyObject(), anyObject())).thenReturn {
+        successful {
+          HttpResponse(200, responseString = Some(""" { "rtix": {"credit": 100, "debit": 0} } """))
+        }
+      }
+      contentAsString(request) shouldBe
+        """{"code":"INTERNAL_SERVER_ERROR","message":"We are currently experiencing problems. Please try again later."}"""
+      status(request) shouldBe INTERNAL_SERVER_ERROR
     }
     "return 403 Forbidden on inactive enrolments" in new App(app.withAuth(inactiveEnrolment).build) {
       status(request) shouldBe FORBIDDEN
@@ -80,6 +90,5 @@ class GetTotalsSpec extends AppSpec with BeforeAndAfterEach {
       status(request) shouldBe FORBIDDEN
     }
   }
-
 
 }
