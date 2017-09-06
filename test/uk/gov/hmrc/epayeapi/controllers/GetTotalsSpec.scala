@@ -26,6 +26,7 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.auth.core.{ConfidenceLevel, Enrolment, EnrolmentIdentifier}
 import uk.gov.hmrc.domain.EmpRef
+import uk.gov.hmrc.epayeapi.models.{TotalsByTypeResponse, TotalsResponse}
 import uk.gov.hmrc.play.http.ws.WSHttp
 import uk.gov.hmrc.play.http.{HeaderCarrier, HttpResponse}
 import unit.AppSpec
@@ -69,6 +70,7 @@ class GetTotalsSpec extends AppSpec with BeforeAndAfterEach {
           HttpResponse(200, responseString = Some(""" {"credit": 100, "debit": 0} """))
         }
       }
+      contentAsString(request) shouldBe """{"credit":100,"debit":0,"_links":{"empRefs":{"href":"/paye-for-employers/"}}}"""
       status(request) shouldBe OK
     }
     "return 403 Forbidden on inactive enrolments" in new App(app.withAuth(inactiveEnrolment).build) {
