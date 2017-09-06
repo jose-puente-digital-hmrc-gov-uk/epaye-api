@@ -77,7 +77,7 @@ class GetTotalsByTypeSpec extends AppSpec with BeforeAndAfterEach {
         }
       }
       contentAsString(request) shouldBe
-        """{"code":"INTERNAL_SERVER_ERROR","message":"We are currently experiencing problems. Please try again later."}""".stripMargin
+        """{"code":"INTERNAL_SERVER_ERROR","message":"We are currently experiencing problems. Please try again later."}"""
       status(request) shouldBe INTERNAL_SERVER_ERROR
     }
     "return 403 Forbidden on inactive enrolments" in new App(app.withAuth(inactiveEnrolment).build) {
