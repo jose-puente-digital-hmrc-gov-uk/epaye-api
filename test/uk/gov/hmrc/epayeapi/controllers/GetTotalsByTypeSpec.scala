@@ -67,10 +67,10 @@ class GetTotalsByTypeSpec extends AppSpec with BeforeAndAfterEach {
     "return 200 OK on active enrolments" in new App(app.withAuth(activeEnrolment).build) {
       when(http.GET[HttpResponse](anyString)(anyObject(), anyObject())).thenReturn {
         successful {
-          HttpResponse(200, responseString = Some(""" { "rti": {"credit": 100, "debit": 0} } """))
+          HttpResponse(200, responseString = Some(""" { "rti": {"credit": 100, "debit": 0}, "nonRti": {"credit": 0, "debit": 100} } """))
         }
       }
-      contentAsString(request) shouldBe """{"rti":{"credit":100,"debit":0},"_links":{"empRefs":{"href":"/paye-for-employers/"}}}"""
+      contentAsString(request) shouldBe """{"rti":{"credit":100,"debit":0},"non_rti":{"credit":0,"debit":100},"_links":{"empRefs":{"href":"/paye-for-employers/"}}}"""
       status(request) shouldBe OK
     }
     "return 500 Internal Server Error and error message body when incorrect json format" in new App(app.withAuth(activeEnrolment).build) {

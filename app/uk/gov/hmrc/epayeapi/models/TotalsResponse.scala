@@ -20,7 +20,7 @@ import uk.gov.hmrc.domain.EmpRef
 
 case class AggregatedTotals(credit: BigDecimal, debit: BigDecimal)
 
-case class AggregatedTotalsByType(rti: AggregatedTotals)
+case class AggregatedTotalsByType(rti: AggregatedTotals, nonRti: AggregatedTotals)
 
 case class TotalsResponse(
   credit: BigDecimal,
@@ -35,12 +35,16 @@ object TotalsResponse {
 
 case class TotalsByTypeResponse(
   rti: AggregatedTotals,
+  non_rti: AggregatedTotals,
   _links: TotalsLinks
 )
 
 object TotalsByTypeResponse {
   def apply(empRef: EmpRef, totals: AggregatedTotalsByType): TotalsByTypeResponse =
-    TotalsByTypeResponse(AggregatedTotals(totals.rti.credit, totals.rti.debit), TotalsLinks(empRef))
+    TotalsByTypeResponse(
+      AggregatedTotals(totals.rti.credit, totals.rti.debit),
+      AggregatedTotals(totals.nonRti.credit, totals.nonRti.debit),
+      TotalsLinks(empRef))
 }
 
 case class TotalsLinks(
