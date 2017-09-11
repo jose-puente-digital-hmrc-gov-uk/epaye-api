@@ -18,6 +18,7 @@ package uk.gov.hmrc.epayeapi.models
 
 import play.api.libs.json._
 import uk.gov.hmrc.domain.EmpRef
+import uk.gov.hmrc.epayeapi.models._
 
 trait Formats {
   implicit val empRefFormat: Writes[EmpRef] = new Writes[EmpRef] {
@@ -33,6 +34,13 @@ trait Formats {
   implicit val totalsLinksFormat: Format[TotalsLinks] = Json.format[TotalsLinks]
   implicit val totalsResponseFormat: Format[TotalsResponse] = Json.format[TotalsResponse]
   implicit val totalsByTypeResponseFormat: Format[TotalsByTypeResponse] = Json.format[TotalsByTypeResponse]
+  implicit val debitAndCreditFormat: Format[DebitAndCredit] = Json.format[DebitAndCredit]
+  implicit val clearedFormat: Format[Cleared] = Json.format[Cleared]
+  implicit val annualTotalFormat: Format[AnnualTotal] = Json.format[AnnualTotal]
+  implicit val codeTextFormat: Format[CodeText] = Json.format[CodeText]
+  implicit val lineItemFormat: Format[LineItem] = Json.format[LineItem]
+  implicit val annualSummaryFormat: Format[AnnualSummary] = Json.format[AnnualSummary]
+  implicit val annualSummaryResponseFormat: Format[AnnualSummaryResponse] = Json.format[AnnualSummaryResponse]
 }
 
 object Formats extends Formats

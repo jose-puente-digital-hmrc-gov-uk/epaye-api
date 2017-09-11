@@ -27,12 +27,12 @@ import uk.gov.hmrc.domain.EmpRef
 import uk.gov.hmrc.epayeapi.connectors.EpayeConnector
 import uk.gov.hmrc.epayeapi.models.Formats._
 import uk.gov.hmrc.epayeapi.models.api.{ApiJsonError, ApiNotFound, ApiSuccess}
-import uk.gov.hmrc.epayeapi.models.{ApiError, TotalsByTypeResponse}
+import uk.gov.hmrc.epayeapi.models.{AnnualSummaryResponse, ApiError}
 
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-case class GetTotalsByTypeController @Inject()(
+case class AnnualSummaryController @Inject()(
   authConnector: AuthConnector,
   epayeConnector: EpayeConnector,
   implicit val ec: ExecutionContext,
@@ -40,11 +40,11 @@ case class GetTotalsByTypeController @Inject()(
 )
   extends ApiController {
 
-  def getTotalsByType(empRef: EmpRef): EssentialAction = EmpRefAction(empRef) {
+  def getAnnualSummary(empRef: EmpRef): EssentialAction = EmpRefAction(empRef) {
     Action.async { request =>
-      epayeConnector.getTotalsByType(empRef, hc(request)).map {
-        case ApiSuccess(totals) =>
-          Ok(Json.toJson(TotalsByTypeResponse(empRef, totals)))
+      epayeConnector.getAnnualSummary(empRef, hc(request)).map {
+        case ApiSuccess(annualSummary) =>
+          Ok(Json.toJson(annualSummary))
         case ApiJsonError(err) =>
           Logger.error(s"Upstream returned invalid json: $err")
           InternalServerError(Json.toJson(ApiError.InternalServerError))

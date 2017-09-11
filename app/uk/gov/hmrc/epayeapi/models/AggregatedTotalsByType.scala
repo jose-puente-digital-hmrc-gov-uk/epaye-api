@@ -44,7 +44,8 @@ object TotalsByTypeResponse {
     TotalsByTypeResponse(
       AggregatedTotals(totals.rti.credit, totals.rti.debit),
       AggregatedTotals(totals.nonRti.credit, totals.nonRti.debit),
-      TotalsLinks(empRef))
+      TotalsLinks(empRef)
+    )
 }
 
 case class TotalsLinks(
@@ -54,3 +55,4 @@ case class TotalsLinks(
 object TotalsLinks {
   def apply(empRef: EmpRef): TotalsLinks = TotalsLinks(Link.empRefsLink(empRef))
 }
+

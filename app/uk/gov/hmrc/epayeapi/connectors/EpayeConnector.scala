@@ -21,7 +21,8 @@ import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.domain.EmpRef
 import uk.gov.hmrc.epayeapi.models.Formats._
 import uk.gov.hmrc.epayeapi.models.api.ApiResponse
-import uk.gov.hmrc.epayeapi.models.{AggregatedTotals, AggregatedTotalsByType}
+import uk.gov.hmrc.epayeapi.models.AggregatedTotals
+import uk.gov.hmrc.epayeapi.models.{AggregatedTotals, AggregatedTotalsByType, AnnualSummaryResponse}
 import uk.gov.hmrc.play.http.HeaderCarrier
 import uk.gov.hmrc.play.http.ws.WSHttp
 
@@ -54,6 +55,16 @@ case class EpayeConnector @Inject() (
       s"/api/v1/totals/by-type"
 
     get[AggregatedTotalsByType](url, headers)
+  }
+
+  def getAnnualSummary(empRef: EmpRef, headers: HeaderCarrier): Future[ApiResponse[AnnualSummaryResponse]] = {
+    val url =
+      s"${config.baseUrl}" +
+      s"/epaye" +
+      s"/${empRef.encodedValue}" +
+      s"/api/v1/summary"
+
+    get[AnnualSummaryResponse](url, headers)
   }
 }
 

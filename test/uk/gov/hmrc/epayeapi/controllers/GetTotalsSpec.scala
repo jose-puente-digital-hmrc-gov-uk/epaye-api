@@ -26,7 +26,6 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.auth.core.{ConfidenceLevel, Enrolment, EnrolmentIdentifier}
 import uk.gov.hmrc.domain.EmpRef
-import uk.gov.hmrc.epayeapi.models.{TotalsByTypeResponse, TotalsResponse}
 import uk.gov.hmrc.play.http.ws.WSHttp
 import uk.gov.hmrc.play.http.{HeaderCarrier, HttpResponse}
 import unit.AppSpec
