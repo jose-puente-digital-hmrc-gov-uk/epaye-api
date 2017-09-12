@@ -16,6 +16,7 @@
 
 package uk.gov.hmrc.epayeapi.controllers
 
+import org.joda.time.LocalDate
 import org.mockito.Matchers._
 import org.mockito.Mockito.{reset, when}
 import org.scalatest.BeforeAndAfterEach
@@ -26,8 +27,9 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.auth.core.{ConfidenceLevel, Enrolment, EnrolmentIdentifier}
 import uk.gov.hmrc.domain.EmpRef
-import uk.gov.hmrc.epayeapi.models._
 import uk.gov.hmrc.epayeapi.models.Formats._
+import uk.gov.hmrc.epayeapi.models._
+import uk.gov.hmrc.epayeapi.models.api.{ChargesSummary, DebitCredit, RtiCharge}
 import uk.gov.hmrc.play.http.ws.WSHttp
 import uk.gov.hmrc.play.http.{HeaderCarrier, HttpResponse}
 import unit.AppSpec
@@ -71,14 +73,11 @@ class AnnualSummarySpec extends AppSpec with BeforeAndAfterEach {
           HttpResponse(200, responseString = Some(JsonFixtures.annualStatements.annualStatement))
         }
       }
-      contentAsJson(request).validate[AnnualSummaryResponse].get shouldBe
-        AnnualSummaryResponse(
-          AnnualSummary(
-            List(LineItem(DebitAndCredit(100.2),None)),
-            AnnualTotal(DebitAndCredit(100.2),Cleared(),DebitAndCredit(100.2))),
-          AnnualSummary(
-            List(),
-            AnnualTotal(DebitAndCredit(0),Cleared(),DebitAndCredit(0))))
+      contentAsJson(request).validate[ChargesSummary].get shouldBe
+        ChargesSummary(
+          List(RtiCharge("month",2017,Some(1),DebitCredit(100.2,0),Some(new LocalDate(2017, 5, 22)),true)),
+          List()
+        )
 
       status(request) shouldBe OK
     }

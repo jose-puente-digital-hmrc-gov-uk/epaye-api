@@ -16,6 +16,7 @@
 
 package uk.gov.hmrc.epayeapi.connectors
 
+import org.joda.time.LocalDate
 import org.mockito.Mockito._
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.mock.MockitoSugar
@@ -64,8 +65,8 @@ class EpayeConnectorSpec extends UnitSpec with MockitoSugar with ScalaFutures {
       connector.getTotalsByType(empRef, hc).futureValue shouldBe
         ApiSuccess(AggregatedTotalsByType(
           rti = AggregatedTotals(credit = 100, debit = 0),
-          nonRti = AggregatedTotals(credit = 100, debit = 0))
-        )
+          nonRti = AggregatedTotals(credit = 100, debit = 0)
+        ))
     }
     "retrieve summary for a given empRef" in new Setup {
       when(connector.http.GET(urlSummary)).thenReturn {
@@ -78,11 +79,13 @@ class EpayeConnectorSpec extends UnitSpec with MockitoSugar with ScalaFutures {
         ApiSuccess(
           AnnualSummaryResponse(
             AnnualSummary(
-              List(LineItem(DebitAndCredit(100.2),None)),
-              AnnualTotal(DebitAndCredit(100.2),Cleared(),DebitAndCredit(100.2))),
+              List(LineItem(TaxYear(2017), Some(TaxMonth(1)), DebitAndCredit(100.2, 0), Cleared(0, 0), DebitAndCredit(100.2, 0), new LocalDate(2017, 5, 22), isSpecified = false, "month", codeText = None)),
+              AnnualTotal(DebitAndCredit(100.2, 0), Cleared(0, 0), DebitAndCredit(100.2, 0))
+            ),
             AnnualSummary(
-              List(),
-              AnnualTotal(DebitAndCredit(0),Cleared(),DebitAndCredit(0))))
+              List(), AnnualTotal(DebitAndCredit(0, 0), Cleared(0, 0), DebitAndCredit(0, 0))
+            )
+          )
         )
     }
   }
