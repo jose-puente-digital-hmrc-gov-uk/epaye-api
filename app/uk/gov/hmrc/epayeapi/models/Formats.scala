@@ -41,6 +41,11 @@ trait Formats {
   implicit val lineItemFormat: Format[LineItem] = Json.format[LineItem]
   implicit val annualSummaryFormat: Format[AnnualSummary] = Json.format[AnnualSummary]
   implicit val annualSummaryResponseFormat: Format[AnnualSummaryResponse] = Json.format[AnnualSummaryResponse]
+  
+  implicit val debitCreditFormat: Format[DebitCredit] = Json.format[DebitCredit]
+  implicit val rtiChargeFormat: Format[RtiCharge] = Json.format[RtiCharge]
+  implicit val nonRtiChargeFormat: Format[NonRtiCharge] = Json.format[NonRtiCharge]
+  implicit val chargesSummaryFormat: Format[ChargesSummary] = Json.format[ChargesSummary]
 }
 
 object Formats extends Formats

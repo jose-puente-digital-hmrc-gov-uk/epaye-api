@@ -1,0 +1,131 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "definitions": {},
+  "id": "http://example.com/example.json",
+  "properties": {
+    "rti": {
+      "id": "/properties/rti",
+      "items": {
+        "id": "/properties/rti/items",
+        "properties": {
+          "type": {
+            "default": "monthly",
+            "description": "Whether monhly or Earlier Year Update (eyu).",
+            "id": "/properties/rti/items/properties/type",
+            "title": "The type schema",
+            "type": "string"
+          },
+          "tax_year": {
+            "default": 0,
+            "description": "Tax year.",
+            "id": "/properties/rti/items/properties/tax_year",
+            "title": "The tax_year schema",
+            "type": "integer"
+          },
+          "tax_month": {
+            "default": 0,
+            "description": "Tax month.",
+            "id": "/properties/rti/items/properties/tax_month",
+            "title": "The tax_month schema",
+            "type": "integer"
+          },
+          "balance": {
+            "id": "/properties/rti/items/properties/balance",
+            "properties": {
+              "debit": {
+                "default": 0,
+                "description": "Total debit balance.",
+                "id": "/properties/rti/items/properties/balance/properties/debit",
+                "title": "The debit schema",
+                "type": "integer"
+              },
+              "credit": {
+                "default": 0,
+                "description": "Total credit balance.",
+                "id": "/properties/rti/items/properties/balance/properties/credit",
+                "title": "The credit schema",
+                "type": "integer"
+              }
+            },
+            "type": "object"
+          },
+          "due_date": {
+            "default": "",
+            "description": "Due date.",
+            "id": "/properties/rti/items/properties/due_date",
+            "title": "The due_date schema",
+            "type": "string"
+          },
+          "overdue": {
+            "default": true,
+            "description": "Whether overdue or not.",
+            "id": "/properties/rti/items/properties/overdue",
+            "title": "The overdue schema",
+            "type": "boolean"
+          }
+        },
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "non_rti": {
+      "id": "/properties/non_rti",
+      "items": {
+        "id": "/properties/non_rti/items",
+        "properties": {
+          "charge_code": {
+            "default": "",
+            "description": "Main transaction group description.",
+            "id": "/properties/non_rti/items/properties/charge_code",
+            "title": "The charge_code schema",
+            "type": "string"
+          },
+          "balance": {
+            "id": "/properties/non_rti/items/properties/balance",
+            "properties": {
+              "debit": {
+                "default": 0,
+                "description": "Total debit balance.",
+                "id": "/properties/non_rti/items/properties/balance/properties/debit",
+                "title": "The debit schema",
+                "type": "integer"
+              },
+              "credit": {
+                "default": 0,
+                "description": "Total credit balance.",
+                "id": "/properties/non_rti/items/properties/balance/properties/credit",
+                "title": "The credit schema",
+                "type": "integer"
+              }
+            },
+            "type": "object"
+          },
+          "tax_year": {
+            "default": 0,
+            "description": "Tax year.",
+            "id": "/properties/non_rti/items/properties/tax_year",
+            "title": "The tax_year schema",
+            "type": "integer"
+          },
+          "due_date": {
+            "default": "",
+            "description": "Due date.",
+            "id": "/properties/non_rti/items/properties/dueDate",
+            "title": "The due_date schema",
+            "type": "string"
+          },
+          "overdue": {
+            "default": false,
+            "description": "Whether overdue or not.",
+            "id": "/properties/non_rti/items/properties/overdue",
+            "title": "The overdue schema",
+            "type": "boolean"
+          }
+        },
+        "type": "object"
+      },
+      "type": "array"
+    }
+  },
+  "type": "object"
+}
