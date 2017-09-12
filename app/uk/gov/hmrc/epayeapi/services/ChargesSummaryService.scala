@@ -22,6 +22,8 @@ import uk.gov.hmrc.epayeapi.models.api.{ChargesSummary, DebitCredit, NonRtiCharg
 
 object ChargesSummaryService {
 
+  val today = new LocalDate()
+
   def toChargesSummary(annualSummaryResponse: AnnualSummaryResponse): ChargesSummary = {
     ChargesSummary(
       rti = toChargesSummaryRti(annualSummaryResponse.rti),
@@ -32,23 +34,23 @@ object ChargesSummaryService {
   def toChargesSummaryRti(annualSummary: AnnualSummary): Seq[RtiCharge] = {
     annualSummary.lineItems.map(lineItem =>
       RtiCharge(
-        `type` = lineItem.bla,
-        tax_year = lineItem.taxYear,
-        tax_month = lineItem.taxMonth,
+        `type` = lineItem.itemType,
+        tax_year = lineItem.taxYear.yearFrom,
+        tax_month = lineItem.taxMonth.map(_.month),
         balance = DebitCredit(lineItem.charges.debit, lineItem.charges.credit),
-        due_date = lineItem.dueDate,
-        overdue = false // TODO
+        due_date = Some(lineItem.dueDate),
+        overdue = lineItem.dueDate.isBefore(today)
       ))
   }
 
   def toChargesSummaryNonRti(annualSummary: AnnualSummary): Seq[NonRtiCharge] = {
     annualSummary.lineItems.map(lineItem =>
       NonRtiCharge(
-        charge_code = lineItem.bla,
-        tax_year = lineItem.taxYear,
+        charge_code = lineItem.codeText.map(_.main).getOrElse(""),
+        tax_year = lineItem.taxYear.yearFrom,
         balance = DebitCredit(lineItem.charges.debit, lineItem.charges.credit),
-        due_date = lineItem.dueDate,
-        overdue = false // TODO
+        due_date = Some(lineItem.dueDate),
+        overdue = lineItem.dueDate.isBefore(today)
       ))
   }
 

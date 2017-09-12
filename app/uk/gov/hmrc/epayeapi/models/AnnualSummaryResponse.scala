@@ -16,6 +16,8 @@
 
 package uk.gov.hmrc.epayeapi.models
 
+import org.joda.time.LocalDate
+
 case class DebitAndCredit(
   debit: BigDecimal = 0,
   credit: BigDecimal = 0
@@ -28,7 +30,21 @@ case class Cleared(
 
 case class CodeText(main: String, sub: String)
 
-case class LineItem(charges: DebitAndCredit, codeText: Option[CodeText] = None)
+case class TaxYear(yearFrom: Int)
+
+case class TaxMonth(month: Int)
+
+case class LineItem(
+  taxYear: TaxYear,
+  taxMonth: Option[TaxMonth],
+  charges: DebitAndCredit,
+  cleared: Cleared,
+  balance: DebitAndCredit,
+  dueDate: LocalDate,
+  isSpecified: Boolean = false,
+  itemType: String = "month",
+  codeText: Option[CodeText] = None
+)
 
 case class AnnualTotal(
   charges: DebitAndCredit,

@@ -28,6 +28,7 @@ import uk.gov.hmrc.epayeapi.connectors.EpayeConnector
 import uk.gov.hmrc.epayeapi.models.Formats._
 import uk.gov.hmrc.epayeapi.models.api.{ApiJsonError, ApiNotFound, ApiSuccess}
 import uk.gov.hmrc.epayeapi.models.{AnnualSummaryResponse, ApiError}
+import uk.gov.hmrc.epayeapi.services.ChargesSummaryService
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -44,7 +45,7 @@ case class AnnualSummaryController @Inject()(
     Action.async { request =>
       epayeConnector.getAnnualSummary(empRef, hc(request)).map {
         case ApiSuccess(annualSummary) =>
-          Ok(Json.toJson(annualSummary))
+          Ok(Json.toJson(ChargesSummaryService.toChargesSummary(annualSummary)))
         case ApiJsonError(err) =>
           Logger.error(s"Upstream returned invalid json: $err")
           InternalServerError(Json.toJson(ApiError.InternalServerError))
