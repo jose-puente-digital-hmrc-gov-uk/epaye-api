@@ -62,7 +62,7 @@ case class EpayeConnector @Inject() (
       s"${config.baseUrl}" +
       s"/epaye" +
       s"/${empRef.encodedValue}" +
-      s"/api/v1/summary"
+      s"/api/v1/annual-statement"
 
     get[AnnualSummaryResponse](url, headers)
   }

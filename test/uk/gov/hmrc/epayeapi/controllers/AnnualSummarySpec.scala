@@ -29,7 +29,7 @@ import uk.gov.hmrc.auth.core.{ConfidenceLevel, Enrolment, EnrolmentIdentifier}
 import uk.gov.hmrc.domain.EmpRef
 import uk.gov.hmrc.epayeapi.models.Formats._
 import uk.gov.hmrc.epayeapi.models._
-import uk.gov.hmrc.epayeapi.models.api.{ChargesSummary, DebitCredit, RtiCharge}
+import uk.gov.hmrc.epayeapi.models.api.{ChargesSummary, DebitCredit, NonRtiCharge, RtiCharge}
 import uk.gov.hmrc.play.http.ws.WSHttp
 import uk.gov.hmrc.play.http.{HeaderCarrier, HttpResponse}
 import unit.AppSpec
@@ -75,8 +75,8 @@ class AnnualSummarySpec extends AppSpec with BeforeAndAfterEach {
       }
       contentAsJson(request).validate[ChargesSummary].get shouldBe
         ChargesSummary(
-          List(RtiCharge("month",2017,Some(1),DebitCredit(100.2,0),Some(new LocalDate(2017, 5, 22)),true)),
-          List()
+          List(RtiCharge("month", 2017, Some(1), DebitCredit(100.2,0), Some(new LocalDate(2017, 5, 22) ), true)),
+          List(NonRtiCharge("P11D_CLASS_1A_CHARGE", 2017, DebitCredit(0,0), Some(new LocalDate(2018, 2, 22)), false))
         )
 
       status(request) shouldBe OK
