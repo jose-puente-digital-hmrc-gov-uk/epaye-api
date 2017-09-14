@@ -53,7 +53,7 @@ class EpayeConnectorSpec extends UnitSpec with MockitoSugar with ScalaFutures {
         }
       }
 
-      connector.getTotals(empRef, hc).futureValue shouldBe
+      await(connector.getTotals(empRef, hc)) shouldBe
         ApiSuccess(AggregatedTotals(credit = 100, debit = 0))
     }
     "retrieve the total by type for a given empRef" in new Setup {
@@ -63,7 +63,7 @@ class EpayeConnectorSpec extends UnitSpec with MockitoSugar with ScalaFutures {
         }
       }
 
-      connector.getTotalsByType(empRef, hc).futureValue shouldBe
+      await(connector.getTotalsByType(empRef, hc).futureValue) shouldBe
         ApiSuccess(AggregatedTotalsByType(
           rti = AggregatedTotals(credit = 100, debit = 0),
           nonRti = AggregatedTotals(credit = 100, debit = 0)
@@ -76,7 +76,7 @@ class EpayeConnectorSpec extends UnitSpec with MockitoSugar with ScalaFutures {
         }
       }
 
-      connector.getAnnualSummary(empRef, hc, Map()).futureValue shouldBe
+      await(connector.getAnnualSummary(empRef, hc, Map())) shouldBe
         ApiSuccess(
           AnnualSummaryResponse(
             AnnualSummary(
