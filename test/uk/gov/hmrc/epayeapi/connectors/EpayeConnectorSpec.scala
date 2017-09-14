@@ -42,7 +42,7 @@ class EpayeConnectorSpec extends UnitSpec with MockitoSugar with ScalaFutures {
     val empRef = EmpRef("123", "456")
     val urlTotals = s"${config.baseUrl}/epaye/${empRef.encodedValue}/api/v1/totals"
     val urlTotalsByType = s"${config.baseUrl}/epaye/${empRef.encodedValue}/api/v1/totals/by-type"
-    val urlSummary = s"${config.baseUrl}/epaye/${empRef.encodedValue}/api/v1/summary"
+    val urlAnnualStatement = s"${config.baseUrl}/epaye/${empRef.encodedValue}/api/v1/annual-statement"
   }
 
   "EpayeConnector" should {
@@ -70,7 +70,7 @@ class EpayeConnectorSpec extends UnitSpec with MockitoSugar with ScalaFutures {
         ))
     }
     "retrieve summary for a given empRef" in new Setup {
-      when(connector.http.GET(urlSummary)).thenReturn {
+      when(connector.http.GET(urlAnnualStatement)).thenReturn {
         successful {
           HttpResponse(Status.OK, responseString = Some(JsonFixtures.annualStatements.annualStatement))
         }
@@ -84,7 +84,8 @@ class EpayeConnectorSpec extends UnitSpec with MockitoSugar with ScalaFutures {
               AnnualTotal(DebitAndCredit(100.2, 0), Cleared(0, 0), DebitAndCredit(100.2, 0))
             ),
             AnnualSummary(
-              List(), AnnualTotal(DebitAndCredit(0, 0), Cleared(0, 0), DebitAndCredit(0, 0))
+              List(LineItem(TaxYear(2017),None,DebitAndCredit(0,0),Cleared(0,0),DebitAndCredit(0,0), new LocalDate(2018, 2, 22),false, "2060", Some(CodeText("P11D_CLASS_1A_CHARGE", "P11D_CLASS_1A_CHARGE")))),
+              AnnualTotal(DebitAndCredit(0,0),Cleared(0,0),DebitAndCredit(0,0))
             )
           )
         )
