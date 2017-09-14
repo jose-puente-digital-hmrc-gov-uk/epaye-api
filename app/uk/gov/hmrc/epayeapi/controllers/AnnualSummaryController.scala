@@ -43,7 +43,7 @@ case class AnnualSummaryController @Inject()(
 
   def getAnnualSummary(empRef: EmpRef): EssentialAction = EmpRefAction(empRef) {
     Action.async { request =>
-      epayeConnector.getAnnualSummary(empRef, hc(request)).map {
+      epayeConnector.getAnnualSummary(empRef, hc(request), request.queryString).map {
         case ApiSuccess(annualSummary) =>
           Ok(Json.toJson(ChargesSummaryService.toChargesSummary(annualSummary)))
         case ApiJsonError(err) =>
