@@ -76,7 +76,7 @@ class AnnualSummarySpec extends AppSpec with BeforeAndAfterEach {
       contentAsJson(request).validate[ChargesSummary].get shouldBe
         ChargesSummary(
           List(RtiCharge("month", 2017, Some(1), DebitCredit(100.2,0), Some(new LocalDate(2017, 5, 22) ), true)),
-          List(NonRtiCharge("P11D_CLASS_1A_CHARGE", 2017, DebitCredit(0,0), Some(new LocalDate(2018, 2, 22)), false))
+          List(NonRtiCharge("P11D_CLASS_1A_CHARGE", 2017, DebitCredit(20.0,0), Some(new LocalDate(2018, 2, 22)), false))
         )
 
       status(request) shouldBe OK
