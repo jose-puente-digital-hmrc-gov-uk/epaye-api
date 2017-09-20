@@ -102,7 +102,7 @@ class EpayeConnectorSpec extends UnitSpec with MockitoSugar with ScalaFutures {
     "retrieve nothing if it matches pattern yyyy" in {
       extractTaxYear(Some("2017")) shouldBe None
     }
-    "retrieve nothing if tax year does not match yyyy-yy nor yyyy" in {
+    "retrieve nothing if tax year does not match yyyy-yy" in {
       extractTaxYear(Some("abc")) shouldBe None
     }
   }
