@@ -70,11 +70,9 @@ case class EpayeConnector @Inject() (
 
 object EpayeConnector {
   def extractTaxYear(taxYear: Option[String]): Option[String] = {
-    lazy val regex1 = """\d\d\d\d-\d\d""".r
-    lazy val regex2 = """\d\d\d\d""".r
+    lazy val taxYearPattern = """\d\d\d\d-\d\d""".r
     taxYear.flatMap{
-      case taxYear@regex1() => Some(taxYear)
-      case taxYear@regex2() => Some(s"$taxYear-${(taxYear.toInt + 1) % 100}")
+      case taxYear@taxYearPattern() => Some(taxYear)
       case _ => None
     }
   }
