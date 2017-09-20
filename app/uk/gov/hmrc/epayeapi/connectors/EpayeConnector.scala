@@ -57,22 +57,22 @@ case class EpayeConnector @Inject() (
     get[AggregatedTotalsByType](url, headers)
   }
 
-  def getAnnualSummary(empRef: EmpRef, headers: HeaderCarrier, query: Map[String, Seq[String]]): Future[ApiResponse[AnnualSummaryResponse]] = {
+  def getAnnualSummary(empRef: EmpRef, headers: HeaderCarrier, taxYear: Option[String]): Future[ApiResponse[AnnualSummaryResponse]] = {
     val url =
       s"${config.baseUrl}" +
       s"/epaye" +
       s"/${empRef.encodedValue}" +
-      s"/api/v1/annual-statement" + extractTaxYear(query).map(q => s"/$q").getOrElse("")
+      s"/api/v1/annual-statement" + extractTaxYear(taxYear).map(q => s"/$q").getOrElse("")
 
     get[AnnualSummaryResponse](url, headers)
   }
 }
 
 object EpayeConnector {
-  def extractTaxYear(query: Map[String, Seq[String]]): Option[String] = {
+  def extractTaxYear(taxYear: Option[String]): Option[String] = {
     lazy val regex1 = """\d\d\d\d-\d\d""".r
     lazy val regex2 = """\d\d\d\d""".r
-    query.keys.headOption.flatMap{
+    taxYear.flatMap{
       case taxYear@regex1() => Some(taxYear)
       case taxYear@regex2() => Some(s"$taxYear-${(taxYear.toInt + 1) % 100}")
       case _ => None

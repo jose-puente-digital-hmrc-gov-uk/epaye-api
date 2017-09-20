@@ -59,7 +59,7 @@ class AnnualSummarySpec extends AppSpec with BeforeAndAfterEach {
     AuthOk(Enrolment("IR-Else", Seq(ton, tor), "activated", ConfidenceLevel.L300))
 
   def request(implicit a: Application): Future[Result] =
-    inject[AnnualSummaryController].getAnnualSummary(empRef)(FakeRequest())
+    inject[AnnualSummaryController].getAnnualSummary(empRef, None)(FakeRequest())
 
 
   override protected def beforeEach(): FixtureParam = {

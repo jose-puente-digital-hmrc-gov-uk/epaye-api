@@ -120,7 +120,7 @@ types:
                         "code" : "INSUFFICIENT_ENROLMENTS",
                         "message" : "You are not currently enrolled for ePAYE"
                       }
-  /{taxOfficeNumber}/{taxOfficeReference}/charges-summary/?{taxYear}:
+  /{taxOfficeNumber}/{taxOfficeReference}/charges-summary/?taxYear={taxYear}:
     uriParameters:
       taxOfficeNumber:
         description: A unique identifier made up of tax office number

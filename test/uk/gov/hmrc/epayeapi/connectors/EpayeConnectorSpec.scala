@@ -76,7 +76,7 @@ class EpayeConnectorSpec extends UnitSpec with MockitoSugar with ScalaFutures {
         }
       }
 
-      await(connector.getAnnualSummary(empRef, hc, Map())) shouldBe
+      await(connector.getAnnualSummary(empRef, hc, None)) shouldBe
         ApiSuccess(
           AnnualSummaryResponse(
             AnnualSummary(
@@ -93,17 +93,17 @@ class EpayeConnectorSpec extends UnitSpec with MockitoSugar with ScalaFutures {
   }
 
   "Extract tax year" should {
-    "retrieve nothing if map is empty" in {
-      extractTaxYear(Map()) shouldBe None
+    "retrieve nothing if tax year query string is empty" in {
+      extractTaxYear(None) shouldBe None
     }
-    "retrieve first key if matches pattern yyyy-yy" in {
-      extractTaxYear(Map("2017-18" -> Seq())) shouldBe Some("2017-18")
+    "retrieve tax year if it matches pattern yyyy-yy" in {
+      extractTaxYear(Some("2017-18")) shouldBe Some("2017-18")
     }
-    "retrieve first key if matches pattern yyyy in form yyyy-yy" in {
-      extractTaxYear(Map("2017" -> Seq())) shouldBe Some("2017-18")
+    "retrieve tax year if it matches pattern yyyy in form yyyy-yy" in {
+      extractTaxYear(Some("2017")) shouldBe Some("2017-18")
     }
-    "retrieve nothing if key does not match yyyy-yy nor yyyy" in {
-      extractTaxYear(Map("abc" -> Seq())) shouldBe None
+    "retrieve nothing if tax year does not match yyyy-yy nor yyyy" in {
+      extractTaxYear(Some("abc")) shouldBe None
     }
   }
 }

@@ -37,8 +37,8 @@ case class ApiRouter @Inject() (
       getTotalsController.getTotals(EmpRef(taxOfficeNumber, taxOfficeReference))
     case GET(p"/$taxOfficeNumber/$taxOfficeReference/total/by-type") =>
       getTotalsByTypeController.getTotalsByType(EmpRef(taxOfficeNumber, taxOfficeReference))
-    case GET(p"/$taxOfficeNumber/$taxOfficeReference/charges-summary") =>
-      annualSummaryController.getAnnualSummary(EmpRef(taxOfficeNumber, taxOfficeReference))
+    case GET(p"/$taxOfficeNumber/$taxOfficeReference/charges-summary" ? q_o"taxYear=$taxYear") =>
+      annualSummaryController.getAnnualSummary(EmpRef(taxOfficeNumber, taxOfficeReference), taxYear)
   }
 
   val routes: Routes = appRoutes.routes.orElse(prodRoutes.routes)
