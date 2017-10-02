@@ -18,7 +18,7 @@ package uk.gov.hmrc.epayeapi.models
 
 import org.joda.time.LocalDate
 import org.scalatest.{Matchers, WordSpec}
-import play.api.libs.json.Json
+import play.api.libs.json.{JsSuccess, Json}
 import uk.gov.hmrc.epayeapi.models.api.{ChargesSummary, DebitCredit, NonRtiCharge, RtiCharge}
 import uk.gov.hmrc.epayeapi.models.Formats._
 
@@ -27,56 +27,55 @@ import scala.io.Source
 class ChargesSummarySpec extends WordSpec with Matchers {
   "charges summary object" should {
     "convert to json" in {
-      val chargesSummary = ChargesSummary(
+      val summary = ChargesSummary(
         rti = Seq(
           RtiCharge(
-            `type` = "monthly",
-            tax_year = 2016,
+            tax_year = api.TaxYear(2016, 2017),
             tax_month = Some(3),
             balance = DebitCredit(debit = 1200.0, credit = 0),
             due_date = Some(new LocalDate(2016, 10, 22)),
-            overdue = true
+            is_overdue = true
           ),
           RtiCharge(
-            `type` = "monthly",
-            tax_year = 2016,
+            tax_year = api.TaxYear(2016, 2017),
             tax_month = Some(4),
             balance = DebitCredit(debit = 1300.0, credit = 0),
             due_date = Some(new LocalDate(2018, 11, 22)),
-            overdue = false
+            is_overdue = false
           ),
           RtiCharge(
-            `type` = "eyu",
-            tax_year = 2016,
+            tax_year = api.TaxYear(2016, 2017),
             tax_month = None,
             balance = DebitCredit(debit = 1200.0, credit = 0),
             due_date = Some(new LocalDate(2016, 10, 22)),
-            overdue = true
+            is_overdue = true
           )
         ),
         non_rti = Seq(
           NonRtiCharge(
             charge_code = "NON_RTI_SPECIFIED_CHARGE",
-            tax_year = 2016,
+            tax_year = api.TaxYear(2016, 2017),
             balance = DebitCredit(debit = 1200.0, credit = 0),
             due_date = Some(new LocalDate(2016, 10, 22)),
-            overdue = true
+            is_overdue = true
           ),
           NonRtiCharge(
             charge_code = "NON_RTI_SPECIFIED_CHARGE",
-            tax_year = 2016,
+            tax_year = api.TaxYear(2016, 2017),
             balance = DebitCredit(debit = 0.0, credit = 800),
             due_date = Some(new LocalDate(2018, 10, 22)),
-            overdue = false
+            is_overdue = false
           )
         )
       )
+      val summaryJson = Json.toJson(summary)
+      val exampleJson = Json.parse {
+        val resource = getClass.getResource(s"/public/api/conf/1.0/examples/ChargesSummary.get.json")
+        Source.fromURL(resource, "utf-8").mkString("")
+      }
 
-      val validateResults = List(
-        Json.toJson(chargesSummary),
-        Json.parse(Source.fromURL(getClass.getResource(s"/public/api/conf/1.0/examples/ChargesSummary.get.json"), "utf-8").mkString(""))
-      ).map(_.validate[ChargesSummary].get)
-      validateResults.head shouldBe validateResults(1)
+      summaryJson shouldEqual exampleJson
+      exampleJson.validate[ChargesSummary] shouldEqual JsSuccess(summary)
     }
   }
 }

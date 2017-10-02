@@ -8,19 +8,23 @@
       "items": {
         "id": "/properties/rti/items",
         "properties": {
-          "type": {
-            "default": "monthly",
-            "description": "Whether monhly or Earlier Year Update (eyu).",
-            "id": "/properties/rti/items/properties/type",
-            "title": "The type schema",
-            "type": "string"
-          },
           "tax_year": {
-            "default": 0,
+            "properties": {
+              "start_year": {
+                "default": 0,
+                "description": "The start year of the tax year",
+                "type": "integer"
+              },
+              "end_year": {
+                "default": 0,
+                "description": "The end year of the tax year",
+                "type": "integer"
+              },
+            },
             "description": "Tax year.",
             "id": "/properties/rti/items/properties/tax_year",
             "title": "The tax_year schema",
-            "type": "integer"
+            "type": "object"
           },
           "tax_month": {
             "default": 0,
@@ -56,7 +60,7 @@
             "title": "The due_date schema",
             "type": "string"
           },
-          "overdue": {
+          "is_overdue": {
             "default": true,
             "description": "Whether overdue or not.",
             "id": "/properties/rti/items/properties/overdue",
@@ -75,7 +79,7 @@
         "properties": {
           "charge_code": {
             "default": "",
-            "description": "Main transaction group description.",
+            "description": "The charge code",
             "id": "/properties/non_rti/items/properties/charge_code",
             "title": "The charge_code schema",
             "type": "string"
@@ -101,11 +105,22 @@
             "type": "object"
           },
           "tax_year": {
-            "default": 0,
+            "properties": {
+              "start_year": {
+                "default": 0,
+                "description": "The start year of the tax year",
+                "type": "integer"
+              },
+              "end_year": {
+                "default": 0,
+                "description": "The end year of the tax year",
+                "type": "integer"
+              },
+            },
             "description": "Tax year.",
             "id": "/properties/non_rti/items/properties/tax_year",
             "title": "The tax_year schema",
-            "type": "integer"
+            "type": "object"
           },
           "due_date": {
             "default": "",
@@ -114,7 +129,7 @@
             "title": "The due_date schema",
             "type": "string"
           },
-          "overdue": {
+          "is_overdue": {
             "default": false,
             "description": "Whether overdue or not.",
             "id": "/properties/non_rti/items/properties/overdue",

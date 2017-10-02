@@ -22,6 +22,7 @@ import org.mockito.Mockito.{reset, when}
 import org.scalatest.BeforeAndAfterEach
 import play.api.Application
 import play.api.inject.bind
+import play.api.libs.json.JsSuccess
 import play.api.mvc.Result
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
@@ -61,7 +62,6 @@ class AnnualSummarySpec extends AppSpec with BeforeAndAfterEach {
   def request(implicit a: Application): Future[Result] =
     inject[AnnualSummaryController].getAnnualSummary(empRef, None)(FakeRequest())
 
-
   override protected def beforeEach(): FixtureParam = {
     reset(http)
   }
@@ -73,11 +73,12 @@ class AnnualSummarySpec extends AppSpec with BeforeAndAfterEach {
           HttpResponse(200, responseString = Some(JsonFixtures.annualStatements.annualStatement))
         }
       }
-      contentAsJson(request).validate[ChargesSummary].get shouldBe
+      contentAsJson(request).validate[ChargesSummary] shouldBe JsSuccess {
         ChargesSummary(
-          List(RtiCharge("month", 2017, Some(1), DebitCredit(100.2,0), Some(new LocalDate(2017, 5, 22) ), true)),
-          List(NonRtiCharge("P11D_CLASS_1A_CHARGE", 2017, DebitCredit(20.0,0), Some(new LocalDate(2018, 2, 22)), false))
+          List(RtiCharge(api.TaxYear(2017, 2018), Some(1), DebitCredit(100.2, 0), Some(new LocalDate(2017, 5, 22)), true)),
+          List(NonRtiCharge("P11D_CLASS_1A_CHARGE", api.TaxYear(2017, 2018), DebitCredit(20.0, 0), Some(new LocalDate(2018, 2, 22)), false))
         )
+      }
 
       status(request) shouldBe OK
     }

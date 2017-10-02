@@ -1,58 +1,70 @@
 {
   "rti": [
     {
-      "type": "monthly",
-      "tax_year": 2016,
+      "tax_year": {
+        "start_year": 2016,
+        "end_year": 2017
+      },
       "tax_month": 3,
       "balance": {
         "debit": 1200.00,
         "credit": 0.0
       },
       "due_date": "2016-10-22",
-      "overdue": true
+      "is_overdue": true
     },
     {
-      "type": "monthly",
-      "tax_year": 2016,
+      "tax_year": {
+        "start_year": 2016,
+        "end_year": 2017
+      },
       "tax_month": 4,
       "balance": {
         "debit": 1300.00,
         "credit": 0.0
       },
       "due_date": "2018-11-22",
-      "overdue": false
+      "is_overdue": false
     },
     {
-      "type": "eyu",
-      "tax_year": 2016,
+      "tax_year": {
+        "start_year": 2016,
+        "end_year": 2017
+      },
       "balance": {
         "debit": 1200.00,
         "credit": 0.0
       },
       "due_date": "2016-10-22",
-      "overdue": true
+      "is_overdue": true
     }
   ],
   "non_rti": [
     {
       "charge_code": "NON_RTI_SPECIFIED_CHARGE",
-      "tax_year": 2016,
+      "tax_year": {
+        "start_year": 2016,
+        "end_year": 2017
+      },
       "balance": {
         "debit": 1200.00,
         "credit": 0.0
       },
       "due_date": "2016-10-22",
-      "overdue": true
+      "is_overdue": true
     },
     {
       "charge_code": "NON_RTI_SPECIFIED_CHARGE",
-      "tax_year": 2016,
+      "tax_year": {
+        "start_year": 2016,
+        "end_year": 2017
+      },
       "balance": {
         "debit": 0.0,
         "credit": 800.0
       },
       "due_date": "2018-10-22",
-      "overdue": false
+      "is_overdue": false
     }
   ]
 }

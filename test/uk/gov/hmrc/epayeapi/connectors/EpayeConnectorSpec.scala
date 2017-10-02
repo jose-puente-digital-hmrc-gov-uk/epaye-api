@@ -84,7 +84,7 @@ class EpayeConnectorSpec extends UnitSpec with MockitoSugar with ScalaFutures {
               AnnualTotal(DebitAndCredit(100.2, 0), Cleared(0, 0), DebitAndCredit(100.2, 0))
             ),
             AnnualSummary(
-              List(LineItem(TaxYear(2017),None,DebitAndCredit(20.0,0),Cleared(0,0),DebitAndCredit(20.0,0), new LocalDate(2018, 2, 22),false, "2060", Some(CodeText("P11D_CLASS_1A_CHARGE", "P11D_CLASS_1A_CHARGE")))),
+              List(LineItem(TaxYear(2017),None,DebitAndCredit(20.0,0),Cleared(0,0),DebitAndCredit(20.0,0), new LocalDate(2018, 2, 22),false, "2060", Some("P11D_CLASS_1A_CHARGE"))),
               AnnualTotal(DebitAndCredit(20.0,0),Cleared(0,0),DebitAndCredit(20.0,0))
             )
           )
@@ -97,7 +97,10 @@ class EpayeConnectorSpec extends UnitSpec with MockitoSugar with ScalaFutures {
       extractTaxYear(None) shouldBe None
     }
     "retrieve tax year if it matches pattern yyyy-yy" in {
-      extractTaxYear(Some("2017-18")) shouldBe Some("2017-18")
+      extractTaxYear(Some("2017-18")) shouldBe Some(TaxYear(2017))
+    }
+    "retrieve nothing if the years don't match" in {
+      extractTaxYear(Some("2017-19")) shouldBe None
     }
     "retrieve nothing if it matches pattern yyyy" in {
       extractTaxYear(Some("2017")) shouldBe None

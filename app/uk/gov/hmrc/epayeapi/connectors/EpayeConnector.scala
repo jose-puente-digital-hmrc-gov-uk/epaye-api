@@ -22,11 +22,12 @@ import uk.gov.hmrc.domain.EmpRef
 import uk.gov.hmrc.epayeapi.connectors.EpayeConnector.extractTaxYear
 import uk.gov.hmrc.epayeapi.models.Formats._
 import uk.gov.hmrc.epayeapi.models.api.ApiResponse
-import uk.gov.hmrc.epayeapi.models.{AggregatedTotals, AggregatedTotalsByType, AnnualSummaryResponse}
+import uk.gov.hmrc.epayeapi.models._
 import uk.gov.hmrc.play.http.HeaderCarrier
 import uk.gov.hmrc.play.http.ws.WSHttp
 
 import scala.concurrent.{ExecutionContext, Future}
+import scala.util.{Success, Try}
 
 case class EpayeApiConfig(baseUrl: String)
 
@@ -40,9 +41,9 @@ case class EpayeConnector @Inject() (
   def getTotals(empRef: EmpRef, headers: HeaderCarrier): Future[ApiResponse[AggregatedTotals]] = {
     val url =
       s"${config.baseUrl}" +
-      s"/epaye" +
-      s"/${empRef.encodedValue}" +
-      s"/api/v1/totals"
+        s"/epaye" +
+        s"/${empRef.encodedValue}" +
+        s"/api/v1/totals"
 
     get[AggregatedTotals](url, headers)
   }
@@ -50,9 +51,9 @@ case class EpayeConnector @Inject() (
   def getTotalsByType(empRef: EmpRef, headers: HeaderCarrier): Future[ApiResponse[AggregatedTotalsByType]] = {
     val url =
       s"${config.baseUrl}" +
-      s"/epaye" +
-      s"/${empRef.encodedValue}" +
-      s"/api/v1/totals/by-type"
+        s"/epaye" +
+        s"/${empRef.encodedValue}" +
+        s"/api/v1/totals/by-type"
 
     get[AggregatedTotalsByType](url, headers)
   }
@@ -60,20 +61,36 @@ case class EpayeConnector @Inject() (
   def getAnnualSummary(empRef: EmpRef, headers: HeaderCarrier, taxYear: Option[String]): Future[ApiResponse[AnnualSummaryResponse]] = {
     val url =
       s"${config.baseUrl}" +
-      s"/epaye" +
-      s"/${empRef.encodedValue}" +
-      s"/api/v1/annual-statement" + extractTaxYear(taxYear).map(q => s"/$q").getOrElse("")
+        s"/epaye" +
+        s"/${empRef.encodedValue}" +
+        s"/api/v1/annual-statement" + extractTaxYear(taxYear)
+        .map(TaxYear.asString)
+        .map(q => s"/$q")
+        .getOrElse("")
 
     get[AnnualSummaryResponse](url, headers)
   }
 }
 
 object EpayeConnector {
-  def extractTaxYear(taxYear: Option[String]): Option[String] = {
-    lazy val taxYearPattern = """\d\d\d\d-\d\d""".r
-    taxYear.flatMap{
-      case taxYear@taxYearPattern() => Some(taxYear)
+  def extractTaxYear(taxYear: Option[String]): Option[TaxYear] = {
+    taxYear.flatMap {
+      case TaxYearPattern(year) => Some(year)
       case _ => None
+    }
+  }
+
+  object TaxYearPattern {
+    lazy val pattern = """20(\d\d)-(\d\d)""".r
+    def unapply(taxYear: String): Option[TaxYear] = {
+      taxYear match {
+        case pattern(fromYear, toYear) =>
+          Try(toYear.toInt - fromYear.toInt) match {
+            case Success(1) => Some(TaxYear(2000 + fromYear.toInt))
+            case _ => None
+          }
+        case _ => None
+      }
     }
   }
 }

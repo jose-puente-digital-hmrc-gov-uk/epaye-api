@@ -106,8 +106,8 @@ types:
           200:
             body:
               application/json:
-                type: !include schemas/Totals.ByType.get.schema.array.json
-                example: !include examples/Totals.ByType.get.array.json
+                type: !include schemas/Totals.ByType.get.schema.json
+                example: !include examples/Totals.ByType.get.json
           403:
             body:
               application/json:
@@ -158,7 +158,7 @@ types:
                       "code" : "INVALID_EMPREF",
                       "message" : "Provided EmpRef is not associated with your account"
                     }
-                notOpenStatus:
+                invalidTaxYear:
                   description: Incorrect tax year.
                   value: |
                     {

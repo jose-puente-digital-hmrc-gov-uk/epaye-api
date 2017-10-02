@@ -18,28 +18,33 @@ package uk.gov.hmrc.epayeapi.models.api
 
 import org.joda.time.LocalDate
 
+case class TaxYear(
+  start_year: Int,
+  end_year: Int
+)
+
 case class DebitCredit(
   debit: BigDecimal,
   credit: BigDecimal
 )
 
 case class RtiCharge(
-  `type`: String,
-  tax_year: Int,
+  tax_year: TaxYear,
   tax_month: Option[Int],
   balance: DebitCredit,
   due_date: Option[LocalDate],
-  overdue: Boolean
+  is_overdue: Boolean
 )
 
 case class NonRtiCharge(
   charge_code: String,
-  tax_year: Int,
+  tax_year: TaxYear,
   balance: DebitCredit,
   due_date: Option[LocalDate],
-  overdue: Boolean
+  is_overdue: Boolean
 )
 
 case class ChargesSummary(
-  rti: Seq[RtiCharge], non_rti: Seq[NonRtiCharge]
+  rti: Seq[RtiCharge],
+  non_rti: Seq[NonRtiCharge]
 )

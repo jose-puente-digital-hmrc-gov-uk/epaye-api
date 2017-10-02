@@ -18,8 +18,8 @@ package uk.gov.hmrc.epayeapi.models
 
 import play.api.libs.json._
 import uk.gov.hmrc.domain.EmpRef
-import uk.gov.hmrc.epayeapi.models._
 import uk.gov.hmrc.epayeapi.models.api.{ChargesSummary, DebitCredit, NonRtiCharge, RtiCharge}
+
 
 trait Formats {
   implicit val empRefFormat: Writes[EmpRef] = new Writes[EmpRef] {
@@ -38,13 +38,13 @@ trait Formats {
   implicit val debitAndCreditFormat: Format[DebitAndCredit] = Json.format[DebitAndCredit]
   implicit val clearedFormat: Format[Cleared] = Json.format[Cleared]
   implicit val annualTotalFormat: Format[AnnualTotal] = Json.format[AnnualTotal]
-  implicit val codeTextFormat: Format[CodeText] = Json.format[CodeText]
   implicit val taxYearFormat: Format[TaxYear] = Json.format[TaxYear]
+  implicit val apiTaxYearFormat: Format[api.TaxYear] = Json.format[api.TaxYear]
   implicit val taxMonthFormat: Format[TaxMonth] = Json.format[TaxMonth]
   implicit val lineItemFormat: Format[LineItem] = Json.format[LineItem]
   implicit val annualSummaryFormat: Format[AnnualSummary] = Json.format[AnnualSummary]
   implicit val annualSummaryResponseFormat: Format[AnnualSummaryResponse] = Json.format[AnnualSummaryResponse]
-  
+
   implicit val debitCreditFormat: Format[DebitCredit] = Json.format[DebitCredit]
   implicit val rtiChargeFormat: Format[RtiCharge] = Json.format[RtiCharge]
   implicit val nonRtiChargeFormat: Format[NonRtiCharge] = Json.format[NonRtiCharge]

@@ -61,10 +61,7 @@
         "dueDate": "2018-02-22",
         "isSpecified": false,
         "itemType": "2060",
-        "codeText": {
-          "main": "P11D_CLASS_1A_CHARGE",
-          "sub": "P11D_CLASS_1A_CHARGE"
-        }
+        "codeText": "P11D_CLASS_1A_CHARGE"
       }
     ],
     "totals": {

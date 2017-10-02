@@ -18,6 +18,8 @@ package uk.gov.hmrc.epayeapi.models
 
 import org.joda.time.LocalDate
 
+import scala.util.{Success, Try}
+
 case class DebitAndCredit(
   debit: BigDecimal = 0,
   credit: BigDecimal = 0
@@ -28,9 +30,15 @@ case class Cleared(
   credit: BigDecimal = 0
 )
 
-case class CodeText(main: String, sub: String)
+case class TaxYear(yearFrom: Int) {
+  val yearTo = yearFrom + 1
+}
 
-case class TaxYear(yearFrom: Int)
+object TaxYear {
+  def asString(taxYear: TaxYear): String =
+    s"${taxYear.yearFrom}-${taxYear.yearTo % 100}"
+}
+
 
 case class TaxMonth(month: Int)
 
@@ -43,7 +51,7 @@ case class LineItem(
   dueDate: LocalDate,
   isSpecified: Boolean = false,
   itemType: String = "month",
-  codeText: Option[CodeText] = None
+  codeText: Option[String] = None
 )
 
 case class AnnualTotal(

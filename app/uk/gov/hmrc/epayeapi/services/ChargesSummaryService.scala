@@ -17,12 +17,12 @@
 package uk.gov.hmrc.epayeapi.services
 
 import org.joda.time.LocalDate
+import uk.gov.hmrc.epayeapi.models.api._
 import uk.gov.hmrc.epayeapi.models.{AnnualSummary, AnnualSummaryResponse}
-import uk.gov.hmrc.epayeapi.models.api.{ChargesSummary, DebitCredit, NonRtiCharge, RtiCharge}
+
 
 object ChargesSummaryService {
-
-  val today = new LocalDate()
+  def today: LocalDate = LocalDate.now()
 
   def toChargesSummary(annualSummaryResponse: AnnualSummaryResponse): ChargesSummary = {
     ChargesSummary(
@@ -34,23 +34,22 @@ object ChargesSummaryService {
   def toChargesSummaryRti(annualSummary: AnnualSummary): Seq[RtiCharge] = {
     annualSummary.lineItems.map(lineItem =>
       RtiCharge(
-        `type` = lineItem.itemType,
-        tax_year = lineItem.taxYear.yearFrom,
+        tax_year = TaxYear(lineItem.taxYear.yearFrom, lineItem.taxYear.yearTo),
         tax_month = lineItem.taxMonth.map(_.month),
         balance = DebitCredit(lineItem.charges.debit, lineItem.charges.credit),
         due_date = Some(lineItem.dueDate),
-        overdue = lineItem.dueDate.isBefore(today)
+        is_overdue = lineItem.dueDate.isBefore(today)
       ))
   }
 
   def toChargesSummaryNonRti(annualSummary: AnnualSummary): Seq[NonRtiCharge] = {
     annualSummary.lineItems.map(lineItem =>
       NonRtiCharge(
-        charge_code = lineItem.codeText.map(_.main).getOrElse(""),
-        tax_year = lineItem.taxYear.yearFrom,
+        charge_code = lineItem.codeText.getOrElse(""),
+        tax_year = TaxYear(lineItem.taxYear.yearFrom, lineItem.taxYear.yearTo),
         balance = DebitCredit(lineItem.charges.debit, lineItem.charges.credit),
         due_date = Some(lineItem.dueDate),
-        overdue = lineItem.dueDate.isBefore(today)
+        is_overdue = lineItem.dueDate.isBefore(today)
       ))
   }
 
