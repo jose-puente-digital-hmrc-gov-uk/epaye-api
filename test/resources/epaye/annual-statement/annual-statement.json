@@ -21,8 +21,7 @@
           "credit": 0
         },
         "dueDate": "2017-05-22",
-        "isSpecified": false,
-        "itemType": "month"
+        "isSpecified": false
       }
     ],
     "totals": {
@@ -60,7 +59,6 @@
         },
         "dueDate": "2018-02-22",
         "isSpecified": false,
-        "itemType": "2060",
         "codeText": "P11D_CLASS_1A_CHARGE"
       }
     ],

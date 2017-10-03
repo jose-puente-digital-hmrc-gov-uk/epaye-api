@@ -18,8 +18,6 @@ package uk.gov.hmrc.epayeapi.models
 
 import org.joda.time.LocalDate
 
-import scala.util.{Success, Try}
-
 case class DebitAndCredit(
   debit: BigDecimal = 0,
   credit: BigDecimal = 0
@@ -50,7 +48,6 @@ case class LineItem(
   balance: DebitAndCredit,
   dueDate: LocalDate,
   isSpecified: Boolean = false,
-  itemType: String = "month",
   codeText: Option[String] = None
 )
 

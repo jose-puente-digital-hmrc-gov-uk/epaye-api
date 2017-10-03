@@ -53,7 +53,7 @@ class EpayeConnectorSpec extends UnitSpec with MockitoSugar with ScalaFutures {
         }
       }
 
-      await(connector.getTotals(empRef, hc)) shouldBe
+      connector.getTotals(empRef, hc).futureValue shouldBe
         ApiSuccess(AggregatedTotals(credit = 100, debit = 0))
     }
     "retrieve the total by type for a given empRef" in new Setup {
@@ -63,7 +63,7 @@ class EpayeConnectorSpec extends UnitSpec with MockitoSugar with ScalaFutures {
         }
       }
 
-      await(connector.getTotalsByType(empRef, hc).futureValue) shouldBe
+      connector.getTotalsByType(empRef, hc).futureValue shouldBe
         ApiSuccess(AggregatedTotalsByType(
           rti = AggregatedTotals(credit = 100, debit = 0),
           nonRti = AggregatedTotals(credit = 100, debit = 0)
@@ -76,15 +76,15 @@ class EpayeConnectorSpec extends UnitSpec with MockitoSugar with ScalaFutures {
         }
       }
 
-      await(connector.getAnnualSummary(empRef, hc, None)) shouldBe
+      connector.getAnnualSummary(empRef, hc, None).futureValue shouldBe
         ApiSuccess(
           AnnualSummaryResponse(
             AnnualSummary(
-              List(LineItem(TaxYear(2017), Some(TaxMonth(1)), DebitAndCredit(100.2, 0), Cleared(0, 0), DebitAndCredit(100.2, 0), new LocalDate(2017, 5, 22), isSpecified = false, "month", codeText = None)),
+              List(LineItem(TaxYear(2017), Some(TaxMonth(1)), DebitAndCredit(100.2, 0), Cleared(0, 0), DebitAndCredit(100.2, 0), new LocalDate(2017, 5, 22), isSpecified = false, codeText = None)),
               AnnualTotal(DebitAndCredit(100.2, 0), Cleared(0, 0), DebitAndCredit(100.2, 0))
             ),
             AnnualSummary(
-              List(LineItem(TaxYear(2017),None,DebitAndCredit(20.0,0),Cleared(0,0),DebitAndCredit(20.0,0), new LocalDate(2018, 2, 22),false, "2060", Some("P11D_CLASS_1A_CHARGE"))),
+              List(LineItem(TaxYear(2017),None,DebitAndCredit(20.0,0),Cleared(0,0),DebitAndCredit(20.0,0), new LocalDate(2018, 2, 22),false, Some("P11D_CLASS_1A_CHARGE"))),
               AnnualTotal(DebitAndCredit(20.0,0),Cleared(0,0),DebitAndCredit(20.0,0))
             )
           )
