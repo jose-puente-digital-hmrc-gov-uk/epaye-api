@@ -19,8 +19,9 @@ package uk.gov.hmrc.epayeapi.models
 import org.joda.time.LocalDate
 import org.scalatest.{Matchers, WordSpec}
 import play.api.libs.json.{JsSuccess, Json}
-import uk.gov.hmrc.epayeapi.models.api.{ChargesSummary, DebitCredit, NonRtiCharge, RtiCharge}
+import uk.gov.hmrc.epayeapi.Fixtures
 import uk.gov.hmrc.epayeapi.models.Formats._
+import uk.gov.hmrc.epayeapi.models.api.ChargesSummary
 
 import scala.io.Source
 
@@ -29,42 +30,42 @@ class ChargesSummarySpec extends WordSpec with Matchers {
     "convert to json" in {
       val summary = ChargesSummary(
         rti = Seq(
-          RtiCharge(
-            tax_year = api.TaxYear(2016, 2017),
-            tax_month = Some(3),
-            balance = DebitCredit(debit = 1200.0, credit = 0),
-            due_date = Some(new LocalDate(2016, 10, 22)),
-            is_overdue = true
+          Fixtures.rtiCharge(
+            taxYear = api.TaxYear(2016, 2017),
+            taxMonth = Some(3),
+            debit = 1200,
+            dueDate = Some(new LocalDate(2016, 10, 22)),
+            isOverdue = true
           ),
-          RtiCharge(
-            tax_year = api.TaxYear(2016, 2017),
-            tax_month = Some(4),
-            balance = DebitCredit(debit = 1300.0, credit = 0),
-            due_date = Some(new LocalDate(2018, 11, 22)),
-            is_overdue = false
+          Fixtures.rtiCharge(
+            taxYear = api.TaxYear(2016, 2017),
+            taxMonth = Some(4),
+            debit = 1300.0,
+            dueDate = Some(new LocalDate(2018, 11, 22)),
+            isOverdue = false
           ),
-          RtiCharge(
-            tax_year = api.TaxYear(2016, 2017),
-            tax_month = None,
-            balance = DebitCredit(debit = 1200.0, credit = 0),
-            due_date = Some(new LocalDate(2016, 10, 22)),
-            is_overdue = true
+          Fixtures.rtiCharge(
+            taxYear = api.TaxYear(2016, 2017),
+            taxMonth = None,
+            debit = 1200.0,
+            dueDate = Some(new LocalDate(2016, 10, 22)),
+            isOverdue = true
           )
         ),
         non_rti = Seq(
-          NonRtiCharge(
-            charge_code = "NON_RTI_SPECIFIED_CHARGE",
-            tax_year = api.TaxYear(2016, 2017),
-            balance = DebitCredit(debit = 1200.0, credit = 0),
-            due_date = Some(new LocalDate(2016, 10, 22)),
-            is_overdue = true
+          Fixtures.nonRtiCharge(
+            chargeCode = "NON_RTI_SPECIFIED_CHARGE",
+            taxYear = api.TaxYear(2016, 2017),
+            debit = 1200,
+            dueDate = Some(new LocalDate(2016, 10, 22)),
+            isOverdue = true
           ),
-          NonRtiCharge(
-            charge_code = "NON_RTI_SPECIFIED_CHARGE",
-            tax_year = api.TaxYear(2016, 2017),
-            balance = DebitCredit(debit = 0.0, credit = 800),
-            due_date = Some(new LocalDate(2018, 10, 22)),
-            is_overdue = false
+          Fixtures.nonRtiCharge(
+            chargeCode = "NON_RTI_SPECIFIED_CHARGE",
+            taxYear = api.TaxYear(2016, 2017),
+            credit = 800,
+            dueDate = Some(new LocalDate(2018, 10, 22)),
+            isOverdue = false
           )
         )
       )

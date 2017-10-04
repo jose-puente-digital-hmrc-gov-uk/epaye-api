@@ -26,12 +26,12 @@ object ChargesSummaryService {
 
   def toChargesSummary(annualSummaryResponse: AnnualSummaryResponse): ChargesSummary = {
     ChargesSummary(
-      rti = toChargesSummaryRti(annualSummaryResponse.rti),
-      non_rti = toChargesSummaryNonRti(annualSummaryResponse.nonRti)
+      rti = toRtiChargesSummary(annualSummaryResponse.rti),
+      non_rti = toNonRtiChargesSummary(annualSummaryResponse.nonRti)
     )
   }
 
-  def toChargesSummaryRti(annualSummary: AnnualSummary): Seq[RtiCharge] = {
+  def toRtiChargesSummary(annualSummary: AnnualSummary): Seq[RtiCharge] = {
     annualSummary.lineItems.map(lineItem =>
       RtiCharge(
         tax_year = TaxYear(lineItem.taxYear.yearFrom, lineItem.taxYear.yearTo),
@@ -42,7 +42,7 @@ object ChargesSummaryService {
       ))
   }
 
-  def toChargesSummaryNonRti(annualSummary: AnnualSummary): Seq[NonRtiCharge] = {
+  def toNonRtiChargesSummary(annualSummary: AnnualSummary): Seq[NonRtiCharge] = {
     annualSummary.lineItems.map(lineItem =>
       NonRtiCharge(
         charge_code = lineItem.codeText.getOrElse(""),

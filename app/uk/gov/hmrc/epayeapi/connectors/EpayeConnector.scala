@@ -19,15 +19,13 @@ package uk.gov.hmrc.epayeapi.connectors
 import javax.inject.{Inject, Singleton}
 
 import uk.gov.hmrc.domain.EmpRef
-import uk.gov.hmrc.epayeapi.connectors.EpayeConnector.extractTaxYear
 import uk.gov.hmrc.epayeapi.models.Formats._
-import uk.gov.hmrc.epayeapi.models.api.ApiResponse
 import uk.gov.hmrc.epayeapi.models._
+import uk.gov.hmrc.epayeapi.models.api.ApiResponse
 import uk.gov.hmrc.play.http.HeaderCarrier
 import uk.gov.hmrc.play.http.ws.WSHttp
 
 import scala.concurrent.{ExecutionContext, Future}
-import scala.util.{Success, Try}
 
 case class EpayeApiConfig(baseUrl: String)
 
@@ -63,7 +61,9 @@ case class EpayeConnector @Inject() (
       s"${config.baseUrl}" +
         s"/epaye" +
         s"/${empRef.encodedValue}" +
-        s"/api/v1/annual-statement" + extractTaxYear(taxYear)
+        s"/api/v1/annual-statement" +
+        taxYear
+        .flatMap(TaxYear.extractTaxYear)
         .map(TaxYear.asString)
         .map(q => s"/$q")
         .getOrElse("")
@@ -72,25 +72,3 @@ case class EpayeConnector @Inject() (
   }
 }
 
-object EpayeConnector {
-  def extractTaxYear(taxYear: Option[String]): Option[TaxYear] = {
-    taxYear.flatMap {
-      case TaxYearPattern(year) => Some(year)
-      case _ => None
-    }
-  }
-
-  object TaxYearPattern {
-    lazy val pattern = """20(\d\d)-(\d\d)""".r
-    def unapply(taxYear: String): Option[TaxYear] = {
-      taxYear match {
-        case pattern(fromYear, toYear) =>
-          Try(toYear.toInt - fromYear.toInt) match {
-            case Success(1) => Some(TaxYear(2000 + fromYear.toInt))
-            case _ => None
-          }
-        case _ => None
-      }
-    }
-  }
-}

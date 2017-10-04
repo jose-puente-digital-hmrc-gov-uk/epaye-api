@@ -22,9 +22,8 @@ import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.mock.MockitoSugar
 import play.api.http.Status
 import uk.gov.hmrc.domain.EmpRef
-import uk.gov.hmrc.epayeapi.connectors.EpayeConnector.extractTaxYear
-import uk.gov.hmrc.epayeapi.models.api.ApiSuccess
 import uk.gov.hmrc.epayeapi.models._
+import uk.gov.hmrc.epayeapi.models.api.ApiSuccess
 import uk.gov.hmrc.play.http.ws.WSHttp
 import uk.gov.hmrc.play.http.{HeaderCarrier, HttpResponse}
 import uk.gov.hmrc.play.test.UnitSpec
@@ -92,21 +91,5 @@ class EpayeConnectorSpec extends UnitSpec with MockitoSugar with ScalaFutures {
     }
   }
 
-  "Extract tax year" should {
-    "retrieve nothing if tax year query string is empty" in {
-      extractTaxYear(None) shouldBe None
-    }
-    "retrieve tax year if it matches pattern yyyy-yy" in {
-      extractTaxYear(Some("2017-18")) shouldBe Some(TaxYear(2017))
-    }
-    "retrieve nothing if the years don't match" in {
-      extractTaxYear(Some("2017-19")) shouldBe None
-    }
-    "retrieve nothing if it matches pattern yyyy" in {
-      extractTaxYear(Some("2017")) shouldBe None
-    }
-    "retrieve nothing if tax year does not match yyyy-yy" in {
-      extractTaxYear(Some("abc")) shouldBe None
-    }
-  }
+
 }
