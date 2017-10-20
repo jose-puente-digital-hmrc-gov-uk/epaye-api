@@ -3,18 +3,18 @@
   "description": "An object containing the outstanding debits and credits.",
   "properties": {
     "_links": {
-      "$ref": "./Links.schema.json"
+      "$ref": "Links.schema.json#/definitions/links"
     },
     "nonRti": {
       "type": "object",
       "description": "The outstanding Non-RTI balance",
       "properties": {
         "credit": {
-          "type": "integer",
+          "type": "number",
           "description": "The current credits on your account."
         },
         "debit": {
-          "type": "integer",
+          "type": "number",
           "description": "The current debits on your account including interest."
         }
       }
@@ -24,11 +24,11 @@
       "description": "The outstanding RTI balance",
       "properties": {
         "credit": {
-          "type": "integer",
+          "type": "number",
           "description": "The current credits on your account."
         },
         "debit": {
-          "type": "integer",
+          "type": "number",
           "description": "The current debits on your account including interest."
         }
       }

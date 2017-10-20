@@ -1,10 +1,10 @@
 {
   "rti": {
-    "credit" : 0,
+    "credit" : 0.0,
     "debit" : 100.25
   },
   "nonRti": {
-    "credit": 0,
+    "credit": 0.0,
     "debit": 100.35
   },
   "_links" : {
@@ -13,9 +13,6 @@
     },
     "totals" : {
       "href" : "/paye-for-employers/123XYZ/totals"
-    },
-    "byType" : {
-      "href" : "/paye-for-employers/123XYZ/totals/by-type"
     }
   }
 }

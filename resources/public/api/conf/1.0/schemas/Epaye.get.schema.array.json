@@ -9,7 +9,7 @@
         "description": "An array of objects which you can use to access further data.",
         "properties": {
           "_links": {
-            "$ref": "./Links.schema.json"
+            "$ref": "Links.schema.json#/definitions/links"
           },
           "empRef": {
             "type": "string",

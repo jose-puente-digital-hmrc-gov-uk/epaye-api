@@ -3,14 +3,14 @@
   "description": "An object containing the outstanding debits and credits.",
   "properties": {
     "_links": {
-      "$ref": "./Links.schema.json"
+      "$ref": "Links.schema.json#/definitions/links"
     },
     "credit": {
-      "type": "integer",
+      "type": "number",
       "description": "The current credits on your account."
     },
     "debit": {
-      "type": "integer",
+      "type": "number",
       "description": "The current debits on your account including interest."
     }
   }
