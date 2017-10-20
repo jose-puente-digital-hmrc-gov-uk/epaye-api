@@ -73,10 +73,27 @@ class AnnualSummarySpec extends AppSpec with BeforeAndAfterEach {
           HttpResponse(200, responseString = Some(JsonFixtures.annualStatements.annualStatement))
         }
       }
+      val taxYear = TaxYear(2017)
+      val taxMonth = TaxMonth(1)
+
       contentAsJson(request).validate[ChargesSummary] shouldBe JsSuccess {
         ChargesSummary(
-          List(RtiCharge(api.TaxYear(2017, 2018), Some(1), DebitCredit(100.2, 0), Some(new LocalDate(2017, 5, 22)), true)),
-          List(NonRtiCharge("P11D_CLASS_1A_CHARGE", api.TaxYear(2017, 2018), DebitCredit(20.0, 0), Some(new LocalDate(2018, 2, 22)), false))
+          List(RtiCharge(
+            tax_year = api.TaxYear.fromTaxYear(taxYear),
+            tax_month = Some(api.TaxMonth.fromTaxMonth(taxMonth, taxYear)),
+            balance = DebitCredit(100.2, 0),
+            due_date = Some(new LocalDate(2017, 5, 22)),
+            is_overdue = true
+          )),
+          List(
+            NonRtiCharge(
+              "P11D_CLASS_1A_CHARGE",
+              tax_year = api.TaxYear.fromTaxYear(taxYear),
+              balance = DebitCredit(20.0, 0),
+              due_date = Some(new LocalDate(2018, 2, 22)),
+              is_overdue = false
+            )
+          )
         )
       }
 

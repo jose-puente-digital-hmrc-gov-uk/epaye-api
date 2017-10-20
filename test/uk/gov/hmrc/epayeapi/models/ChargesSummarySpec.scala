@@ -28,25 +28,26 @@ import scala.io.Source
 class ChargesSummarySpec extends WordSpec with Matchers {
   "charges summary object" should {
     "convert to json" in {
+      val taxYear = TaxYear(2016)
       val summary = ChargesSummary(
         rti = Seq(
           Fixtures.rtiCharge(
-            taxYear = api.TaxYear(2016, 2017),
-            taxMonth = Some(3),
+            taxYear = api.TaxYear.fromTaxYear(taxYear),
+            taxMonth = Some(api.TaxMonth.fromTaxMonth(TaxMonth(3), taxYear)),
             debit = 1200,
             dueDate = Some(new LocalDate(2016, 10, 22)),
             isOverdue = true
           ),
           Fixtures.rtiCharge(
-            taxYear = api.TaxYear(2016, 2017),
-            taxMonth = Some(4),
+            taxYear = api.TaxYear.fromTaxYear(taxYear),
+            taxMonth = Some(api.TaxMonth.fromTaxMonth(TaxMonth(4), taxYear)),
             debit = 1300.0,
-            dueDate = Some(new LocalDate(2018, 11, 22)),
-            isOverdue = false
+            dueDate = Some(new LocalDate(2016, 11, 22)),
+            isOverdue = true
           ),
           Fixtures.rtiCharge(
-            taxYear = api.TaxYear(2016, 2017),
-            taxMonth = None,
+            taxYear = api.TaxYear.fromTaxYear(taxYear),
+            taxMonth = Some(api.TaxMonth.fromTaxMonth(TaxMonth(5), taxYear)),
             debit = 1200.0,
             dueDate = Some(new LocalDate(2016, 10, 22)),
             isOverdue = true
@@ -54,18 +55,18 @@ class ChargesSummarySpec extends WordSpec with Matchers {
         ),
         non_rti = Seq(
           Fixtures.nonRtiCharge(
-            chargeCode = "NON_RTI_SPECIFIED_CHARGE",
-            taxYear = api.TaxYear(2016, 2017),
+            chargeCode = "NON_RTI_IN_YEAR_PAYE_LATE_FILING_PENALTY",
+            taxYear = api.TaxYear.fromTaxYear(taxYear),
             debit = 1200,
             dueDate = Some(new LocalDate(2016, 10, 22)),
             isOverdue = true
           ),
           Fixtures.nonRtiCharge(
-            chargeCode = "NON_RTI_SPECIFIED_CHARGE",
-            taxYear = api.TaxYear(2016, 2017),
+            chargeCode = "NON_RTI_EOY_NIC1",
+            taxYear = api.TaxYear.fromTaxYear(taxYear),
             credit = 800,
-            dueDate = Some(new LocalDate(2018, 10, 22)),
-            isOverdue = false
+            dueDate = Some(new LocalDate(2016, 10, 22)),
+            isOverdue = true
           )
         )
       )
@@ -75,7 +76,7 @@ class ChargesSummarySpec extends WordSpec with Matchers {
         Source.fromURL(resource, "utf-8").mkString("")
       }
 
-      summaryJson shouldEqual exampleJson
+      Json.prettyPrint(summaryJson).toString shouldEqual Json.prettyPrint(exampleJson).toString
       exampleJson.validate[ChargesSummary] shouldEqual JsSuccess(summary)
     }
   }

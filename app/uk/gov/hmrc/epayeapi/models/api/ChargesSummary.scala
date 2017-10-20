@@ -17,11 +17,34 @@
 package uk.gov.hmrc.epayeapi.models.api
 
 import org.joda.time.LocalDate
+import uk.gov.hmrc.epayeapi.models
+
 
 case class TaxYear(
-  start_year: Int,
-  end_year: Int
+  year: String,
+  first_day: LocalDate,
+  last_day: LocalDate
 )
+object TaxYear {
+  def fromTaxYear(taxYear: models.TaxYear): TaxYear = {
+    TaxYear(taxYear.asString, taxYear.firstDay, taxYear.lastDay)
+  }
+}
+
+case class TaxMonth(
+  month: Int,
+  first_day: LocalDate,
+  last_day: LocalDate
+)
+object TaxMonth {
+  def fromTaxMonth(taxMonth: models.TaxMonth, taxYear: models.TaxYear): TaxMonth = {
+    TaxMonth(
+      taxMonth.month,
+      taxMonth.firstDay(taxYear),
+      taxMonth.lastDay(taxYear)
+    )
+  }
+}
 
 case class DebitCredit(
   debit: BigDecimal,
@@ -30,7 +53,7 @@ case class DebitCredit(
 
 case class RtiCharge(
   tax_year: TaxYear,
-  tax_month: Option[Int],
+  tax_month: Option[TaxMonth],
   balance: DebitCredit,
   due_date: Option[LocalDate],
   is_overdue: Boolean

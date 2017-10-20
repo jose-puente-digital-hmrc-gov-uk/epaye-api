@@ -16,10 +16,16 @@
 
 package uk.gov.hmrc.epayeapi.models
 
+import org.joda.time.LocalDate
+import uk.gov.hmrc.time.TaxYearResolver
+
 import scala.util.{Success, Try}
 
 case class TaxYear(yearFrom: Int) {
-  val yearTo = yearFrom + 1
+  val yearTo: Int = yearFrom + 1
+  val asString: String = s"$yearFrom-${yearTo % 100}"
+  val firstDay: LocalDate = TaxYearResolver.startOfTaxYear(yearFrom)
+  val lastDay: LocalDate = firstDay.plusYears(1).minusDays(1)
 }
 
 object TaxYear {
@@ -27,7 +33,6 @@ object TaxYear {
 
   def asString(taxYear: TaxYear): String =
     s"${taxYear.yearFrom}-${taxYear.yearTo % 100}"
-
 
   def extractTaxYear(taxYear: String): Option[TaxYear] = {
     taxYear match {

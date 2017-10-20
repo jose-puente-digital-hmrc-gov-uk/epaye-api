@@ -16,13 +16,14 @@
 
 package uk.gov.hmrc.epayeapi
 
+
 import org.joda.time.LocalDate
-import uk.gov.hmrc.epayeapi.models.api.{DebitCredit, NonRtiCharge, RtiCharge, TaxYear}
+import uk.gov.hmrc.epayeapi.models.api._
 
 object Fixtures {
   def rtiCharge(
     taxYear: TaxYear,
-    taxMonth: Option[Int] = None,
+    taxMonth: Option[TaxMonth] = None,
     debit: BigDecimal = 0,
     credit: BigDecimal = 0,
     dueDate: Option[LocalDate] = None,
@@ -39,7 +40,7 @@ object Fixtures {
 
   def nonRtiCharge(
     chargeCode: String = "NON_RTI_SPECIFIED_CHARGE",
-    taxYear: TaxYear = TaxYear(2016, 2017),
+    taxYear: TaxYear = TaxYear.fromTaxYear(models.TaxYear(2016)),
     debit: BigDecimal = 0,
     credit: BigDecimal = 0,
     dueDate: Option[LocalDate] = None,

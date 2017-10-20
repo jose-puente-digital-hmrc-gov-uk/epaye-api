@@ -2,8 +2,11 @@
   "credit" : 100,
   "debit" : 0,
   "_links" : {
-    "empRefs" : {
-      "href" : "/paye-for-employers/"
+    "empRefs": {
+      "href": "/paye-for-employers/"
+    },
+    "total": {
+      "href": "/paye-for-employers/001/AB00001/total"
     }
   }
 }

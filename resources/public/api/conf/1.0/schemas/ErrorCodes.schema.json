@@ -24,7 +24,8 @@
         "BAD_REQUEST",
         "INSUFFICIENT_ENROLMENTS",
         "INVALID_EMPREF",
-        "EMPREF_NOT_FOUND"
+        "EMPREF_NOT_FOUND",
+        "INVALID_TAXYEAR"
       ]
     }
   }

@@ -1,0 +1,194 @@
+{
+  "definitions": {
+    "empRef": {
+      "type": "string",
+      "description": "A unique identifier made up of tax office number and tax office reference.",
+      "pattern": "^\\w{3}/\\w{7,10}"
+    },
+    "links": {
+      "type": "object",
+      "description": "An object of links to explore further data.",
+      "properties": {
+        "total": {
+          "type": "object",
+          "description": "Link to total balance endpoint.",
+          "properties": {
+            "href": {
+              "type": "string",
+              "description": "Link to the entry endpoint."
+            }
+          }
+        },
+        "empRefs": {
+          "type": "object",
+          "description": "Link to the entry endpoint endpoint.",
+          "properties": {
+            "href": {
+              "type": "string",
+              "description": "Link to the entry endpoint."
+            }
+          }
+        }
+      }
+    },
+    "tax_year": {
+      "type": "object",
+      "description": "Tax year",
+      "title": "The tax year for this data",
+      "properties": {
+        "year": {
+          "type": "string",
+          "description": "The tax year",
+          "pattern": "^\\d{4}-\\d{2}"
+        },
+        "first_day": {
+          "type": "string",
+          "description": "The first day of the tax year"
+        },
+        "last_day": {
+          "type": "string",
+          "description": "The last day of the tax year"
+        }
+      }
+    },
+    "tax_month": {
+      "type": "object",
+      "description": "Tax month",
+      "title": "The tax month for this data",
+      "properties": {
+        "number": {
+          "type": "integer",
+          "description": "The tax month's number"
+        },
+        "first_day": {
+          "type": "string",
+          "description": "The first day of the tax month"
+        },
+        "last_day": {
+          "type": "string",
+          "description": "The last day of the tax month"
+        }
+      }
+    },
+    "balance": {
+      "type": "object",
+      "description": "An object containing the outstanding debits and credits.",
+      "properties": {
+        "debit": {
+          "$ref": "#/definitions/debit"
+        },
+        "credit": {
+          "$ref": "#/definitions/credit"
+        }
+      }
+    },
+    "credit": {
+      "type": "number",
+      "description": "The current credits on your account.",
+      "default": 0
+    },
+    "debit": {
+      "type": "number",
+      "description": "The current debits on your account including interest.",
+      "default": 0
+    },
+    "due_date": {
+      "type": "string",
+      "description": "The date this item is due",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+      "example": "2017-05-05"
+    },
+    "is_overdue": {
+      "type": "boolean",
+      "description": "Whether this item is overdue or not",
+      "default": false
+    },
+    "charge_code": {
+      "type": "string",
+      "description": "The unique identifier for this charge",
+      "enum": [
+        "NON_RTI_APPRENTICESHIP_LEVY_INTEREST",
+        "NON_RTI_CIS_FIXED_PENALTY",
+        "NON_RTI_CIS_LATE_FILING_INTEREST",
+        "NON_RTI_CIS_TAX_GEARED_PENALTY",
+        "NON_RTI_CISR_IN_YEAR_INTEREST",
+        "NON_RTI_EI_INCOMPLETE_REPORT_DAILY_PENALTY",
+        "NON_RTI_EI_INCOMPLETE_REPORT_DAILY_PENALTY_INTEREST",
+        "NON_RTI_EI_INCOMPLETE_REPORT_PENALTY",
+        "NON_RTI_EI_INCOMPLETE_REPORT_PENALTY_INTEREST",
+        "NON_RTI_EI_INCORRECT_REPORT_PENALTY",
+        "NON_RTI_EI_INCORRECT_REPORT_PENALTY_INTEREST",
+        "NON_RTI_EI_LATE_REPORT_DAILY_PENALTY",
+        "NON_RTI_EI_LATE_REPORT_DAILY_PENALTY_INTEREST",
+        "NON_RTI_EI_LATE_REPORT_PENALTY",
+        "NON_RTI_EI_LATE_REPORT_PENALTY_INTEREST",
+        "NON_RTI_EMPLOYEE_NIC1",
+        "NON_RTI_EMPLOYEE_NIC1_INTEREST",
+        "NON_RTI_EMPLOYER_NIC1_INTEREST",
+        "NON_RTI_EMPLOYMENT_ALLOWANCE_INTEREST",
+        "NON_RTI_EOY_COMPENSATION_ON_SHARED_PARENT_PAY",
+        "NON_RTI_EOY_COMPENSATION_STATUTORY_MATERNITY_PAY",
+        "NON_RTI_EOY_COMPENSATION_STATUTORY_PATERNITY_PAY",
+        "NON_RTI_EOY_DEDUCTION_SUFFERED",
+        "NON_RTI_EOY_EMPLOYEE_NIC1_INTEREST",
+        "NON_RTI_EOY_EMPLOYER_NIC1",
+        "NON_RTI_EOY_EMPLOYER_NIC1_INTEREST",
+        "NON_RTI_EOY_NI_COMPENSATION_ON_STATUTORY_ADOPTION_PAY",
+        "NON_RTI_EOY_NI_HOLIDAY",
+        "NON_RTI_EOY_NIC1",
+        "NON_RTI_EOY_NIC1_INTEREST",
+        "NON_RTI_EOY_SHARED_PARENT_PAY",
+        "NON_RTI_EOY_STATUTORY_ADOPTION_PAY",
+        "NON_RTI_EOY_STATUTORY_MATERNITY_PAY",
+        "NON_RTI_EOY_STATUTORY_PATERNITY_PAY",
+        "NON_RTI_EOY_STATUTORY_SICK_PAY",
+        "NON_RTI_EOY_STUDENT_LOAN_DEDUCTION",
+        "NON_RTI_EOY_STUDENT_LOAN_DEDUCTION_INTEREST",
+        "NON_RTI_EOY_TAX",
+        "NON_RTI_EOY_TAX_INTEREST",
+        "NON_RTI_ERS_OTHER_RETURN_RELATED_PENALTY_9_MONTH_LATE",
+        "NON_RTI_ERS_PENALTY_1",
+        "NON_RTI_ERS_PENALTY_2",
+        "NON_RTI_ERS_PENALTY_3",
+        "NON_RTI_EYU_PAYE_EMPLOYEE_NIC1_INTEREST",
+        "NON_RTI_EYU_PAYE_EMPLOYER_NIC1_INTEREST",
+        "NON_RTI_EYU_PAYE_LATE_PAYMENT_PENALTY",
+        "NON_RTI_EYU_PAYE_LATE_PAYMENT_PENALTY_12_MONTH",
+        "NON_RTI_EYU_PAYE_LATE_PAYMENT_PENALTY_12_MONTH_INTEREST",
+        "NON_RTI_EYU_PAYE_LATE_PAYMENT_PENALTY_6_MONTH",
+        "NON_RTI_EYU_PAYE_LATE_PAYMENT_PENALTY_6_MONTH_INTEREST",
+        "NON_RTI_EYU_PAYE_LATE_PAYMENT_PENALTY_INTEREST",
+        "NON_RTI_EYU_PAYE_STUDENT_LOAN_DEDUCTION_INTEREST",
+        "NON_RTI_EYU_PAYE_TAX_INTEREST",
+        "NON_RTI_IN_YEAR_PAYE_LATE_FILING_PENALTY",
+        "NON_RTI_IN_YEAR_PAYE_LATE_FILING_PENALTY_INTEREST",
+        "NON_RTI_IN_YEAR_PAYE_LATE_PAYMENT_PENALTY",
+        "NON_RTI_IN_YEAR_PAYE_LATE_PAYMENT_PENALTY_12_MONTH",
+        "NON_RTI_IN_YEAR_PAYE_LATE_PAYMENT_PENALTY_12_MONTH_INTEREST",
+        "NON_RTI_IN_YEAR_PAYE_LATE_PAYMENT_PENALTY_6_MONTH",
+        "NON_RTI_IN_YEAR_PAYE_LATE_PAYMENT_PENALTY_6_MONTH_INTEREST",
+        "NON_RTI_IN_YEAR_PAYE_LATE_PAYMENT_PENALTY_INTEREST",
+        "NON_RTI_LATE_FILING_PENALTY_P11DB_1",
+        "NON_RTI_LATE_FILING_PENALTY_P11DB_2",
+        "NON_RTI_LATE_FILING_PENALTY_P11DB_3",
+        "NON_RTI_LATE_FILING_PENALTY_P11DB_4",
+        "NON_RTI_LATE_FILING_PENALTY_P11DB_5",
+        "NON_RTI_NIC1_INTEREST",
+        "NON_RTI_P11D_CLASS_1A_CHARGE",
+        "NON_RTI_P11D_CLASS_1A_CHARGE_INTEREST",
+        "NON_RTI_PAYE_P11D_LATE_PAYMENT_PENALTY",
+        "NON_RTI_PAYE_P11D_LATE_PAYMENT_PENALTY_12_MONTH",
+        "NON_RTI_PAYE_P11D_LATE_PAYMENT_PENALTY_12_MONTH_INTEREST",
+        "NON_RTI_PAYE_P11D_LATE_PAYMENT_PENALTY_6_MONTH",
+        "NON_RTI_PAYE_P11D_LATE_PAYMENT_PENALTY_6_MONTH_INTEREST",
+        "NON_RTI_PAYE_P11D_LATE_PAYMENT_PENALTY_INTEREST",
+        "NON_RTI_SPECIFIED_CHARGE_EMPLOYEE_NIC1",
+        "NON_RTI_SPECIFIED_CHARGE_EMPLOYER_NIC1",
+        "NON_RTI_SPECIFIED_CHARGE_NIC1",
+        "NON_RTI_SPECIFIED_CHARGE_TAX",
+        "NON_RTI_STUDENT_LOAN_DEDUCTION_INTEREST",
+        "NON_RTI_TAX_INTEREST"
+      ]
+    }
+  }
+}

@@ -31,7 +31,13 @@ case class Cleared(
 )
 
 
-case class TaxMonth(month: Int)
+case class TaxMonth(month: Int) {
+  def firstDay(year: TaxYear): LocalDate =
+    year.firstDay.plusMonths(month - 1)
+
+  def lastDay(year: TaxYear): LocalDate =
+    year.firstDay.plusMonths(month).minusDays(1)
+}
 
 case class LineItem(
   taxYear: TaxYear,

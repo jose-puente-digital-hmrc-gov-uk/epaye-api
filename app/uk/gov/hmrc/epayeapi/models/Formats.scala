@@ -20,7 +20,6 @@ import play.api.libs.json._
 import uk.gov.hmrc.domain.EmpRef
 import uk.gov.hmrc.epayeapi.models.api.{ChargesSummary, DebitCredit, NonRtiCharge, RtiCharge}
 
-
 trait Formats {
   implicit val empRefFormat: Writes[EmpRef] = new Writes[EmpRef] {
     override def writes(o: EmpRef): JsValue = JsString(s"${o.taxOfficeNumber}/${o.taxOfficeReference}")
@@ -41,6 +40,7 @@ trait Formats {
   implicit val taxYearFormat: Format[TaxYear] = Json.format[TaxYear]
   implicit val apiTaxYearFormat: Format[api.TaxYear] = Json.format[api.TaxYear]
   implicit val taxMonthFormat: Format[TaxMonth] = Json.format[TaxMonth]
+  implicit val apiTaxMonthFormat: Format[api.TaxMonth] = Json.format[api.TaxMonth]
   implicit val lineItemFormat: Format[LineItem] = Json.format[LineItem]
   implicit val annualSummaryFormat: Format[AnnualSummary] = Json.format[AnnualSummary]
   implicit val annualSummaryResponseFormat: Format[AnnualSummaryResponse] = Json.format[AnnualSummaryResponse]

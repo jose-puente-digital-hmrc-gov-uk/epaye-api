@@ -3,7 +3,10 @@
     {
       "empRef": "001/AB00001",
       "_links": {
-        "totals": {
+        "empRefs": {
+          "href": "/paye-for-employers/"
+        },
+        "total": {
           "href": "/paye-for-employers/001/AB00001/total"
         }
       }

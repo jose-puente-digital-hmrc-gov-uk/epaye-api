@@ -1,146 +1,51 @@
 {
-  "$schema": "http://json-schema.org/draft-04/schema#",
-  "definitions": {},
-  "id": "http://example.com/example.json",
+  "type": "object",
   "properties": {
     "rti": {
-      "id": "/properties/rti",
+      "type": "array",
       "items": {
-        "id": "/properties/rti/items",
+        "type": "object",
         "properties": {
           "tax_year": {
-            "properties": {
-              "start_year": {
-                "default": 0,
-                "description": "The start year of the tax year",
-                "type": "integer"
-              },
-              "end_year": {
-                "default": 0,
-                "description": "The end year of the tax year",
-                "type": "integer"
-              },
-            },
-            "description": "Tax year.",
-            "id": "/properties/rti/items/properties/tax_year",
-            "title": "The tax_year schema",
-            "type": "object"
+            "$ref": "Definitions.schema.json#/definitions/tax_year"
           },
           "tax_month": {
-            "default": 0,
-            "description": "Tax month.",
-            "id": "/properties/rti/items/properties/tax_month",
-            "title": "The tax_month schema",
-            "type": "integer"
+            "$ref": "Definitions.schema.json#/definitions/tax_month"
           },
           "balance": {
-            "id": "/properties/rti/items/properties/balance",
-            "properties": {
-              "debit": {
-                "default": 0,
-                "description": "Total debit balance.",
-                "id": "/properties/rti/items/properties/balance/properties/debit",
-                "title": "The debit schema",
-                "type": "integer"
-              },
-              "credit": {
-                "default": 0,
-                "description": "Total credit balance.",
-                "id": "/properties/rti/items/properties/balance/properties/credit",
-                "title": "The credit schema",
-                "type": "integer"
-              }
-            },
-            "type": "object"
+            "$ref": "Definitions.schema.json#/definitions/balance"
           },
           "due_date": {
-            "default": "",
-            "description": "Due date.",
-            "id": "/properties/rti/items/properties/due_date",
-            "title": "The due_date schema",
-            "type": "string"
+            "$ref": "Definitions.schema.json#/definitions/due_date"
           },
           "is_overdue": {
-            "default": true,
-            "description": "Whether overdue or not.",
-            "id": "/properties/rti/items/properties/overdue",
-            "title": "The overdue schema",
-            "type": "boolean"
+            "$ref": "Definitions.schema.json#/definitions/is_overdue"
           }
-        },
-        "type": "object"
-      },
-      "type": "array"
+        }
+      }
     },
     "non_rti": {
-      "id": "/properties/non_rti",
+      "type": "array",
       "items": {
-        "id": "/properties/non_rti/items",
+        "type": "object",
         "properties": {
           "charge_code": {
-            "default": "",
-            "description": "The charge code",
-            "id": "/properties/non_rti/items/properties/charge_code",
-            "title": "The charge_code schema",
-            "type": "string"
+            "$ref": "Definitions.schema.json#/definitions/charge_code"
           },
           "balance": {
-            "id": "/properties/non_rti/items/properties/balance",
-            "properties": {
-              "debit": {
-                "default": 0,
-                "description": "Total debit balance.",
-                "id": "/properties/non_rti/items/properties/balance/properties/debit",
-                "title": "The debit schema",
-                "type": "integer"
-              },
-              "credit": {
-                "default": 0,
-                "description": "Total credit balance.",
-                "id": "/properties/non_rti/items/properties/balance/properties/credit",
-                "title": "The credit schema",
-                "type": "integer"
-              }
-            },
-            "type": "object"
+            "$ref": "Definitions.schema.json#/definitions/balance"
           },
           "tax_year": {
-            "properties": {
-              "start_year": {
-                "default": 0,
-                "description": "The start year of the tax year",
-                "type": "integer"
-              },
-              "end_year": {
-                "default": 0,
-                "description": "The end year of the tax year",
-                "type": "integer"
-              },
-            },
-            "description": "Tax year.",
-            "id": "/properties/non_rti/items/properties/tax_year",
-            "title": "The tax_year schema",
-            "type": "object"
+            "$ref": "Definitions.schema.json#/definitions/tax_year"
           },
           "due_date": {
-            "default": "",
-            "description": "Due date.",
-            "id": "/properties/non_rti/items/properties/dueDate",
-            "title": "The due_date schema",
-            "type": "string"
+            "$ref": "Definitions.schema.json#/definitions/due_date"
           },
           "is_overdue": {
-            "default": false,
-            "description": "Whether overdue or not.",
-            "id": "/properties/non_rti/items/properties/overdue",
-            "title": "The overdue schema",
-            "type": "boolean"
+            "$ref": "Definitions.schema.json#/definitions/is_overdue"
           }
-        },
-        "type": "object"
-      },
-      "type": "array"
+        }
+      }
     }
-  },
-  "type": "object"
+  }
 }

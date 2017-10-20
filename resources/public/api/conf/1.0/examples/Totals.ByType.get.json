@@ -1,18 +1,18 @@
 {
   "rti": {
-    "credit" : 0.0,
-    "debit" : 100.25
+    "credit": 0.0,
+    "debit": 100.25
   },
-  "nonRti": {
+  "non_rti": {
     "credit": 0.0,
     "debit": 100.35
   },
-  "_links" : {
-    "empRefs" : {
-      "href" : "/paye-for-employers/"
+  "_links": {
+    "empRefs": {
+      "href": "/paye-for-employers/"
     },
-    "totals" : {
-      "href" : "/paye-for-employers/123XYZ/totals"
+    "total": {
+      "href": "/paye-for-employers/001/AB00001/total"
     }
   }
 }

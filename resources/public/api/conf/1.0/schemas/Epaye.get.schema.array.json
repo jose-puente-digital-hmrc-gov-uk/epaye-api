@@ -9,11 +9,10 @@
         "description": "An array of objects which you can use to access further data.",
         "properties": {
           "_links": {
-            "$ref": "Links.schema.json#/definitions/links"
+            "$ref": "Definitions.schema.json#/definitions/links"
           },
           "empRef": {
-            "type": "string",
-            "description": "A unique identifier made up of tax office number and tax office reference."
+            "$ref": "Definitions.schema.json#/definitions/empRef"
           }
         }
       }

@@ -34,8 +34,8 @@ object ChargesSummaryService {
   def toRtiChargesSummary(annualSummary: AnnualSummary): Seq[RtiCharge] = {
     annualSummary.lineItems.map(lineItem =>
       RtiCharge(
-        tax_year = TaxYear(lineItem.taxYear.yearFrom, lineItem.taxYear.yearTo),
-        tax_month = lineItem.taxMonth.map(_.month),
+        tax_year = TaxYear.fromTaxYear(lineItem.taxYear),
+        tax_month = lineItem.taxMonth.map(month => TaxMonth.fromTaxMonth(month, lineItem.taxYear)),
         balance = DebitCredit(lineItem.charges.debit, lineItem.charges.credit),
         due_date = Some(lineItem.dueDate),
         is_overdue = lineItem.dueDate.isBefore(today)
@@ -46,7 +46,7 @@ object ChargesSummaryService {
     annualSummary.lineItems.map(lineItem =>
       NonRtiCharge(
         charge_code = lineItem.codeText.getOrElse(""),
-        tax_year = TaxYear(lineItem.taxYear.yearFrom, lineItem.taxYear.yearTo),
+        tax_year = TaxYear(lineItem.taxYear.asString, lineItem.taxYear.firstDay, lineItem.taxYear.lastDay),
         balance = DebitCredit(lineItem.charges.debit, lineItem.charges.credit),
         due_date = Some(lineItem.dueDate),
         is_overdue = lineItem.dueDate.isBefore(today)
