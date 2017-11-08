@@ -42,7 +42,8 @@ trait ApiController extends BaseController with AuthorisedFunctions {
   def EnrolmentsAction(enrolment: Enrolment, retrieveEnrolments: Retrieval[Enrolments])(action: Enrolments => EssentialAction): EssentialAction = {
     EssentialAction { implicit request =>
       Accumulator.done {
-        authorised(enrolment).retrieve(retrieveEnrolments) { enrolments =>
+        authorised(enrolment.withDelegatedAuthRule("epaye-auth"))
+          .retrieve(retrieveEnrolments) { enrolments =>
           action(enrolments)(request).run()
         } recoverWith {
           case ex: MissingBearerToken => missingBearerToken
