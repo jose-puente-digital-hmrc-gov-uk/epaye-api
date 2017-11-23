@@ -1,9 +1,45 @@
 {
   "definitions": {
+    "href": {
+      "type": "string",
+      "description": "URL to endpoint"
+    },
     "empRef": {
       "type": "string",
       "description": "A unique identifier made up of tax office number and tax office reference.",
       "pattern": "^\\w{3}/\\w{7,10}"
+    },
+    "epayeLinks": {
+      "type": "object",
+      "description": "An object of links to explore further data.",
+      "properties": {
+        "self": {
+          "type": "object",
+          "description": "Link to the entry endpoint.",
+          "properties": {
+            "href": {
+              "type": "string",
+              "description": "URL to endpoint"
+            }
+          }
+        }
+      }
+    },
+    "empRefLinks": {
+      "type": "object",
+      "description": "An object of links to explore further data.",
+      "properties": {
+        "summary": {
+          "type": "object",
+          "description": "Link to account summary endpoint.",
+          "properties": {
+            "href": {
+              "type": "string",
+              "description": "Link to the summary endpoint."
+            }
+          }
+        }
+      }
     },
     "links": {
       "type": "object",
@@ -70,15 +106,66 @@
         }
       }
     },
+    "outstandingCharges": {
+      "type": "object",
+      "description": "The outstanding charges on account.",
+      "properties": {
+        "amount": {
+          "type": "number",
+          "description": "The outstanding charges on account."
+        } ,
+        "breakdown": {
+          "type": "object",
+          "description": "The breakdown of outstanding charges.",
+          "properties": {
+            "rti": {
+              "type": "number",
+              "description": "The outstanding RTI charges on account."
+            },
+            "nonRti": {
+              "type": "number",
+              "description": "The outstanding Non-RTI charges on account."
+            }
+          }
+        }
+      }
+    },
     "balance": {
       "type": "object",
-      "description": "An object containing the outstanding debits and credits.",
+      "description": "The currently outstanding balance on account.",
+
       "properties": {
-        "debit": {
-          "$ref": "#/definitions/debit"
-        },
         "credit": {
           "$ref": "#/definitions/credit"
+        },
+        "debit": {
+          "$ref": "#/definitions/debit"
+        }
+      }
+    },
+    "summaryLinks": {
+      "type": "object",
+      "description": "An object of links to explore further data.",
+      "properties": {
+        "self": {
+          "type": "object",
+          "description": "Link to account summary endpoint.",
+          "properties": {
+            "href": {
+              "type": "string",
+              "description": "Link account summary endpoint."
+            }
+          }
+        },
+        "empRefs": {
+          "type": "object",
+          "description": "Link to the entry endpoint endpoint.",
+          "properties": {
+            "href": {
+              "type": "string",
+              "description": "Link to the entry endpoint."
+            }
+          }
         }
       }
     },

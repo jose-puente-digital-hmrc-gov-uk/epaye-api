@@ -35,7 +35,7 @@ types:
   TaxOfficeReference:
     pattern: "[a-zA-Z0-9]{7}"
 
-/paye-for-employers:
+/organisation/paye:
   /:
     get:
       is: [ headers.acceptHeader ]
@@ -61,7 +61,7 @@ types:
                       "code" : "INSUFFICIENT_ENROLMENTS",
                       "message" : "You are not currently enrolled for ePAYE"
                     }
-  /{taxOfficeNumber}/{taxOfficeReference}/total:
+  /{taxOfficeNumber}/{taxOfficeReference}/:
     uriParameters:
       taxOfficeNumber:
         description: A unique identifier made up of tax office number
@@ -74,15 +74,15 @@ types:
     get:
       is: [ headers.acceptHeader ]
       displayName: Get ePAYE total balance
-      description: This resource returns the total balance including interest on your ePAYE account.
+      description: This resource returns the account summary including outstanding balance and interest on your ePAYE account.
       (annotations.scope): "read:epaye"
       securedBy: [ sec.oauth_2_0: { scopes: [ "read:epaye" ] } ]
       responses:
         200:
           body:
             application/json:
-              type: !include schemas/Totals.get.schema.json
-              example: !include examples/Totals.get.json
+              type: !include schemas/Summary.get.schema.json
+              example: !include examples/Summary.get.json
         403:
           body:
             application/json:
@@ -95,73 +95,4 @@ types:
                       "code" : "INVALID_EMPREF",
                       "message" : "Provided EmpRef is not associated with your account"
                     }
-    /by-type:
-      get:
-        is: [ headers.acceptHeader ]
-        displayName: Get ePAYE balance by type
-        description: This resource returns the total balance including interest on your ePAYE account for RTI and Non-RTI charges.
-        (annotations.scope): "read:epaye"
-        securedBy: [ sec.oauth_2_0: { scopes: [ "read:epaye" ] } ]
-        responses:
-          200:
-            body:
-              application/json:
-                type: !include schemas/Totals.ByType.get.schema.json
-                example: !include examples/Totals.ByType.get.json
-          403:
-            body:
-              application/json:
-                type: !include schemas/ErrorCodes.schema.json
-                examples:
-                  notOpenStatus:
-                    description: You don't currently have an ePAYE enrolment on this account.
-                    value: |
-                      {
-                        "code" : "INSUFFICIENT_ENROLMENTS",
-                        "message" : "You are not currently enrolled for ePAYE"
-                      }
-  /{taxOfficeNumber}/{taxOfficeReference}/charges-summary/?taxYear={taxYear}:
-    uriParameters:
-      taxOfficeNumber:
-        description: A unique identifier made up of tax office number
-        type: string
-        example: "001"
-      taxOfficeReference:
-        description: A unique identifier made up of the tax office reference
-        type: string
-        example: "A000001"
-      taxYear:
-        description: string identifying a tax year, if not given, current tax year assumed
-        type: string
-        example: "2016-17"
-    get:
-      is: [ headers.acceptHeader ]
-      displayName: Get RTI and non-RTI charges summary
-      description: This resource returns open RTI charges grouped by tax month and non-RTI charges grouped by type, for the given tax year or current tax year if tax year query parameter is missing
-      (annotations.scope): "read:epaye"
-      securedBy: [ sec.oauth_2_0: { scopes: [ "read:epaye" ] } ]
-      responses:
-        200:
-          body:
-            application/json:
-              type: !include schemas/ChargesSummary.get.schema.json
-              example: !include examples/ChargesSummary.get.json
-        403:
-          body:
-            application/json:
-              type: !include schemas/ErrorCodes.schema.json
-              examples:
-                notOpenStatus:
-                  description: You don't currently have an ePAYE enrolment on this account.
-                  value: |
-                    {
-                      "code" : "INVALID_EMPREF",
-                      "message" : "Provided EmpRef is not associated with your account"
-                    }
-                invalidTaxYear:
-                  description: Incorrect tax year.
-                  value: |
-                    {
-                      "code" : "INVALID_TAXYEAR",
-                      "message" : "Provided Tax Year is incorrect"
-                    }
+

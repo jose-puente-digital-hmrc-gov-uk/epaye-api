@@ -1,0 +1,17 @@
+{
+  "outstandingCharges": {
+    "amount": 123,
+    "breakdown": {
+      "rti": 100,
+      "nonRti": 23
+    }
+  },
+  "_links" : {
+    "empRefs": {
+      "href": "/organisation/paye/"
+    },
+    "self": {
+      "href": "/organisation/paye/001/AB00001"
+    }
+  }
+}

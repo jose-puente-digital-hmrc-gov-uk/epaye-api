@@ -2,20 +2,23 @@
   "type": "object",
   "description": "Wrapper object for individual EmpRefs.",
   "properties": {
-    "_embedded": {
+    "empRefs": {
       "type": "array",
       "items": {
         "type": "object",
         "description": "An array of objects which you can use to access further data.",
         "properties": {
           "_links": {
-            "$ref": "Definitions.schema.json#/definitions/links"
+            "$ref": "Definitions.schema.json#/definitions/empRefLinks"
           },
           "empRef": {
             "$ref": "Definitions.schema.json#/definitions/empRef"
           }
         }
       }
+    },
+    "_links": {
+      "$ref": "Definitions.schema.json#/definitions/epayeLinks"
     }
   }
 }

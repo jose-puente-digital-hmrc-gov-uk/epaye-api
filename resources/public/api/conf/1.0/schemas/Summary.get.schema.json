@@ -1,0 +1,16 @@
+{
+  "type": "object",
+  "description": "An object containing the account summary.",
+  "properties": {
+    "_links": {
+      "$ref": "Definitions.schema.json#/definitions/summaryLinks"
+    },
+    "outstandingCharges": {
+      "$ref": "Definitions.schema.json#/definitions/outstandingCharges"
+    }
+  },
+  "required": [
+    "outstandingCharges",
+    "_links"
+  ]
+}
