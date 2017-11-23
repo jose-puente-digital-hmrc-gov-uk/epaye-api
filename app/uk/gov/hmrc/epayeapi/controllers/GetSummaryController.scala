@@ -16,6 +16,7 @@
 
 package uk.gov.hmrc.epayeapi.controllers
 
+import java.util.NoSuchElementException
 import javax.inject.{Inject, Singleton}
 
 import akka.stream.Materializer
@@ -27,12 +28,12 @@ import uk.gov.hmrc.domain.EmpRef
 import uk.gov.hmrc.epayeapi.connectors.EpayeConnector
 import uk.gov.hmrc.epayeapi.models.Formats._
 import uk.gov.hmrc.epayeapi.models.api.{ApiJsonError, ApiNotFound, ApiSuccess}
-import uk.gov.hmrc.epayeapi.models.{ApiError, TotalsResponse}
+import uk.gov.hmrc.epayeapi.models.{ApiError, SummaryResponse}
 
 import scala.concurrent.ExecutionContext
 
 @Singleton
-case class GetTotalsController @Inject()(
+case class GetSummaryController @Inject()(
   authConnector: AuthConnector,
   epayeConnector: EpayeConnector,
   implicit val ec: ExecutionContext,
@@ -40,19 +41,22 @@ case class GetTotalsController @Inject()(
 )
   extends ApiController {
 
-  def getTotals(empRef: EmpRef): EssentialAction = EmpRefAction(empRef) {
+  def getSummary(empRef: EmpRef): EssentialAction = EmpRefAction(empRef) {
     Action.async { request =>
-      epayeConnector.getTotals(empRef, hc(request)).map {
-        case ApiSuccess(totals) =>
-          Ok(Json.toJson(TotalsResponse(empRef, totals)))
-        case ApiJsonError(err) =>
-          Logger.error(s"Upstream returned invalid json: $err")
-          InternalServerError(Json.toJson(ApiError.InternalServerError))
-        case ApiNotFound() =>
+      val totalsResp = epayeConnector.getTotals(empRef, hc(request))
+      val totalsByTypeResp = epayeConnector.getTotalsByType(empRef, hc(request))
+
+      val resp = for {
+        ApiSuccess(totals) <- totalsResp
+        ApiSuccess(totalsByType) <- totalsByTypeResp
+      } yield {
+        Ok(Json.toJson(SummaryResponse(empRef, totals, totalsByType)))
+      }
+
+      // TODO: Revisit and add error handling!
+      resp.recover {
+        case ex: NoSuchElementException =>
           NotFound(Json.toJson(ApiError.EmpRefNotFound))
-        case error =>
-          Logger.error(s"Error while fetching totals: $error")
-          InternalServerError(Json.toJson(ApiError.InternalServerError))
       }
     }
   }

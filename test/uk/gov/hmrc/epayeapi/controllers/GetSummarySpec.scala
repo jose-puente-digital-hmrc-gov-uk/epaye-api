@@ -16,16 +16,19 @@
 
 package uk.gov.hmrc.epayeapi.controllers
 
+import org.mockito.Matchers
 import org.mockito.Matchers._
 import org.mockito.Mockito.{reset, when}
 import org.scalatest.BeforeAndAfterEach
 import play.api.Application
 import play.api.inject.bind
+import play.api.libs.json.Json
 import play.api.mvc.Result
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.auth.core.{ConfidenceLevel, Enrolment, EnrolmentIdentifier}
 import uk.gov.hmrc.domain.EmpRef
+import uk.gov.hmrc.epayeapi.connectors.EpayeApiConfig
 import uk.gov.hmrc.play.http.ws.WSHttp
 import uk.gov.hmrc.play.http.{HeaderCarrier, HttpResponse}
 import unit.AppSpec
@@ -34,9 +37,9 @@ import unit.auth.AuthComponents.AuthOk
 import scala.concurrent.Future
 import scala.concurrent.Future.successful
 
-class GetTotalsSpec extends AppSpec with BeforeAndAfterEach {
-  val ton = EnrolmentIdentifier("TaxOfficeNumber", "840")
-  val tor = EnrolmentIdentifier("TaxOfficeReference", "GZ00064")
+class GetSummarySpec extends AppSpec with BeforeAndAfterEach {
+  val ton = EnrolmentIdentifier("TaxOfficeNumber", "001")
+  val tor = EnrolmentIdentifier("TaxOfficeReference", "AB00001")
   val empRef = EmpRef(ton.value, tor.value)
 
   implicit val hc = HeaderCarrier()
@@ -54,24 +57,65 @@ class GetTotalsSpec extends AppSpec with BeforeAndAfterEach {
   val differentEnrolment =
     AuthOk(Enrolment("IR-Else", Seq(ton, tor), "activated", ConfidenceLevel.L300))
 
+  def config(implicit a: Application) =
+    inject[EpayeApiConfig]
+
   def request(implicit a: Application): Future[Result] =
-    inject[GetTotalsController].getTotals(empRef)(FakeRequest())
+    inject[GetSummaryController].getSummary(empRef)(FakeRequest())
 
 
   override protected def beforeEach(): FixtureParam = {
     reset(http)
   }
 
-  "The Totals endpoint" should {
+  "The summary endpoint" should {
     "return 200 OK on active enrolments" in new App(app.withAuth(activeEnrolment).build) {
-      when(http.GET[HttpResponse](anyString)(anyObject(), anyObject())).thenReturn {
+      val firstUrl =  s"${config.baseUrl}" +
+                      s"/epaye" +
+                      s"/${empRef.encodedValue}" +
+                      s"/api/v1/totals"
+
+      val secondUrl =
+        s"${config.baseUrl}" +
+        s"/epaye" +
+        s"/${empRef.encodedValue}" +
+        s"/api/v1/totals/by-type"
+
+      when(http.GET[HttpResponse](Matchers.eq(firstUrl))(anyObject(), anyObject())).thenReturn {
         successful {
-          HttpResponse(200, responseString = Some(""" {"credit": 100, "debit": 0} """))
+          HttpResponse(200, responseString = Some(""" {"credit": 0, "debit": 123} """))
         }
       }
-      contentAsString(request) shouldBe """{"credit":100,"debit":0,"_links":{"empRefs":{"href":"/paye-for-employers/"}}}"""
+
+      when(http.GET[HttpResponse](Matchers.eq(secondUrl))(anyObject(), anyObject())).thenReturn {
+        successful {
+          HttpResponse(200, responseString = Some(""" { "rti": {"credit": 0, "debit": 100}, "nonRti": {"credit": 0, "debit": 23} } """))
+        }
+      }
+
+      contentAsString(request) shouldBe Json.parse(
+        """
+          |{
+          |  "outstandingCharges": {
+          |    "amount": 123,
+          |    "breakdown": {
+          |      "rti": 100,
+          |      "nonRti": 23
+          |    }
+          |  },
+          |  "_links" : {
+          |    "empRefs": {
+          |      "href": "/organisation/paye/"
+          |    },
+          |    "self": {
+          |      "href": "/organisation/paye/001/AB00001/"
+          |    }
+          |  }
+          |}
+        """.stripMargin).toString()
       status(request) shouldBe OK
     }
+
     "return 403 Forbidden on inactive enrolments" in new App(app.withAuth(inactiveEnrolment).build) {
       status(request) shouldBe FORBIDDEN
     }

@@ -18,13 +18,16 @@ package uk.gov.hmrc.epayeapi.models
 
 import uk.gov.hmrc.domain.EmpRef
 
-case class EmpRefsResponse(_embedded: Seq[EmpRefItem])
+case class EmpRefsResponse(
+  empRefs: Seq[EmpRefItem],
+  _links: EmpRefsLinks
+)
 
 object EmpRefsResponse {
   def fromSeq(seq: Seq[EmpRef]): EmpRefsResponse =
-    EmpRefsResponse(seq.map(EmpRefItem(_)))
+    EmpRefsResponse(seq.map(EmpRefItem(_)), EmpRefsLinks())
   def apply(empRef: EmpRef): EmpRefsResponse =
-    EmpRefsResponse(Seq(EmpRefItem(empRef)))
+    EmpRefsResponse(Seq(EmpRefItem(empRef)), EmpRefsLinks())
 }
 
 case class EmpRefItem(empRef: EmpRef, _links: EmpRefLinks)
@@ -34,29 +37,14 @@ object EmpRefItem {
     EmpRefItem(empRef, EmpRefLinks(empRef))
 }
 
-case class EmpRefLinks(totals: Link, byType: Link)
+case class EmpRefsLinks(self: Link = Link.empRefsLink())
+
+case class EmpRefLinks(summary: Link)
 
 object EmpRefLinks {
   def apply(empRef: EmpRef): EmpRefLinks =
-    EmpRefLinks(Link.totalLink(empRef),
-                Link.totalBreakdownLink(empRef))
+    EmpRefLinks(summary = Link.summaryLink(empRef))
 }
-
-case class Link (href: String)
-
-object Link {
-
-
-  val prefix = "/paye-for-employers"
-
-  private def apply(empRef: EmpRef, path: String): Link =
-    Link(s"$prefix/${empRef.taxOfficeNumber}/${empRef.taxOfficeReference}/$path/")
-
-  def totalLink(empRef: EmpRef): Link = apply(empRef, "total")
-  def totalBreakdownLink(empRef: EmpRef): Link = apply(empRef, "total/by-type")
-  def empRefsLink(empRef: EmpRef): Link = Link(s"$prefix/")
-}
-
 
 
 

@@ -16,17 +16,4 @@
 
 package uk.gov.hmrc.epayeapi.models
 
-import uk.gov.hmrc.domain.EmpRef
-import uk.gov.hmrc.play.test.UnitSpec
-
-class LinkSpecs extends UnitSpec {
-  "Links" should {
-    "generate the right root link" in {
-      Link.empRefsLink() shouldEqual Link("/organisation/paye/")
-    }
-
-    "generate the summary link" in {
-      Link.summaryLink(EmpRef("123", "1231231")) shouldEqual Link("/organisation/paye/123/1231231/")
-    }
-  }
-}
+case class AggregatedTotals(credit: BigDecimal, debit: BigDecimal)

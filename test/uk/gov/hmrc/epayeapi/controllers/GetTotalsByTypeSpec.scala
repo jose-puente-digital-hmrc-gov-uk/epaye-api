@@ -32,6 +32,7 @@ import uk.gov.hmrc.play.http.ws.WSHttp
 import uk.gov.hmrc.play.http.{HeaderCarrier, HttpResponse}
 import unit.AppSpec
 import unit.auth.AuthComponents.AuthOk
+import play.api.libs.json.Json
 
 import scala.concurrent.Future
 import scala.concurrent.Future.successful
@@ -70,7 +71,14 @@ class GetTotalsByTypeSpec extends AppSpec with BeforeAndAfterEach {
           HttpResponse(200, responseString = Some(""" { "rti": {"credit": 100, "debit": 0}, "nonRti": {"credit": 0, "debit": 100} } """))
         }
       }
-      contentAsString(request) shouldBe """{"rti":{"credit":100,"debit":0},"non_rti":{"credit":0,"debit":100},"_links":{"empRefs":{"href":"/paye-for-employers/"}}}"""
+      contentAsString(request) shouldBe Json.parse(
+        s"""
+          |{"rti":{"credit":100,"debit":0},
+          |"non_rti":{"credit":0,"debit":100},
+          |"_links":{
+          |"empRefs": {"href":"/organisation/paye/"},
+          |"self":{"href":"/organisation/paye/${ton.value}/${tor.value}/"}}}
+        """.stripMargin).toString
       status(request) shouldBe OK
     }
     "return 500 Internal Server Error and error message body when incorrect json format" in new App(app.withAuth(activeEnrolment).build) {

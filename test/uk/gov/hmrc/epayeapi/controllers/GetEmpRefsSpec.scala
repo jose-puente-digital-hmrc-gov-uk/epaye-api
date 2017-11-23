@@ -61,13 +61,13 @@ class GetEmpRefsSpec extends AppSpec {
       status(request) shouldBe OK
     }
     "return an empty list inactive EmpRefs" in new App(build(AuthOk(inactiveEnrolment))) {
-      contentAsJson(request) shouldBe Json.toJson(EmpRefsResponse(Seq()))
+      contentAsJson(request) shouldBe Json.toJson(EmpRefsResponse.fromSeq(Seq()))
     }
     "return 200 OK on different enrolments" in new App(build(AuthOk(differentEnrolment))) {
       status(request) shouldBe OK
     }
     "return an empty list on different enrolments" in new App(build(AuthOk(differentEnrolment))) {
-      contentAsJson(request) shouldBe Json.toJson(EmpRefsResponse(Seq()))
+      contentAsJson(request) shouldBe Json.toJson(EmpRefsResponse.fromSeq(Seq()))
     }
     "return 403 Forbidden on insufficient enrolments" in new App(build(AuthFail(new InsufficientEnrolments()))) {
       status(request) shouldBe FORBIDDEN
