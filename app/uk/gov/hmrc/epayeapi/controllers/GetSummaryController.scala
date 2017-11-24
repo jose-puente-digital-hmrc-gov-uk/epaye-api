@@ -16,7 +16,6 @@
 
 package uk.gov.hmrc.epayeapi.controllers
 
-import java.util.NoSuchElementException
 import javax.inject.{Inject, Singleton}
 
 import akka.stream.Materializer
@@ -27,13 +26,13 @@ import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.domain.EmpRef
 import uk.gov.hmrc.epayeapi.connectors.EpayeConnector
 import uk.gov.hmrc.epayeapi.models.Formats._
-import uk.gov.hmrc.epayeapi.models.api.{ApiJsonError, ApiNotFound, ApiSuccess}
+import uk.gov.hmrc.epayeapi.models.api.{ApiJsonError, ApiNotFound, ApiResponse, ApiSuccess}
 import uk.gov.hmrc.epayeapi.models.{ApiError, SummaryResponse}
 
 import scala.concurrent.ExecutionContext
 
 @Singleton
-case class GetSummaryController @Inject()(
+case class GetSummaryController @Inject() (
   authConnector: AuthConnector,
   epayeConnector: EpayeConnector,
   implicit val ec: ExecutionContext,
@@ -43,20 +42,17 @@ case class GetSummaryController @Inject()(
 
   def getSummary(empRef: EmpRef): EssentialAction = EmpRefAction(empRef) {
     Action.async { request =>
-      val totalsResp = epayeConnector.getTotals(empRef, hc(request))
-      val totalsByTypeResp = epayeConnector.getTotalsByType(empRef, hc(request))
-
-      val resp = for {
-        ApiSuccess(totals) <- totalsResp
-        ApiSuccess(totalsByType) <- totalsByTypeResp
-      } yield {
-        Ok(Json.toJson(SummaryResponse(empRef, totals, totalsByType)))
-      }
-
-      // TODO: Revisit and add error handling!
-      resp.recover {
-        case ex: NoSuchElementException =>
+      epayeConnector.getTotal(empRef, hc(request)).map {
+        case ApiSuccess(totals) =>
+          Ok(Json.toJson(SummaryResponse(empRef, totals)))
+        case ApiJsonError(err) =>
+          Logger.error(s"Upstream returned invalid json: $err")
+          InternalServerError(Json.toJson(ApiError.InternalServerError))
+        case ApiNotFound() =>
           NotFound(Json.toJson(ApiError.EmpRefNotFound))
+        case error: ApiResponse[_] =>
+          Logger.error(s"Error while fetching totals: $error")
+          InternalServerError(Json.toJson(ApiError.InternalServerError))
       }
     }
   }

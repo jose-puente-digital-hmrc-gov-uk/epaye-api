@@ -39,7 +39,7 @@ class EpayeConnectorSpec extends UnitSpec with MockitoSugar with ScalaFutures {
     val config = EpayeApiConfig("https://EPAYE")
     val connector = EpayeConnector(config, http, global)
     val empRef = EmpRef("123", "456")
-    val urlTotals = s"${config.baseUrl}/epaye/${empRef.encodedValue}/api/v1/totals"
+    val urlTotals = s"${config.baseUrl}/epaye/${empRef.encodedValue}/api/v1/annual-statement"
     val urlTotalsByType = s"${config.baseUrl}/epaye/${empRef.encodedValue}/api/v1/totals/by-type"
     val urlAnnualStatement = s"${config.baseUrl}/epaye/${empRef.encodedValue}/api/v1/annual-statement"
   }
@@ -48,12 +48,38 @@ class EpayeConnectorSpec extends UnitSpec with MockitoSugar with ScalaFutures {
     "retrieve the total credit and debit for a given empRef" in new Setup {
       when(connector.http.GET(urlTotals)).thenReturn {
         successful {
-          HttpResponse(Status.OK, responseString = Some(""" {"credit": 100, "debit": 0} """))
+          HttpResponse(Status.OK, responseString = Some(
+            """
+              |{
+              |  "rti": {
+              |    "totals": {
+              |      "balance": {
+              |        "debit": 100,
+              |        "credit": 0
+              |      }
+              |    }
+              |  },
+              |  "nonRti": {
+              |    "totals": {
+              |      "balance": {
+              |        "debit": 23,
+              |        "credit": 0
+              |      }
+              |    }
+              |  }
+              |}
+            """.stripMargin
+          ))
         }
       }
 
-      connector.getTotals(empRef, hc).futureValue shouldBe
-        ApiSuccess(AggregatedTotals(credit = 100, debit = 0))
+      connector.getTotal(empRef, hc).futureValue shouldBe
+        ApiSuccess(
+          EpayeTotalsResponse(
+            EpayeTotalsItem(EpayeTotals(DebitAndCredit(100, 0))),
+            EpayeTotalsItem(EpayeTotals(DebitAndCredit(23, 0)))
+          )
+        )
     }
     "retrieve the total by type for a given empRef" in new Setup {
       when(connector.http.GET(urlTotalsByType)).thenReturn {
@@ -83,13 +109,12 @@ class EpayeConnectorSpec extends UnitSpec with MockitoSugar with ScalaFutures {
               AnnualTotal(DebitAndCredit(100.2, 0), Cleared(0, 0), DebitAndCredit(100.2, 0))
             ),
             AnnualSummary(
-              List(LineItem(TaxYear(2017),None,DebitAndCredit(20.0,0),Cleared(0,0),DebitAndCredit(20.0,0), new LocalDate(2018, 2, 22),false, Some("P11D_CLASS_1A_CHARGE"))),
-              AnnualTotal(DebitAndCredit(20.0,0),Cleared(0,0),DebitAndCredit(20.0,0))
+              List(LineItem(TaxYear(2017), None, DebitAndCredit(20.0, 0), Cleared(0, 0), DebitAndCredit(20.0, 0), new LocalDate(2018, 2, 22), false, Some("P11D_CLASS_1A_CHARGE"))),
+              AnnualTotal(DebitAndCredit(20.0, 0), Cleared(0, 0), DebitAndCredit(20.0, 0))
             )
           )
         )
     }
   }
-
 
 }

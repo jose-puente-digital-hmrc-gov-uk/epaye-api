@@ -57,7 +57,7 @@ class GetSummarySpec extends AppSpec with BeforeAndAfterEach {
   val differentEnrolment =
     AuthOk(Enrolment("IR-Else", Seq(ton, tor), "activated", ConfidenceLevel.L300))
 
-  def config(implicit a: Application) =
+  def config(implicit a: Application): EpayeApiConfig =
     inject[EpayeApiConfig]
 
   def request(implicit a: Application): Future[Result] =
@@ -73,23 +73,32 @@ class GetSummarySpec extends AppSpec with BeforeAndAfterEach {
       val firstUrl =  s"${config.baseUrl}" +
                       s"/epaye" +
                       s"/${empRef.encodedValue}" +
-                      s"/api/v1/totals"
-
-      val secondUrl =
-        s"${config.baseUrl}" +
-        s"/epaye" +
-        s"/${empRef.encodedValue}" +
-        s"/api/v1/totals/by-type"
+                      s"/api/v1/annual-statement"
 
       when(http.GET[HttpResponse](Matchers.eq(firstUrl))(anyObject(), anyObject())).thenReturn {
         successful {
-          HttpResponse(200, responseString = Some(""" {"credit": 0, "debit": 123} """))
-        }
-      }
-
-      when(http.GET[HttpResponse](Matchers.eq(secondUrl))(anyObject(), anyObject())).thenReturn {
-        successful {
-          HttpResponse(200, responseString = Some(""" { "rti": {"credit": 0, "debit": 100}, "nonRti": {"credit": 0, "debit": 23} } """))
+          HttpResponse(OK, responseString = Some(
+            """
+              |{
+              |  "rti": {
+              |    "totals": {
+              |      "balance": {
+              |        "debit": 100,
+              |        "credit": 0
+              |      }
+              |    }
+              |  },
+              |  "nonRti": {
+              |    "totals": {
+              |      "balance": {
+              |        "debit": 23,
+              |        "credit": 0
+              |      }
+              |    }
+              |  }
+              |}
+            """.stripMargin
+          ))
         }
       }
 

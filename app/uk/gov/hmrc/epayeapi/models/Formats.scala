@@ -52,6 +52,10 @@ trait Formats {
   implicit val rtiChargeFormat: Format[RtiCharge] = Json.format[RtiCharge]
   implicit val nonRtiChargeFormat: Format[NonRtiCharge] = Json.format[NonRtiCharge]
   implicit val chargesSummaryFormat: Format[ChargesSummary] = Json.format[ChargesSummary]
+  implicit val epayeTotals: Format[EpayeTotals] = Json.format[EpayeTotals]
+  implicit val epayeTotalsItems: Format[EpayeTotalsItem] = Json.format[EpayeTotalsItem]
+  implicit val epayeTotalsResponse: Format[EpayeTotalsResponse] = Json.format[EpayeTotalsResponse]
+
 }
 
 object Formats extends Formats

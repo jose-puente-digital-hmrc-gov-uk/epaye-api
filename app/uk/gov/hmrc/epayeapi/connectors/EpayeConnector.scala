@@ -29,6 +29,7 @@ import scala.concurrent.{ExecutionContext, Future}
 
 case class EpayeApiConfig(baseUrl: String)
 
+
 @Singleton
 case class EpayeConnector @Inject() (
   config: EpayeApiConfig,
@@ -36,14 +37,14 @@ case class EpayeConnector @Inject() (
   implicit val ec: ExecutionContext
 ) extends ConnectorBase {
 
-  def getTotals(empRef: EmpRef, headers: HeaderCarrier): Future[ApiResponse[AggregatedTotals]] = {
+  def getTotal(empRef: EmpRef, headers: HeaderCarrier): Future[ApiResponse[EpayeTotalsResponse]] = {
     val url =
       s"${config.baseUrl}" +
         s"/epaye" +
         s"/${empRef.encodedValue}" +
-        s"/api/v1/totals"
+        s"/api/v1/annual-statement"
 
-    get[AggregatedTotals](url, headers)
+    get[EpayeTotalsResponse](url, headers)
   }
 
   def getTotalsByType(empRef: EmpRef, headers: HeaderCarrier): Future[ApiResponse[AggregatedTotalsByType]] = {

@@ -38,6 +38,7 @@ trait ConnectorBase {
 
     result.recover({
       case ex: Exception =>
+        Logger.error("HTTP request threw exception", ex)
         ApiException(ex.getMessage)
     })
   }

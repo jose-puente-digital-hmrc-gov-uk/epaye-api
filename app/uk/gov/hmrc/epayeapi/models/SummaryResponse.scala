@@ -34,13 +34,13 @@ case class SummaryResponse(
 )
 
 object SummaryResponse {
-  def apply(empRef: EmpRef, totals: AggregatedTotals, byType: AggregatedTotalsByType): SummaryResponse =
+  def apply(empRef: EmpRef, total: EpayeTotalsResponse): SummaryResponse =
     SummaryResponse(
       OutstandingCharges(
-        totals.debit,
+        total.overall,
         Breakdown(
-          byType.rti.debit,
-          byType.nonRti.debit
+          rti = total.rti.totals.balance.debit,
+          nonRti = total.nonRti.totals.balance.debit
         )
       ),
       SummaryLinks(empRef)
