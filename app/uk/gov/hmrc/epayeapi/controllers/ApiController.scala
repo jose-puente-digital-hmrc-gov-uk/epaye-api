@@ -60,9 +60,9 @@ trait ApiController extends BaseController with AuthorisedFunctions {
     }
 
   def EmpRefAction(empRefFromUrl: EmpRef)(action: EssentialAction): EssentialAction = {
-    EmpRefsAction { empRefs =>
+    EmpRefsAction { empRefsFromAuth =>
       EssentialAction { request =>
-        empRefs.find(_ == empRefFromUrl) match {
+        empRefsFromAuth.find(_ == empRefFromUrl) match {
           case Some(empRef) => action(request)
           case None => Accumulator.done(invalidEmpRef)
         }

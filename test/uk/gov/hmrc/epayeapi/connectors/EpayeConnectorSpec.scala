@@ -22,7 +22,7 @@ import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.mock.MockitoSugar
 import play.api.http.Status
 import uk.gov.hmrc.domain.EmpRef
-import uk.gov.hmrc.epayeapi.models._
+import uk.gov.hmrc.epayeapi.models.JsonFixtures
 import uk.gov.hmrc.epayeapi.models.in._
 import uk.gov.hmrc.play.http.ws.WSHttp
 import uk.gov.hmrc.play.http.{HeaderCarrier, HttpResponse}
