@@ -26,8 +26,9 @@ import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.domain.EmpRef
 import uk.gov.hmrc.epayeapi.connectors.EpayeConnector
 import uk.gov.hmrc.epayeapi.models.Formats._
-import uk.gov.hmrc.epayeapi.models.api.{ApiJsonError, ApiNotFound, ApiResponse, ApiSuccess}
-import uk.gov.hmrc.epayeapi.models.{ApiError, SummaryResponse}
+import uk.gov.hmrc.epayeapi.models.in.{ApiJsonError, ApiNotFound, ApiResponse, ApiSuccess}
+import uk.gov.hmrc.epayeapi.models.out.ApiError.EmpRefNotFound
+import uk.gov.hmrc.epayeapi.models.out.{ApiError, SummaryResponse}
 
 import scala.concurrent.ExecutionContext
 
@@ -49,7 +50,7 @@ case class GetSummaryController @Inject() (
           Logger.error(s"Upstream returned invalid json: $err")
           InternalServerError(Json.toJson(ApiError.InternalServerError))
         case ApiNotFound() =>
-          NotFound(Json.toJson(ApiError.EmpRefNotFound))
+          NotFound(Json.toJson(EmpRefNotFound))
         case error: ApiResponse[_] =>
           Logger.error(s"Error while fetching totals: $error")
           InternalServerError(Json.toJson(ApiError.InternalServerError))

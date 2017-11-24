@@ -16,18 +16,15 @@
 
 package uk.gov.hmrc.epayeapi.controllers
 
-import akka.stream.Materializer
-import akka.util.ByteString
 import play.api.Application
 import play.api.libs.json.Json
-import play.api.libs.streams.Accumulator
 import play.api.mvc.Result
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.auth.core._
 import uk.gov.hmrc.domain.EmpRef
-import uk.gov.hmrc.epayeapi.models.{ApiError, EmpRefsResponse}
 import uk.gov.hmrc.epayeapi.models.Formats._
+import uk.gov.hmrc.epayeapi.models.out.{ApiError, EmpRefsResponse}
 import unit.AppSpec
 import unit.auth.AuthComponents.{AuthFail, AuthOk}
 

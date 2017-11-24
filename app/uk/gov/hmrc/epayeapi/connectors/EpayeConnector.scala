@@ -20,15 +20,13 @@ import javax.inject.{Inject, Singleton}
 
 import uk.gov.hmrc.domain.EmpRef
 import uk.gov.hmrc.epayeapi.models.Formats._
-import uk.gov.hmrc.epayeapi.models._
-import uk.gov.hmrc.epayeapi.models.api.ApiResponse
+import uk.gov.hmrc.epayeapi.models.in.{AnnualSummaryResponse, ApiResponse, EpayeTotalsResponse, TaxYear}
 import uk.gov.hmrc.play.http.HeaderCarrier
 import uk.gov.hmrc.play.http.ws.WSHttp
 
 import scala.concurrent.{ExecutionContext, Future}
 
 case class EpayeApiConfig(baseUrl: String)
-
 
 @Singleton
 case class EpayeConnector @Inject() (
@@ -45,16 +43,6 @@ case class EpayeConnector @Inject() (
         s"/api/v1/annual-statement"
 
     get[EpayeTotalsResponse](url, headers)
-  }
-
-  def getTotalsByType(empRef: EmpRef, headers: HeaderCarrier): Future[ApiResponse[AggregatedTotalsByType]] = {
-    val url =
-      s"${config.baseUrl}" +
-        s"/epaye" +
-        s"/${empRef.encodedValue}" +
-        s"/api/v1/totals/by-type"
-
-    get[AggregatedTotalsByType](url, headers)
   }
 
   def getAnnualSummary(empRef: EmpRef, headers: HeaderCarrier, taxYear: Option[String]): Future[ApiResponse[AnnualSummaryResponse]] = {

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.epayeapi.models
+package uk.gov.hmrc.epayeapi.models.in
 
 case class EpayeTotals(balance: DebitAndCredit)
 case class EpayeTotalsItem(totals: EpayeTotals)

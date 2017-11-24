@@ -20,15 +20,14 @@ import akka.stream.Materializer
 import play.api.libs.json.Json
 import play.api.libs.streams.Accumulator
 import play.api.mvc._
+import uk.gov.hmrc.auth.core.Retrievals._
 import uk.gov.hmrc.auth.core._
 import uk.gov.hmrc.domain.EmpRef
-import uk.gov.hmrc.play.microservice.controller.BaseController
-import uk.gov.hmrc.auth.core.Retrievals._
-import uk.gov.hmrc.domain.EmpRef
-import uk.gov.hmrc.epayeapi.models.ApiError.InvalidEmpRef
-import uk.gov.hmrc.epayeapi.models.Formats._
-import uk.gov.hmrc.epayeapi.models.{ApiError, EmpRefsResponse}
+import uk.gov.hmrc.epayeapi.models.out.ApiError.{AuthorizationHeaderInvalid, InsufficientEnrolments, InvalidEmpRef}
 import uk.gov.hmrc.play.binders.SimpleObjectBinder
+import uk.gov.hmrc.play.microservice.controller.BaseController
+import uk.gov.hmrc.epayeapi.models.out.Formats._
+
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -44,15 +43,14 @@ trait ApiController extends BaseController with AuthorisedFunctions {
       Accumulator.done {
         authorised(enrolment.withDelegatedAuthRule("epaye-auth"))
           .retrieve(retrieveEnrolments) { enrolments =>
-          action(enrolments)(request).run()
-        } recoverWith {
-          case ex: MissingBearerToken => missingBearerToken
-          case ex: InsufficientEnrolments => insufficientEnrolments
-        }
+            action(enrolments)(request).run()
+          } recoverWith {
+            case ex: MissingBearerToken => missingBearerToken
+            case ex: InsufficientEnrolments => insufficientEnrolments
+          }
       }
     }
   }
-
 
   def EmpRefsAction(action: Set[EmpRef] => EssentialAction): EssentialAction =
     EnrolmentsAction(epayeEnrolment, epayeRetrieval) { enrolments =>
@@ -73,11 +71,11 @@ trait ApiController extends BaseController with AuthorisedFunctions {
   }
 
   def missingBearerToken: Future[Result] =
-    Future.successful(Unauthorized(Json.toJson(ApiError.AuthorizationHeaderInvalid)))
+    Future.successful(Unauthorized(Json.toJson(AuthorizationHeaderInvalid)))
   def insufficientEnrolments: Future[Result] =
-    Future.successful(Forbidden(Json.toJson(ApiError.InsufficientEnrolments)))
+    Future.successful(Forbidden(Json.toJson(InsufficientEnrolments)))
   def invalidEmpRef: Future[Result] =
-    Future.successful(Forbidden(Json.toJson(ApiError.InvalidEmpRef)))
+    Future.successful(Forbidden(Json.toJson(InvalidEmpRef)))
 
   private def enrolmentToEmpRef(enrolment: Enrolment): Option[EmpRef] = {
     for {
