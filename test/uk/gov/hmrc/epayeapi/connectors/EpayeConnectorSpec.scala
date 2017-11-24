@@ -23,7 +23,7 @@ import org.scalatest.mock.MockitoSugar
 import play.api.http.Status
 import uk.gov.hmrc.domain.EmpRef
 import uk.gov.hmrc.epayeapi.models._
-import uk.gov.hmrc.epayeapi.models.api.ApiSuccess
+import uk.gov.hmrc.epayeapi.models.in._
 import uk.gov.hmrc.play.http.ws.WSHttp
 import uk.gov.hmrc.play.http.{HeaderCarrier, HttpResponse}
 import uk.gov.hmrc.play.test.UnitSpec
@@ -80,19 +80,6 @@ class EpayeConnectorSpec extends UnitSpec with MockitoSugar with ScalaFutures {
             EpayeTotalsItem(EpayeTotals(DebitAndCredit(23, 0)))
           )
         )
-    }
-    "retrieve the total by type for a given empRef" in new Setup {
-      when(connector.http.GET(urlTotalsByType)).thenReturn {
-        successful {
-          HttpResponse(Status.OK, responseString = Some(""" { "rti": {"credit": 100, "debit": 0}, "nonRti": {"credit": 100, "debit": 0} } """))
-        }
-      }
-
-      connector.getTotalsByType(empRef, hc).futureValue shouldBe
-        ApiSuccess(AggregatedTotalsByType(
-          rti = AggregatedTotals(credit = 100, debit = 0),
-          nonRti = AggregatedTotals(credit = 100, debit = 0)
-        ))
     }
     "retrieve summary for a given empRef" in new Setup {
       when(connector.http.GET(urlAnnualStatement)).thenReturn {

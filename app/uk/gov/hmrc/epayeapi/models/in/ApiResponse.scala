@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.epayeapi.models.api
+package uk.gov.hmrc.epayeapi.models.in
 
 import play.api.libs.json.JsError
 

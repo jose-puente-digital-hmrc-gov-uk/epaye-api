@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.epayeapi.models
+package uk.gov.hmrc.epayeapi.models.out
 
 case class ApiError(code: String, message: String)
 
@@ -38,7 +38,6 @@ object ApiError {
     "EMPREF_NOT_FOUND",
     "Provided EmpRef wasn't found."
   )
-
 
   object InternalServerError extends ApiError(
     "INTERNAL_SERVER_ERROR",

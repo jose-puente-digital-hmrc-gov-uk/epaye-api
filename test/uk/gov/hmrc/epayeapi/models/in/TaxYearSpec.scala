@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.epayeapi.models
+package uk.gov.hmrc.epayeapi.models.in
 
 import org.scalatest.{Matchers, WordSpec}
 import TaxYear.extractTaxYear

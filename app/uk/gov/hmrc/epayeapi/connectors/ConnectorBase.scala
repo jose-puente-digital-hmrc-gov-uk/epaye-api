@@ -19,7 +19,8 @@ package uk.gov.hmrc.epayeapi.connectors
 import play.api.Logger
 import play.api.http.Status
 import play.api.libs.json.{JsError, JsSuccess, Reads}
-import uk.gov.hmrc.epayeapi.models.api._
+import uk.gov.hmrc.epayeapi.models.in
+import uk.gov.hmrc.epayeapi.models.in._
 import uk.gov.hmrc.epayeapi.syntax.json._
 import uk.gov.hmrc.play.http.{HeaderCarrier, HttpGet, HttpReads, HttpResponse}
 
@@ -55,7 +56,7 @@ trait ConnectorBase {
           case Status.NOT_FOUND =>
             ApiNotFound()
           case _ =>
-            ApiError(response.status, response.body)
+            in.ApiError(response.status, response.body)
         }
       }
     }

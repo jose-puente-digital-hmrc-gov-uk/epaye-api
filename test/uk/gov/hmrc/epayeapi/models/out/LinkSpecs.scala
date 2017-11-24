@@ -14,10 +14,19 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.epayeapi.models
+package uk.gov.hmrc.epayeapi.models.out
 
 import uk.gov.hmrc.domain.EmpRef
+import uk.gov.hmrc.play.test.UnitSpec
 
+class LinkSpecs extends UnitSpec {
+  "Links" should {
+    "generate the right root link" in {
+      Link.empRefsLink() shouldEqual Link("/organisation/paye/")
+    }
 
-case class AggregatedTotalsByType(rti: AggregatedTotals, nonRti: AggregatedTotals)
-
+    "generate the summary link" in {
+      Link.summaryLink(EmpRef("123", "1231231")) shouldEqual Link("/organisation/paye/123/1231231/")
+    }
+  }
+}

@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.epayeapi.models
+package uk.gov.hmrc.epayeapi.models.out
 
 import uk.gov.hmrc.domain.EmpRef
+import uk.gov.hmrc.epayeapi.models.in.EpayeTotalsResponse
 
 case class Breakdown(
   rti: BigDecimal,
@@ -43,21 +44,6 @@ object SummaryResponse {
           nonRti = total.nonRti.totals.balance.debit
         )
       ),
-      SummaryLinks(empRef)
-    )
-}
-
-case class TotalsByTypeResponse(
-  rti: AggregatedTotals,
-  non_rti: AggregatedTotals,
-  _links: SummaryLinks
-)
-
-object TotalsByTypeResponse {
-  def apply(empRef: EmpRef, totals: AggregatedTotalsByType): TotalsByTypeResponse =
-    TotalsByTypeResponse(
-      AggregatedTotals(totals.rti.credit, totals.rti.debit),
-      AggregatedTotals(totals.nonRti.credit, totals.nonRti.debit),
       SummaryLinks(empRef)
     )
 }
