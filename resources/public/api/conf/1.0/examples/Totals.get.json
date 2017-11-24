@@ -1,6 +1,5 @@
 {
-  "credit" : 100,
-  "debit" : 0,
+  "owed" : 100,
   "_links" : {
     "empRefs": {
       "href": "/paye-for-employers/"

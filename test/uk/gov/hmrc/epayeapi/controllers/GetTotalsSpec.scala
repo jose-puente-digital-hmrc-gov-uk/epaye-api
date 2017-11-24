@@ -63,13 +63,25 @@ class GetTotalsSpec extends AppSpec with BeforeAndAfterEach {
   }
 
   "The Totals endpoint" should {
-    "return 200 OK on active enrolments" in new App(app.withAuth(activeEnrolment).build) {
+
+    "return 200 OK on active enrolments given some credit and no debit" in new App(app.withAuth(activeEnrolment).build) {
       when(http.GET[HttpResponse](anyString)(anyObject(), anyObject())).thenReturn {
         successful {
           HttpResponse(200, responseString = Some(""" {"credit": 100, "debit": 0} """))
         }
       }
-      contentAsString(request) shouldBe """{"credit":100,"debit":0,"_links":{"empRefs":{"href":"/paye-for-employers/"}}}"""
+      contentAsString(request) shouldBe
+        """{"owed":0,"_links":{"empRefs":{"href":"/paye-for-employers/"}}}"""
+      status(request) shouldBe OK
+    }
+    "return 200 OK on active enrolments given no credit and some debit" in new App(app.withAuth(activeEnrolment).build) {
+      when(http.GET[HttpResponse](anyString)(anyObject(), anyObject())).thenReturn {
+        successful {
+          HttpResponse(200, responseString = Some(""" {"credit": 0, "debit": 200} """))
+        }
+      }
+      contentAsString(request) shouldBe
+        """{"owed":200,"_links":{"empRefs":{"href":"/paye-for-employers/"}}}"""
       status(request) shouldBe OK
     }
     "return 403 Forbidden on inactive enrolments" in new App(app.withAuth(inactiveEnrolment).build) {

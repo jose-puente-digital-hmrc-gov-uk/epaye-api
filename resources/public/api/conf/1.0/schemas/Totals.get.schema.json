@@ -5,10 +5,7 @@
     "_links": {
       "$ref": "Definitions.schema.json#/definitions/links"
     },
-    "credit": {
-      "$ref": "Definitions.schema.json#/definitions/credit"
-    },
-    "debit": {
+    "owed": {
       "$ref": "Definitions.schema.json#/definitions/debit"
     }
   }
