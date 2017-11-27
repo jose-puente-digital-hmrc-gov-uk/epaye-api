@@ -43,33 +43,106 @@ class ClientGivens(empRef: EmpRef) {
 
   def and(): ClientGivens = this
 
+  val epayeAnnualStatement =
+    """
+      |{
+      |  "rti": {
+      |    "lineItems": [
+      |      {
+      |        "taxYear": {
+      |          "yearFrom": 2017
+      |        },
+      |        "taxMonth": {
+      |          "month": 7
+      |        },
+      |        "charges": {
+      |          "debit": 1200,
+      |          "credit": 0
+      |        },
+      |        "cleared": {
+      |          "cleared": 0,
+      |          "payment": 0,
+      |          "credit": 0
+      |        },
+      |        "balance": {
+      |          "debit": 1200,
+      |          "credit": 0
+      |        },
+      |        "dueDate": "2017-11-22",
+      |        "isSpecified": false,
+      |        "itemType": "month"
+      |      }
+      |    ],
+      |    "totals": {
+      |      "charges": {
+      |        "debit": 1200,
+      |        "credit": 0
+      |      },
+      |      "cleared": {
+      |        "cleared": 0,
+      |        "payment": 0,
+      |        "credit": 0
+      |      },
+      |      "balance": {
+      |        "debit": 1200,
+      |        "credit": 0
+      |      }
+      |    }
+      |  },
+      |  "nonRti": {
+      |    "lineItems": [
+      |      {
+      |        "taxYear": {
+      |          "yearFrom": 2017
+      |        },
+      |        "taxMonth": {
+      |          "month": 1
+      |        },
+      |        "charges": {
+      |          "debit": 100,
+      |          "credit": 0
+      |        },
+      |        "cleared": {
+      |          "cleared": 100,
+      |          "payment": 0,
+      |          "credit": 0
+      |        },
+      |        "balance": {
+      |          "debit": 0,
+      |          "credit": 0
+      |        },
+      |        "dueDate": "2017-05-22",
+      |        "isSpecified": false,
+      |        "itemType": "1481",
+      |        "codeText": "NON_RTI_CIS_FIXED_PENALTY"
+      |      }
+      |    ],
+      |    "totals": {
+      |      "charges": {
+      |        "debit": 100,
+      |        "credit": 0
+      |      },
+      |      "cleared": {
+      |        "cleared": 100,
+      |        "payment": 100,
+      |        "credit": 0
+      |      },
+      |      "balance": {
+      |        "debit": 100,
+      |        "credit": 100
+      |      }
+      |    }
+      |  },
+      |  "unallocated": 2000
+      |}
+    """.stripMargin
+
   def epayeTotalsReturns(owed: BigDecimal): ClientGivens = {
     val response = aResponse()
 
-    val body =
-      """
-        |{
-        |  "rti": {
-        |     "totals": {
-        |       "balance": {
-        |         "credit": 10,
-        |         "debit": 20
-        |       }
-        |     }
-        |  },
-        |  "nonRti": {
-        |     "totals": {
-        |       "balance": {
-        |         "credit": 10,
-        |         "debit": 20
-        |       }
-        |     }
-        |  }
-        |}
-      """.stripMargin
 
     response
-      .withBody(body)
+      .withBody(epayeAnnualStatement)
       .withHeader("Content-Type", "application/json")
       .withStatus(200)
 
@@ -79,6 +152,22 @@ class ClientGivens(empRef: EmpRef) {
 
     this
   }
+
+  def epayeAnnualStatementReturns(): ClientGivens = {
+    val response = aResponse()
+
+    response
+      .withBody(epayeAnnualStatement)
+      .withHeader("Content-Type", "application/json")
+      .withStatus(200)
+
+    stubFor(
+      get(urlPathEqualTo(s"/epaye/${empRef.encodedValue}/api/v1/annual-statement")).willReturn(response)
+    )
+
+    this
+  }
+
 
   def isAuthorized: ClientGivens = {
 

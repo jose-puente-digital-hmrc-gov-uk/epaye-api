@@ -22,14 +22,14 @@ import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.routing.Router
 import uk.gov.hmrc.epayeapi.router.RoutesProvider
 
-class TotalsSpec extends WiremockSetup with EmpRefGenerator with RestAssertions {
+class GetSummarySpec extends WiremockSetup with EmpRefGenerator with RestAssertions {
 
   override implicit lazy val app: Application =
     new GuiceApplicationBuilder().overrides(bind[Router].toProvider[RoutesProvider]).build()
 
   "/organisation/epaye/{ton}/{tor}/" should {
 
-    "return 200 OK on active enrolments given no debit" in {
+    "returns a response body that conforms with the Summary schema" in {
       val empRef = randomEmpRef()
 
       val totalsUrl =

@@ -24,7 +24,12 @@
           "description": "The last day of the tax year",
           "$ref": "#/definitions/date"
         }
-      }
+      },
+      "required": [
+        "year",
+        "firstDay",
+        "lastDay"
+      ]
     },
     "taxMonth": {
       "type": "object",
@@ -45,7 +50,40 @@
           "description": "The last day of the tax month",
           "$ref": "#/definitions/date"
         }
-      }
+      },
+      "required": [
+        "number",
+        "firstDay",
+        "lastDay"
+      ]
+    },
+    "chargeSummary": {
+      "type": "object",
+      "description": "meuhh",
+      "properties": {
+        "amount": {
+          "type": "number",
+          "description": "The amount of the charge"
+        },
+        "clearedByCredits": {
+          "type": "number",
+          "description": "The amount cleared by credits"
+        },
+        "clearedByPayments": {
+          "type": "number",
+          "description": "The amount cleared by payments"
+        },
+        "balance": {
+          "type": "number",
+          "description": "The balance on the charge"
+        }
+      },
+      "required": [
+        "amount",
+        "clearedByCredits",
+        "clearedByPayments",
+        "balance"
+      ]
     },
     "link": {
       "type": "object",
@@ -149,7 +187,6 @@
         "NON_RTI_TAX_INTEREST"
       ]
     },
-
     "dueDate": {
       "$ref": "#/definitions/date",
       "description": "The date this item is due"
@@ -159,7 +196,90 @@
       "description": "Whether this item is overdue or not",
       "default": false
     },
-
+    "nonRtiCharges": {
+      "type": "array",
+      "description": "The non RTI charges on the annual statement",
+      "items": {
+        "allOf": [
+          {
+            "$ref": "#/definitions/chargeSummary"
+          },
+          {
+            "properties": {
+              "code": {
+                "type": "string",
+                "description": "The code name for the non rti charge"
+              },
+              "taxPeriod": {
+                "type": "object",
+                "description": "The tax period of the charge",
+                "properties": {
+                  "firstDay": {
+                    "description": "The first day of the tax period",
+                    "$ref": "#/definitions/date"
+                  },
+                  "lastDay": {
+                    "description": "The last day of the tax period",
+                    "$ref": "#/definitions/date"
+                  }
+                },
+                "required": [
+                  "firstDay",
+                  "lastDay"
+                ]
+              },
+              "dueDate": {
+                "$ref": "#/definitions/dueDate"
+              }
+            },
+            "required": [
+              "code",
+              "taxPeriod",
+              "dueDate"
+            ]
+          }
+        ]
+      }
+    },
+    "summary": {
+      "type": "object",
+      "description": "Blah",
+      "properties": {
+        "rtiCharges": {
+          "type": "object",
+          "description": "Blah2",
+          "$ref": "#/definitions/chargeSummary"
+        },
+        "nonRtiCharges": {
+          "type": "object",
+          "description": "Blah2",
+          "$ref": "#/definitions/chargeSummary"
+        },
+        "unallocated": {
+          "type": "object",
+          "description": "Roger",
+          "properties": {
+            "payments": {
+              "type": "number",
+              "description": "Blah"
+            },
+            "credits": {
+              "type": "number",
+              "description": "Blah"
+            },
+            "required": [
+              "payments",
+              "credits"
+            ]
+          }
+        }
+      },
+      "required": [
+        "rtiCharges",
+        "nonRtiCharges",
+        "unallocated"
+      ]
+    },
     "outstandingCharges": {
       "type": "object",
       "description": "The outstanding charges on account.",
@@ -192,40 +312,130 @@
         "breakdown"
       ]
     },
-
-    "epayeLinks": {
+    "annualStatementEmbedded": {
       "type": "object",
-      "description": "An object of links to explore further data.",
+      "description": "awcafvaev",
       "properties": {
-        "self": {
-          "description": "Link to the entry endpoint.",
-          "$ref": "#/definitions/link"
+        "rtiCharges": {
+          "type": "array",
+          "description": "Glasgow rangers",
+          "items": {
+            "allOf": [
+              {
+                "$ref": "#/definitions/chargeSummary"
+              },
+              {
+                "type": "object",
+                "description": "Paris",
+                "properties": {
+                  "taxMonth": {
+                    "$ref": "#/definitions/taxMonth"
+                  },
+                  "dueDate": {
+                    "$ref": "#/definitions/dueDate"
+                  },
+                  "_links": {
+                    "type": "object",
+                    "description": "",
+                    "properties": {
+                      "self": {
+                        "description": "",
+                        "$ref": "#/definitions/link"
+                      }
+                    },
+                    "required": [
+                      "self"
+                    ]
+                  }
+                },
+                "required": [
+                  "taxMonth",
+                  "dueDate",
+                  "_links"
+                ]
+              }
+            ]
+          }
         }
-      }
+      },
+      "required": ["rtiCharges"]
     },
-    "empRefLinks": {
+    "annualStatementLinks": {
       "type": "object",
-      "description": "An object of links to explore further data.",
+      "description": "",
       "properties": {
-        "summary": {
-          "description": "Link to account summary endpoint.",
-          "$ref": "#/definitions/link"
-        }
-      }
-    },
-    "summaryLinks": {
-      "type": "object",
-      "description": "An object of links to explore further data.",
-      "properties": {
-        "self": {
-          "description": "Link to account summary endpoint.",
+        "empRefs": {
+          "description": "",
           "$ref": "#/definitions/link"
         },
-        "empRefs": {
-          "description": "Link to the entry endpoint endpoint.",
+        "statements": {
+          "description": "",
+          "$ref": "#/definitions/link"
+        },
+        "self": {
+          "description": "",
+          "$ref": "#/definitions/link"
+        },
+        "next": {
+          "description": "",
+          "$ref": "#/definitions/link"
+        },
+        "previous": {
+          "description": "",
           "$ref": "#/definitions/link"
         }
+      },
+      "required": [
+        "empRefs",
+        "statements",
+        "self",
+        "next",
+        "previous"
+      ]
+    }
+  },
+  "epayeLinks": {
+    "type": "object",
+    "description": "An object of links to explore further data.",
+    "properties": {
+      "self": {
+        "description": "Link to the entry endpoint.",
+        "$ref": "#/definitions/link"
       }
+    },
+    "required": [
+      "self"
+    ]
+  },
+  "empRefLinks": {
+    "type": "object",
+    "description": "An object of links to explore further data.",
+    "properties": {
+      "summary": {
+        "description": "Link to account summary endpoint.",
+        "$ref": "#/definitions/link"
+      }
+    },
+    "required": [
+      "summary"
+    ]
+  },
+  "summaryLinks": {
+    "type": "object",
+    "description": "An object of links to explore further data.",
+    "properties": {
+      "self": {
+        "description": "Link to account summary endpoint.",
+        "$ref": "#/definitions/link"
+      },
+      "empRefs": {
+        "description": "Link to the entry endpoint endpoint.",
+        "$ref": "#/definitions/link"
+      },
+      "required": [
+        "self",
+        "empRefs"
+      ]
     }
   }
 }

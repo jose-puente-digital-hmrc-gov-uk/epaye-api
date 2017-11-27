@@ -1,0 +1,28 @@
+{
+  "type": "object",
+  "description": "An object containing the annual statement.",
+  "properties": {
+    "taxYear": {
+      "$ref": "Definitions.schema.json#/definitions/taxYear"
+    },
+    "nonRtiCharges": {
+      "$ref": "Definitions.schema.json#/definitions/nonRtiCharges"
+    },
+    "summary": {
+      "$ref": "Definitions.schema.json#/definitions/summary"
+    },
+    "_embedded": {
+      "$ref": "Definitions.schema.json#/definitions/_embedded"
+    },
+    "_links": {
+      "$ref": "Definitions.schema.json#/definitions/annualStatementLinks"
+    }
+  },
+  "required": [
+    "taxYear",
+    "nonRtiCharges",
+    "summary",
+    "_embedded",
+    "_links"
+  ]
+}
