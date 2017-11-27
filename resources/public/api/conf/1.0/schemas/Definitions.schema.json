@@ -180,9 +180,17 @@
               "type": "number",
               "description": "The outstanding Non-RTI charges on account."
             }
-          }
+          },
+          "required": [
+            "rti",
+            "nonRti"
+          ]
         }
-      }
+      },
+      "required": [
+        "amount",
+        "breakdown"
+      ]
     },
 
     "epayeLinks": {
