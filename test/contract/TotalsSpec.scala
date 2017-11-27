@@ -43,7 +43,6 @@ class TotalsSpec extends WiremockSetup with EmpRefGenerator with RestAssertions 
         .when
         .get(totalsUrl).withAuthHeader()
         .thenAssertThat()
-        .statusCodeIs(200)
         .bodyIsOfSchema(summarySchemaPath)
     }
 

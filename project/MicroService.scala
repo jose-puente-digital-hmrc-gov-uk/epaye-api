@@ -1,23 +1,19 @@
-import sbt.Keys._
-import sbt.Tests.{SubProcess, Group}
-import sbt._
 import play.routes.compiler.StaticRoutesGenerator
-import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin._
-import play.sbt.PlayImport.PlayKeys._
 import play.sbt.routes.RoutesKeys._
+import sbt.Keys._
+import sbt.Tests.{Group, SubProcess}
+import sbt._
+import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin._
 
 
 trait MicroService {
 
   import uk.gov.hmrc._
   import DefaultBuildSettings._
-  import uk.gov.hmrc.{SbtBuildInfo, ShellPrompt, SbtAutoBuildPlugin}
+  import TestPhases._
+  import uk.gov.hmrc.SbtAutoBuildPlugin
   import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin
   import uk.gov.hmrc.versioning.SbtGitVersioning
-  import play.sbt.routes.RoutesKeys.routesGenerator
-
-
-  import TestPhases._
 
   val appName: String
 

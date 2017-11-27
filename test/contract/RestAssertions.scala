@@ -121,7 +121,9 @@ class Assertions(response: HttpResponse) extends Matchers {
   def bodyIsOfSchema(schemaPath: String): Unit = {
     val validator = JsonSchemaFactory.byDefault().getJsonSchema(schemaPath)
 
-    validator.validate(new ObjectMapper().readTree(response.body), true)
+    val report = validator.validate(new ObjectMapper().readTree(response.body), true)
+
+    withClue(report.toString){ report.isSuccess shouldBe true }
   }
 
   def statusCodeIs(statusCode: Int): Assertions = {
