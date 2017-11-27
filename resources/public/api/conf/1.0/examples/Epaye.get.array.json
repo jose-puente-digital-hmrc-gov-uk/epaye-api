@@ -1,17 +1,41 @@
 {
-  "empRefs": [
-    {
-      "empRef": "001/AB00001",
-      "_links": {
-        "summary": {
-          "href": "/organisation/paye/001/AB00001/"
+  "_embedded": {
+    "empRefs": [
+      {
+        "taxOfficeNumber": "001",
+        "taxOfficeReference": "AB00001",
+        "_links": {
+          "self": {
+            "href": "/organisations/paye/001/AB00001/"
+          },
+          "statements": {
+            "href": "/organisations/paye/001/AB00001/statements/"
+          },
+          "currentStatement": {
+            "href": "/organisations/paye/001/AB00001/statements/2017-18"
+          }
+        }
+      },
+      {
+        "taxOfficeNumber": "001",
+        "taxOfficeReference": "CD00002",
+        "_links": {
+          "self": {
+            "href": "/organisations/paye/001/CD00002/"
+          },
+          "statements": {
+            "href": "/organisations/paye/001/CD00002/statements/"
+          },
+          "currentStatement": {
+            "href": "/organisations/paye/001/CD00002/statements/2017-18"
+          }
         }
       }
-    }
-  ],
+    ]
+  },
   "_links": {
     "self": {
-      "href": "/organisation/paye/"
+      "href": "/organisations/paye/"
     }
   }
 }

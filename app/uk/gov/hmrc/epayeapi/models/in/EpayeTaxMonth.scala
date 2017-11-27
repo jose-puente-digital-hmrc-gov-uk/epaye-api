@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.epayeapi
+package uk.gov.hmrc.epayeapi.models.in
 
-package object syntax extends JsonSyntax {
-}
+case class EpayeTaxMonth(month: Int)

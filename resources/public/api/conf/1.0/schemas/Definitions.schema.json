@@ -36,7 +36,7 @@
       "description": "Tax month",
       "title": "The tax month for this data",
       "properties": {
-        "number": {
+        "month": {
           "description": "The tax month's number",
           "type": "integer",
           "minimum": 1,
@@ -52,7 +52,7 @@
         }
       },
       "required": [
-        "number",
+        "month",
         "firstDay",
         "lastDay"
       ]
@@ -67,20 +67,31 @@
         }
       }
     },
+    "taxOfficeNumber": {
+      "description": "A tax office number.",
+      "type": "string",
+      "pattern": "^\\w{3}$"
+    },
+    "taxOfficeReference": {
+      "description": "A tax office reference.",
+      "type": "string",
+      "pattern": "^\\w{7,10}$"
+    },
     "empRef": {
       "type": "string",
       "description": "A unique identifier made up of tax office number and tax office reference.",
       "pattern": "^\\w{3}/\\w{7,10}"
     },
-    "charge_code": {
+    "chargeCode": {
       "type": "string",
       "description": "The unique identifier for this charge",
       "enum": [
+        "INTEREST",
         "NON_RTI_APPRENTICESHIP_LEVY_INTEREST",
+        "NON_RTI_CISR_IN_YEAR_INTEREST",
         "NON_RTI_CIS_FIXED_PENALTY",
         "NON_RTI_CIS_LATE_FILING_INTEREST",
         "NON_RTI_CIS_TAX_GEARED_PENALTY",
-        "NON_RTI_CISR_IN_YEAR_INTEREST",
         "NON_RTI_EI_INCOMPLETE_REPORT_DAILY_PENALTY",
         "NON_RTI_EI_INCOMPLETE_REPORT_DAILY_PENALTY_INTEREST",
         "NON_RTI_EI_INCOMPLETE_REPORT_PENALTY",
@@ -102,10 +113,10 @@
         "NON_RTI_EOY_EMPLOYEE_NIC1_INTEREST",
         "NON_RTI_EOY_EMPLOYER_NIC1",
         "NON_RTI_EOY_EMPLOYER_NIC1_INTEREST",
-        "NON_RTI_EOY_NI_COMPENSATION_ON_STATUTORY_ADOPTION_PAY",
-        "NON_RTI_EOY_NI_HOLIDAY",
         "NON_RTI_EOY_NIC1",
         "NON_RTI_EOY_NIC1_INTEREST",
+        "NON_RTI_EOY_NI_COMPENSATION_ON_STATUTORY_ADOPTION_PAY",
+        "NON_RTI_EOY_NI_HOLIDAY",
         "NON_RTI_EOY_SHARED_PARENT_PAY",
         "NON_RTI_EOY_STATUTORY_ADOPTION_PAY",
         "NON_RTI_EOY_STATUTORY_MATERNITY_PAY",
@@ -156,38 +167,37 @@
         "NON_RTI_SPECIFIED_CHARGE_NIC1",
         "NON_RTI_SPECIFIED_CHARGE_TAX",
         "NON_RTI_STUDENT_LOAN_DEDUCTION_INTEREST",
-        "NON_RTI_TAX_INTEREST"
-      ]
-    },
-    "is_overdue": {
-      "type": "boolean",
-      "description": "Whether this item is overdue or not",
-      "default": false
-    },
-    "epayeLinks": {
-      "type": "object",
-      "description": "An object of links to explore further data.",
-      "properties": {
-        "self": {
-          "description": "Link to the entry endpoint.",
-          "$ref": "#/definitions/link"
-        }
-      },
-      "required": [
-        "self"
-      ]
-    },
-    "empRefLinks": {
-      "type": "object",
-      "description": "An object of links to explore further data.",
-      "properties": {
-        "summary": {
-          "description": "Link to account summary endpoint.",
-          "$ref": "#/definitions/link"
-        }
-      },
-      "required": [
-        "summary"
+        "NON_RTI_TAX_INTEREST",
+        "RTI_CIS_CHARGE_IT",
+        "RTI_CIS_DEDUCTION_SUFFERED",
+        "RTI_EMPLOYMENT_ALLOWANCE_CHARGE",
+        "RTI_IN_YEAR_APPRENTICESHIP_LEVY_CHARGE",
+        "RTI_IN_YEAR_CHARGE_INCOME_TAX",
+        "RTI_IN_YEAR_CHARGE_NIC1",
+        "RTI_IN_YEAR_CHARGE_NIC1_EMPLOYEE_DEDUCTION",
+        "RTI_IN_YEAR_CHARGE_NIC1_EMPLOYER_CONTRIBUTION",
+        "RTI_IN_YEAR_CHARGE_STUDENT_LOAN_DEDUCTION",
+        "RTI_NI_COMPENSATION_SHARED_PARENT_PAY",
+        "RTI_NI_COMPENSATION_STATUTORY_ADOPTION_PAY",
+        "RTI_NI_COMPENSATION_STATUTORY_MATERNITY_PAY",
+        "RTI_NI_COMPENSATION_STATUTORY_PATERNITY_PAY",
+        "RTI_NI_HOLIDAY",
+        "RTI_PAYE_EYU_EMPLOYEE_NIC1",
+        "RTI_PAYE_EYU_EMPLOYER_NIC1",
+        "RTI_PAYE_EYU_STUDENT_LOAN_DEDUCTION",
+        "RTI_PAYE_EYU_TAX",
+        "RTI_SHARED_PARENT_PAY",
+        "RTI_SPECIFIED_CHARGE_EMPLOYEE_NIC1",
+        "RTI_SPECIFIED_CHARGE_EMPLOYER_NIC1",
+        "RTI_SPECIFIED_CHARGE_INCOME_TAX",
+        "RTI_SPECIFIED_CHARGE_NIC1",
+        "RTI_SPECIFIED_CHARGE_STUDENT_LOAN_DEDUCTION",
+        "RTI_SPECIFIED_CISR_CHARGE_IT",
+        "RTI_STATUTORY_ADOPTION_PAY",
+        "RTI_STATUTORY_MATERNITY_PAY",
+        "RTI_STATUTORY_PATERNITY_PAY",
+        "RTI_STATUTORY_SICK_PAY",
+        "UNALLOCATED_CREDIT"
       ]
     }
   }

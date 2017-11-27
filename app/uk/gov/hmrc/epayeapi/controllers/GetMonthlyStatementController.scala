@@ -26,15 +26,15 @@ import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.domain.EmpRef
 import uk.gov.hmrc.epayeapi.connectors.EpayeConnector
 import uk.gov.hmrc.epayeapi.models.Formats._
-import uk.gov.hmrc.epayeapi.models.TaxYear
-import uk.gov.hmrc.epayeapi.models.in._
+import uk.gov.hmrc.epayeapi.models.in.{EpayeJsonError, EpayeNotFound, EpayeResponse, EpayeSuccess}
 import uk.gov.hmrc.epayeapi.models.out.ApiErrorJson.EmpRefNotFound
-import uk.gov.hmrc.epayeapi.models.out.{AnnualStatementJson, ApiErrorJson}
+import uk.gov.hmrc.epayeapi.models.out.{ApiErrorJson, MonthlyStatementJson}
+import uk.gov.hmrc.epayeapi.models.{TaxMonth, TaxYear}
 
 import scala.concurrent.ExecutionContext
 
 @Singleton
-case class GetAnnualStatementController @Inject() (
+case class GetMonthlyStatementController @Inject() (
   authConnector: AuthConnector,
   epayeConnector: EpayeConnector,
   implicit val ec: ExecutionContext,
@@ -42,21 +42,33 @@ case class GetAnnualStatementController @Inject() (
 )
   extends ApiController {
 
-  def getAnnualStatement(empRef: EmpRef, taxYear:TaxYear): EssentialAction =
+  def getStatement(empRef: EmpRef, taxYear: TaxYear, taxMonth: TaxMonth): EssentialAction =
     EmpRefAction(empRef) {
       Action.async { request =>
-        epayeConnector.getAnnualStatement(empRef, taxYear, hc(request)).map {
-          case EpayeSuccess(epayeAnnualStatement) =>
-            Ok(Json.toJson(AnnualStatementJson(empRef, taxYear, epayeAnnualStatement)))
-          case EpayeJsonError(err) =>
-            Logger.error(s"Upstream returned invalid json: $err")
-            InternalServerError(Json.toJson(ApiErrorJson.InternalServerError))
-          case EpayeNotFound() =>
-            NotFound(Json.toJson(EmpRefNotFound))
-          case error: EpayeResponse[_] =>
-            Logger.error(s"Error while fetching totals: $error")
-            InternalServerError(Json.toJson(ApiErrorJson.InternalServerError))
-        }
+        epayeConnector.getMonthlyStatement(
+          empRef,
+          hc(request),
+          taxYear,
+          taxMonth
+        ).map {
+            case EpayeSuccess(json) =>
+              Ok(Json.toJson(
+                MonthlyStatementJson(
+                  empRef,
+                  taxYear,
+                  taxMonth,
+                  json
+                )
+              ))
+            case EpayeNotFound() =>
+              NotFound(Json.toJson(EmpRefNotFound))
+            case EpayeJsonError(error) =>
+              Logger.error(s"Upstream returned invalid json: $error")
+              InternalServerError(Json.toJson(ApiErrorJson.InternalServerError))
+            case error: EpayeResponse[_] =>
+              Logger.error(s"Error while fetching totals: $error")
+              InternalServerError(Json.toJson(ApiErrorJson.InternalServerError))
+          }
       }
     }
 }

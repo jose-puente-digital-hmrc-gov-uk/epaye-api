@@ -35,7 +35,7 @@ class GetSummarySpec
   override implicit lazy val app: Application =
     new GuiceApplicationBuilder().overrides(bind[Router].toProvider[RoutesProvider]).build()
 
-  "/organisation/epaye/{ton}/{tor}/" should {
+  "/organisations/epaye/{ton}/{tor}/" should {
 
     "returns a response body that conforms with the Summary schema" in {
       val empRef = randomEmpRef()

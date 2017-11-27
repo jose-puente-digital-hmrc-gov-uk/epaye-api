@@ -24,7 +24,7 @@ import play.api.mvc.{Action, AnyContent, EssentialAction}
 import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.domain.EmpRef
 import uk.gov.hmrc.epayeapi.models.Formats._
-import uk.gov.hmrc.epayeapi.models.out.EmpRefsResponse
+import uk.gov.hmrc.epayeapi.models.out.EmpRefsJson
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -38,7 +38,7 @@ case class GetEmpRefsController @Inject()(
 
   def getEmpRefs(): EssentialAction = EmpRefsAction { empRefs =>
     Action { request =>
-      Ok(Json.toJson(EmpRefsResponse.fromSeq(empRefs.toSeq)))
+      Ok(Json.toJson(EmpRefsJson.fromSeq(empRefs.toSeq)))
     }
   }
 }

@@ -23,10 +23,10 @@ import play.api.mvc._
 import uk.gov.hmrc.auth.core.Retrievals._
 import uk.gov.hmrc.auth.core._
 import uk.gov.hmrc.domain.EmpRef
-import uk.gov.hmrc.epayeapi.models.out.ApiError.{AuthorizationHeaderInvalid, InsufficientEnrolments, InvalidEmpRef}
+import uk.gov.hmrc.epayeapi.models.out.ApiErrorJson.{AuthorizationHeaderInvalid, InsufficientEnrolments, InvalidEmpRef}
 import uk.gov.hmrc.play.binders.SimpleObjectBinder
 import uk.gov.hmrc.play.microservice.controller.BaseController
-import uk.gov.hmrc.epayeapi.models.out.Formats._
+import uk.gov.hmrc.epayeapi.models.Formats._
 
 
 import scala.concurrent.{ExecutionContext, Future}

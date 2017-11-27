@@ -17,15 +17,25 @@
 package uk.gov.hmrc.epayeapi.models.out
 
 import uk.gov.hmrc.domain.EmpRef
+import uk.gov.hmrc.epayeapi.models.{TaxMonth, TaxYear}
 
 case class Link(href: String)
 
 object Link {
-  val prefix = "/organisation/paye"
-
-  def summaryLink(empRef: EmpRef): Link =
-    Link(s"$prefix/${empRef.taxOfficeNumber}/${empRef.taxOfficeReference}/")
+  val prefix = "/organisations/paye"
 
   def empRefsLink(): Link =
     Link(s"$prefix/")
+
+  def summaryLink(empRef: EmpRef): Link =
+  Link(s"$prefix/${empRef.taxOfficeNumber}/${empRef.taxOfficeReference}/")
+
+  def statementsLink(empRef: EmpRef): Link =
+  Link(s"$prefix/${empRef.taxOfficeNumber}/${empRef.taxOfficeReference}/statements")
+
+  def anualStatementLink(empRef: EmpRef, taxYear: TaxYear): Link =
+  Link(s"$prefix/${empRef.taxOfficeNumber}/${empRef.taxOfficeReference}/statements/${taxYear.asString}")
+
+  def monthlyStatementLink(empRef: EmpRef, taxYear: TaxYear, taxMonth: TaxMonth): Link =
+  Link(s"$prefix/${empRef.taxOfficeNumber}/${empRef.taxOfficeReference}/statements/${taxYear.asString}/${taxMonth.asString}")
 }

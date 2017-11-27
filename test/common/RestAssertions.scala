@@ -43,41 +43,59 @@ class ClientGivens(empRef: EmpRef) {
   def and(): ClientGivens = this
 
   def epayeTotalsReturns(body: String): ClientGivens = {
-    val response = aResponse()
-
-    response
-      .withBody(body)
-      .withHeader("Content-Type", "application/json")
-      .withStatus(200)
-
     stubFor(
-      get(urlPathEqualTo(s"/epaye/${empRef.encodedValue}/api/v1/annual-statement")).willReturn(response)
+      get(
+        urlPathEqualTo(s"/epaye/${empRef.encodedValue}/api/v1/annual-statement")
+      ).willReturn(
+          aResponse()
+            .withBody(body)
+            .withHeader("Content-Type", "application/json")
+            .withStatus(200)
+        )
     )
 
     this
   }
 
   def epayeAnnualStatementReturns(body: String): ClientGivens = {
-    val response = aResponse()
-
-    response
-      .withBody(body)
-      .withHeader("Content-Type", "application/json")
-      .withStatus(200)
-
     stubFor(
-      get(urlPathEqualTo(s"/epaye/${empRef.encodedValue}/api/v1/annual-statement")).willReturn(response)
+      get(
+        urlPathEqualTo(s"/epaye/${empRef.encodedValue}/api/v1/annual-statement")
+      ).willReturn(
+          aResponse()
+            .withBody(body)
+            .withHeader("Content-Type", "application/json")
+            .withStatus(200)
+        )
+    )
+
+    this
+  }
+
+  def epayeMonthlyStatementReturns(body: String): ClientGivens = {
+    stubFor(
+      get(
+        urlPathEqualTo(s"/epaye/${empRef.encodedValue}/api/v1/monthly-statement")
+      ).willReturn(
+          aResponse()
+            .withBody(body)
+            .withHeader("Content-Type", "application/json")
+            .withStatus(200)
+        )
     )
 
     this
   }
 
   def isAuthorized: ClientGivens = {
-
-    val response = aResponse().withBody(Fixtures.authorisedEnrolmentJson(empRef)).withStatus(200)
-
     stubFor(
-      post(urlPathEqualTo(s"/auth/authorise")).willReturn(response)
+      post(
+        urlPathEqualTo(s"/auth/authorise")
+      ).willReturn(
+          aResponse()
+            .withBody(Fixtures.authorisedEnrolmentJson(empRef))
+            .withStatus(200)
+        )
     )
     this
   }

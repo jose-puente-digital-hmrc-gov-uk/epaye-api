@@ -24,7 +24,7 @@ import play.api.test.Helpers._
 import uk.gov.hmrc.auth.core._
 import uk.gov.hmrc.domain.EmpRef
 import uk.gov.hmrc.epayeapi.models.Formats._
-import uk.gov.hmrc.epayeapi.models.out.{ApiError, EmpRefsResponse}
+import uk.gov.hmrc.epayeapi.models.out.{ApiErrorJson, EmpRefsJson}
 import unit.AppSpec
 import unit.auth.AuthComponents.{AuthFail, AuthOk}
 
@@ -52,25 +52,25 @@ class GetEmpRefsSpec extends AppSpec {
       status(request) shouldBe OK
     }
     "return a list of EmpRefs" in new App(build(AuthOk(activeEnrolment))) {
-      contentAsJson(request) shouldBe Json.toJson(EmpRefsResponse(EmpRef(ton.value, tor.value)))
+      contentAsJson(request) shouldBe Json.toJson(EmpRefsJson(EmpRef(ton.value, tor.value)))
     }
     "return 200 OK on inactive enrolments" in new App(build(AuthOk(inactiveEnrolment))) {
       status(request) shouldBe OK
     }
     "return an empty list inactive EmpRefs" in new App(build(AuthOk(inactiveEnrolment))) {
-      contentAsJson(request) shouldBe Json.toJson(EmpRefsResponse.fromSeq(Seq()))
+      contentAsJson(request) shouldBe Json.toJson(EmpRefsJson.fromSeq(Seq()))
     }
     "return 200 OK on different enrolments" in new App(build(AuthOk(differentEnrolment))) {
       status(request) shouldBe OK
     }
     "return an empty list on different enrolments" in new App(build(AuthOk(differentEnrolment))) {
-      contentAsJson(request) shouldBe Json.toJson(EmpRefsResponse.fromSeq(Seq()))
+      contentAsJson(request) shouldBe Json.toJson(EmpRefsJson.fromSeq(Seq()))
     }
     "return 403 Forbidden on insufficient enrolments" in new App(build(AuthFail(new InsufficientEnrolments()))) {
       status(request) shouldBe FORBIDDEN
     }
     "explain the error on insufficient enrolments" in new App(build(AuthFail(new InsufficientEnrolments()))) {
-      contentAsJson(request) shouldBe Json.toJson(ApiError.InsufficientEnrolments)
+      contentAsJson(request) shouldBe Json.toJson(ApiErrorJson.InsufficientEnrolments)
     }
   }
 

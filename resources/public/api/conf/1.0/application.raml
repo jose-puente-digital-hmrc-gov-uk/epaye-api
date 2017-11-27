@@ -34,6 +34,10 @@ types:
     pattern: "[a-zA-Z0-9]{3}"
   TaxOfficeReference:
     pattern: "[a-zA-Z0-9]{7}"
+  TaxYear:
+    pattern: "[0-9]{4}-[0-9]{2}"
+  TaxMonth:
+    pattern: "[1-9]|1[0-2]"
 
 /organisations/paye:
   /:
@@ -65,11 +69,11 @@ types:
     uriParameters:
       taxOfficeNumber:
         description: A unique identifier made up of tax office number
-        type: string
+        type: TaxOfficeNumber
         example: "001"
       taxOfficeReference:
         description: A unique identifier made up of the tax office reference
-        type: string
+        type: TaxOfficeReference
         example: "A000001"
     get:
       is: [ headers.acceptHeader ]
@@ -134,4 +138,44 @@ types:
                         "message" : "Provided EmpRef is not associated with your account"
                       }
 
+
+  /{taxOfficeNumber}/{taxOfficeReference}/statements/{taxYear}/{taxMonth}:
+    uriParameters:
+      taxOfficeNumber:
+        description: A unique identifier made up of tax office number
+        type: TaxOfficeNumber
+        example: "001"
+      taxOfficeReference:
+        description: A unique identifier made up of the tax office reference
+        type: TaxOfficeReference
+        example: "A000001"
+      taxYear:
+        type: TaxYear
+        example: "2015-16"
+      taxMonth:
+        type: TaxMonth
+        example: "5"
+    get:
+      is: [ headers.acceptHeader ]
+      displayName: Get ePAYE monthly statement
+      (annotations.scope): "read:epaye"
+      securedBy: [ sec.oauth_2_0: { scopes: [ "read:epaye" ] } ]
+      responses:
+        200:
+          body:
+            application/json:
+              type: !include schemas/MonthlyStatement.get.schema.json
+              example: !include examples/MonthlyStatement.get.json
+        403:
+          body:
+            application/json:
+              type: !include schemas/ErrorCodes.schema.json
+              examples:
+                notOpenStatus:
+                  description: You don't currently have an ePAYE enrolment on this account.
+                  value: |
+                    {
+                      "code" : "INVALID_EMPREF",
+                      "message" : "Provided EmpRef is not associated with your account"
+                    }
 

@@ -18,16 +18,16 @@ package uk.gov.hmrc.epayeapi.models.out
 
 import uk.gov.hmrc.domain.EmpRef
 
-case class EmpRefsResponse(
+case class EmpRefsJson(
   empRefs: Seq[EmpRefItem],
   _links: EmpRefsLinks
 )
 
-object EmpRefsResponse {
-  def fromSeq(seq: Seq[EmpRef]): EmpRefsResponse =
-    EmpRefsResponse(seq.map(EmpRefItem(_)), EmpRefsLinks())
-  def apply(empRef: EmpRef): EmpRefsResponse =
-    EmpRefsResponse(Seq(EmpRefItem(empRef)), EmpRefsLinks())
+object EmpRefsJson {
+  def fromSeq(seq: Seq[EmpRef]): EmpRefsJson =
+    EmpRefsJson(seq.map(EmpRefItem(_)), EmpRefsLinks())
+  def apply(empRef: EmpRef): EmpRefsJson =
+    EmpRefsJson(Seq(EmpRefItem(empRef)), EmpRefsLinks())
 }
 
 case class EmpRefItem(empRef: EmpRef, _links: EmpRefLinks)

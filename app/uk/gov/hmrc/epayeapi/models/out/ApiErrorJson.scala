@@ -16,30 +16,30 @@
 
 package uk.gov.hmrc.epayeapi.models.out
 
-case class ApiError(code: String, message: String)
+case class ApiErrorJson(code: String, message: String)
 
-object ApiError {
-  object AuthorizationHeaderInvalid extends ApiError(
+object ApiErrorJson {
+  object AuthorizationHeaderInvalid extends ApiErrorJson(
     "AUTHORIZATION_HEADER_INVALID",
     "You must provide a valid Bearer token in your header"
   )
 
-  object InsufficientEnrolments extends ApiError(
+  object InsufficientEnrolments extends ApiErrorJson(
     "INSUFFICIENT_ENROLMENTS",
     "You are not currently enrolled for ePAYE"
   )
 
-  object InvalidEmpRef extends ApiError(
+  object InvalidEmpRef extends ApiErrorJson(
     "INVALID_EMPREF",
     "Provided EmpRef is not associated with your account"
   )
 
-  object EmpRefNotFound extends ApiError(
+  object EmpRefNotFound extends ApiErrorJson(
     "EMPREF_NOT_FOUND",
     "Provided EmpRef wasn't found."
   )
 
-  object InternalServerError extends ApiError(
+  object InternalServerError extends ApiErrorJson(
     "INTERNAL_SERVER_ERROR",
     "We are currently experiencing problems. Please try again later."
   )

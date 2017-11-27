@@ -3,18 +3,6 @@
   "type": "object",
   "properties": {
     "code": {
-      "$ref": "#/definitions/error-codeType"
-    },
-    "message": {
-      "type": "string"
-    }
-  },
-  "required": [
-    "code",
-    "message"
-  ],
-  "definitions": {
-    "error-codeType": {
       "type": "string",
       "enum": [
         "UNAUTHORIZED",
@@ -27,6 +15,13 @@
         "EMPREF_NOT_FOUND",
         "INVALID_TAXYEAR"
       ]
+    },
+    "message": {
+      "type": "string"
     }
-  }
+  },
+  "required": [
+    "code",
+    "message"
+  ]
 }

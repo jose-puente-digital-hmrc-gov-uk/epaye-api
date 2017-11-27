@@ -22,16 +22,16 @@ import play.api.Application
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.routing.Router
+import uk.gov.hmrc.domain.EmpRef
 import uk.gov.hmrc.epayeapi.router.RoutesProvider
 
 import scala.io.Source
 
-class GetAnnualStatementSpec
+class GetMonthlyStatementSpec
   extends WordSpec
   with Matchers
   with WSClientSetup
   with WiremockSetup
-  with EmpRefGenerator
   with RestAssertions {
 
   override implicit lazy val app: Application =
@@ -43,31 +43,32 @@ class GetAnnualStatementSpec
   def getResourceAsString(name: String): String =
     Source.fromURL(getClass.getResource(name), "utf-8").mkString("")
 
-  val annualStatementSchemaPath: String = getUriString("/public/api/conf/1.0/schemas/AnnualStatement.get.schema.json")
+  val monthlyStatementSchemaPath: String = getUriString("/public/api/conf/1.0/schemas/MonthlyStatement.get.schema.json")
 
-  "/organisations/epaye/{ton}/{tor}/statements/{taxYear}" should {
+  "/organisations/epaye/{ton}/{tor}/statements/{taxYear}/{taxMonth}" should {
 
-    "returns a response body that conforms with the Annual Statement schema" in {
+    "returns a response body that conforms with the Monthly Statement schema" in {
+      val empRef = EmpRef("921", "PE91702")
 
-      val empRef = randomEmpRef()
+      val monthlyStatementUrl = s"$baseUrl/921/PE91702/statements/2017-18/3"
 
-      val annualStatementUrl = s"$baseUrl/${empRef.taxOfficeNumber}/${empRef.taxOfficeReference}/statements/2016-17"
+      val inputJsonString = getResourceAsString("/epaye/monthly-statement/in/921-PE91702-2017-3.json")
 
       given()
         .clientWith(empRef).isAuthorized
-        .and().epayeAnnualStatementReturns(Fixtures.epayeAnnualStatement)
+        .and().epayeMonthlyStatementReturns(inputJsonString)
         .when
-        .get(annualStatementUrl).withAuthHeader()
+        .get(monthlyStatementUrl).withAuthHeader()
         .thenAssertThat()
-        .bodyIsOfSchema(annualStatementSchemaPath)
+        .bodyIsOfSchema(monthlyStatementSchemaPath)
     }
   }
 
-  "The provided example for the Annual Statement" should {
+  "The provided example for the Monthly Statement" should {
     "conform to the schema" in {
-      val annualStatementExampleJson = getResourceAsString("/public/api/conf/1.0/examples/AnnualStatement.get.json")
+      val monthlyStatementExampleJson = getResourceAsString("/public/api/conf/1.0/examples/MonthlyStatement.get.json")
 
-      val report = Schema(annualStatementSchemaPath).validate(annualStatementExampleJson)
+      val report = Schema(monthlyStatementSchemaPath).validate(monthlyStatementExampleJson)
 
       withClue(report.toString) { report.isSuccess shouldBe true }
     }
