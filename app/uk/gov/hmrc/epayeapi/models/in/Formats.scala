@@ -26,8 +26,8 @@ trait Formats {
   implicit lazy val annualTotalFormat: Format[AnnualTotal] = format[AnnualTotal]
   implicit lazy val taxMonthFormat: Format[TaxMonth] = format[TaxMonth]
   implicit lazy val lineItemFormat: Format[LineItem] = format[LineItem]
-  implicit lazy val annualSummaryFormat: Format[AnnualSummary] = format[AnnualSummary]
-  implicit lazy val annualSummaryResponseFormat: Format[AnnualSummaryResponse] = format[AnnualSummaryResponse]
+  implicit lazy val annualSummaryFormat: Format[AnnualStatementTable] = format[AnnualStatementTable]
+  implicit lazy val annualSummaryResponseFormat: Format[EpayeAnnualStatement] = format[EpayeAnnualStatement]
 
   implicit lazy val epayeTotals: Format[EpayeTotals] = format[EpayeTotals]
   implicit lazy val epayeTotalsItems: Format[EpayeTotalsItem] = format[EpayeTotalsItem]

@@ -28,7 +28,6 @@ case class Cleared(
   credit: BigDecimal = 0
 )
 
-
 case class TaxMonth(month: Int) {
   def firstDay(year: TaxYear): LocalDate =
     year.firstDay.plusMonths(month - 1)
@@ -54,6 +53,6 @@ case class AnnualTotal(
   balance: DebitAndCredit
 )
 
-case class AnnualSummary(lineItems: Seq[LineItem], totals: AnnualTotal)
+case class AnnualStatementTable(lineItems: Seq[LineItem], totals: AnnualTotal)
 
-case class AnnualSummaryResponse(rti: AnnualSummary, nonRti: AnnualSummary)
+case class EpayeAnnualStatement(rti: AnnualStatementTable, nonRti: AnnualStatementTable)

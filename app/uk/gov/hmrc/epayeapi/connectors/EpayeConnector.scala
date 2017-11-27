@@ -20,7 +20,7 @@ import javax.inject.{Inject, Singleton}
 
 import uk.gov.hmrc.domain.EmpRef
 import uk.gov.hmrc.epayeapi.models.Formats._
-import uk.gov.hmrc.epayeapi.models.in.{AnnualSummaryResponse, ApiResponse, EpayeTotalsResponse, TaxYear}
+import uk.gov.hmrc.epayeapi.models.in.{EpayeAnnualStatement, ApiResponse, EpayeTotalsResponse, TaxYear}
 import uk.gov.hmrc.play.http.HeaderCarrier
 import uk.gov.hmrc.play.http.ws.WSHttp
 
@@ -45,19 +45,18 @@ case class EpayeConnector @Inject() (
     get[EpayeTotalsResponse](url, headers)
   }
 
-  def getAnnualSummary(empRef: EmpRef, headers: HeaderCarrier, taxYear: Option[String]): Future[ApiResponse[AnnualSummaryResponse]] = {
+  def getAnnualStatement(empRef: EmpRef, taxYear: Option[TaxYear], headers: HeaderCarrier): Future[ApiResponse[EpayeAnnualStatement]] = {
     val url =
       s"${config.baseUrl}" +
         s"/epaye" +
         s"/${empRef.encodedValue}" +
         s"/api/v1/annual-statement" +
         taxYear
-        .flatMap(TaxYear.extractTaxYear)
         .map(TaxYear.asString)
         .map(q => s"/$q")
         .getOrElse("")
 
-    get[AnnualSummaryResponse](url, headers)
+    get[EpayeAnnualStatement](url, headers)
   }
 }
 

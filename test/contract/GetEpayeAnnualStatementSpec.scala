@@ -22,7 +22,7 @@ import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.routing.Router
 import uk.gov.hmrc.epayeapi.router.RoutesProvider
 
-class GetAnnualStatementSpec extends WiremockSetup with EmpRefGenerator with RestAssertions{
+class GetEpayeAnnualStatementSpec extends WiremockSetup with EmpRefGenerator with RestAssertions{
 
   override implicit lazy val app: Application =
     new GuiceApplicationBuilder().overrides(bind[Router].toProvider[RoutesProvider]).build()
@@ -35,7 +35,7 @@ class GetAnnualStatementSpec extends WiremockSetup with EmpRefGenerator with Res
       val annualStatementUrl =
         s"$baseUrl/${empRef.taxOfficeNumber}/${empRef.taxOfficeReference}/statements/2016-17"
 
-      val summarySchemaPath = s"${app.path.toURI}/resources/public/api/conf/1.0/schemas/AnnualStatement.get.schema.json"
+      val annualStatementSchemaPath = s"${app.path.toURI}/resources/public/api/conf/1.0/schemas/AnnualStatement.get.schema.json"
 
       given()
         .clientWith(empRef).isAuthorized
@@ -43,7 +43,7 @@ class GetAnnualStatementSpec extends WiremockSetup with EmpRefGenerator with Res
         .when
         .get(annualStatementUrl).withAuthHeader()
         .thenAssertThat()
-        .bodyIsOfSchema(summarySchemaPath)
+        .bodyIsOfSchema(annualStatementSchemaPath)
     }
 
   }
