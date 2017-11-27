@@ -28,7 +28,7 @@ import uk.gov.hmrc.epayeapi.connectors.EpayeConnector
 import uk.gov.hmrc.epayeapi.models.Formats._
 import uk.gov.hmrc.epayeapi.models.in._
 import uk.gov.hmrc.epayeapi.models.out.ApiError.EmpRefNotFound
-import uk.gov.hmrc.epayeapi.models.out.{AnnualStatementResponse, ApiError, SummaryResponse}
+import uk.gov.hmrc.epayeapi.models.out.{AnnualStatementJson, ApiError, SummaryResponse}
 
 import scala.concurrent.ExecutionContext
 
@@ -45,7 +45,7 @@ case class GetAnnualStatementController @Inject()(
     Action.async { request =>
       epayeConnector.getAnnualStatement(empRef, taxYear, hc(request)).map {
         case ApiSuccess(epayeAnnualStatement) =>
-          Ok(Json.toJson(AnnualStatementResponse(epayeAnnualStatement)))
+          Ok(Json.toJson(AnnualStatementJson(epayeAnnualStatement)))
         case ApiJsonError(err) =>
           Logger.error(s"Upstream returned invalid json: $err")
           InternalServerError(Json.toJson(ApiError.InternalServerError))

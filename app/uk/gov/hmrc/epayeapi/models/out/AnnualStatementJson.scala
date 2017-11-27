@@ -47,7 +47,8 @@ case class PaymentsAndCreditsJson(
   credits: BigDecimal
 )
 
-case class EmbeddedJson(rtiCharges: RtiChargesJson)
+case class EmbeddedRtiChargesJson(rtiCharges: Seq[RtiChargesJson])
+
 case class RtiChargesJson(
   taxMonth: TaxMonthJson,
   amount: BigDecimal,
@@ -66,7 +67,7 @@ case class SelfLinks(
   self: Link
 )
 
-case class AnnualStatementLinks(
+case class AnnualStatementLinksJson(
   empRefs: Link,
   statements: Link,
   self: Link,
@@ -74,14 +75,14 @@ case class AnnualStatementLinks(
   previous: Link
 )
 
-case class AnnualStatementResponse(
+case class AnnualStatementJson(
   taxYear: PeriodJson,
-  nonRtiCharges: NonRtiChargesJson,
+  nonRtiCharges: Seq[NonRtiChargesJson],
   summary: SummaryJson,
-  _embedded: EmbeddedJson,
-  _links: AnnualStatementLinks
+  _embedded: EmbeddedRtiChargesJson,
+  _links: AnnualStatementLinksJson
 )
 
-object AnnualStatementResponse {
-  def apply(annualStatement: EpayeAnnualStatement): AnnualStatementResponse = ???
+object AnnualStatementJson {
+  def apply(annualStatement: EpayeAnnualStatement): AnnualStatementJson = ???
 }
