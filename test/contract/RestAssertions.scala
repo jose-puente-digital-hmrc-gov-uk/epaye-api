@@ -16,7 +16,8 @@
 
 package contract
 
-import com.github.tomakehurst.wiremock.client.ResponseDefinitionBuilder
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.github.fge.jsonschema.main.JsonSchemaFactory
 import com.github.tomakehurst.wiremock.client.WireMock._
 import org.scalatest.Matchers
 import play.api.libs.ws.{WSClient, WSRequest}
@@ -55,7 +56,7 @@ class ClientGivens(empRef: EmpRef) {
         |         "debit": 20
         |       }
         |     }
-        |  }
+        |  },
         |  "nonRti": {
         |     "totals": {
         |       "balance": {
@@ -65,7 +66,7 @@ class ClientGivens(empRef: EmpRef) {
         |     }
         |  }
         |}
-      """
+      """.stripMargin
 
     response
       .withBody(body)
@@ -80,30 +81,22 @@ class ClientGivens(empRef: EmpRef) {
   }
 
   def isAuthorized: ClientGivens = {
-//    val postBody: String =
-//      """
-//        |{
-//        |  "authorise": [
-//        |    {
-//        |      "identifiers": [],
-//        |      "state": "Activated",
-//        |      "confidenceLevel": 0,
-//        |      "delegatedAuthRule": "epaye-auth",
-//        |      "enrolment": "IR-PAYE"
-//        |    }
-//        |  ],
-//        |  "retrieve": [
-//        |    "authorisedEnrolments"
-//        |  ]
-//        |}
-//      """.stripMargin
 
     val responseBody =
-      """
+      s"""
         |{
-        |  "enrolments": [
+        |  "authorisedEnrolments": [
         |    {
-        |      "identifiers": [],
+        |      "key": "IR-PAYE",
+        |      "identifiers": [
+        |        {
+        |          "key": "TaxOfficeNumber",
+        |          "value": "${empRef.taxOfficeNumber}"
+        |        },
+        |        {
+        |          "key": "TaxOfficeReference",
+        |          "value": "${empRef.taxOfficeReference}"
+        |        }],
         |      "state": "Activated",
         |      "confidenceLevel": 0,
         |      "delegatedAuthRule": "epaye-auth",
@@ -124,8 +117,11 @@ class ClientGivens(empRef: EmpRef) {
 }
 
 class Assertions(response: HttpResponse) extends Matchers {
-  def bodyIsOfSchema(schema: String): Unit = {
-    ???
+
+  def bodyIsOfSchema(schemaPath: String): Unit = {
+    val validator = JsonSchemaFactory.byDefault().getJsonSchema(schemaPath)
+
+    validator.validate(new ObjectMapper().readTree(response.body), true)
   }
 
   def statusCodeIs(statusCode: Int): Assertions = {
