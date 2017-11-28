@@ -55,4 +55,4 @@ case class AnnualTotal(
 
 case class AnnualStatementTable(lineItems: Seq[LineItem], totals: AnnualTotal)
 
-case class EpayeAnnualStatement(rti: AnnualStatementTable, nonRti: AnnualStatementTable)
+case class EpayeAnnualStatement(rti: AnnualStatementTable, nonRti: AnnualStatementTable, unallocated: Option[BigDecimal])

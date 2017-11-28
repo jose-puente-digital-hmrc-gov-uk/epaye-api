@@ -38,7 +38,7 @@ trait Formats {
   implicit lazy val annualStatementJsonFormat: Format[AnnualStatementJson] = format[AnnualStatementJson]
 
 
-  implicit lazy val selfLinksFormat: Format[SelfLinks] = format[SelfLinks]
+  implicit lazy val selfLinksFormat: Format[SelfLink] = format[SelfLink]
 
   implicit lazy val empRefsLinksFormat: Format[EmpRefsLinks] = format[EmpRefsLinks]
   implicit lazy val empRefLinksFormat: Format[EmpRefLinks] = format[EmpRefLinks]

@@ -98,14 +98,15 @@ class EpayeConnectorSpec extends UnitSpec with MockitoSugar with ScalaFutures {
       connector.getAnnualStatement(empRef, taxYear, hc).futureValue shouldBe
         ApiSuccess(
           EpayeAnnualStatement(
-            AnnualStatementTable(
+            rti = AnnualStatementTable(
               List(LineItem(TaxYear(2017), Some(TaxMonth(1)), DebitAndCredit(100.2, 0), Cleared(0, 0), DebitAndCredit(100.2, 0), new LocalDate(2017, 5, 22), isSpecified = false, codeText = None)),
               AnnualTotal(DebitAndCredit(100.2, 0), Cleared(0, 0), DebitAndCredit(100.2, 0))
             ),
-            AnnualStatementTable(
+            nonRti = AnnualStatementTable(
               List(LineItem(TaxYear(2017), None, DebitAndCredit(20.0, 0), Cleared(0, 0), DebitAndCredit(20.0, 0), new LocalDate(2018, 2, 22), false, Some("P11D_CLASS_1A_CHARGE"))),
               AnnualTotal(DebitAndCredit(20.0, 0), Cleared(0, 0), DebitAndCredit(20.0, 0))
-            )
+            ),
+            unallocated = Some(0)
           )
         )
     }
