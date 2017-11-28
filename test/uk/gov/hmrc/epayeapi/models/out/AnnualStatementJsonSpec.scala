@@ -16,108 +16,20 @@
 
 package uk.gov.hmrc.epayeapi.models.out
 
-import org.joda.time.LocalDate
-import org.scalatest.WordSpec
-import uk.gov.hmrc.epayeapi.models.in._
+import org.scalatest.{Matchers, WordSpec}
+import uk.gov.hmrc.domain.EmpRef
+import uk.gov.hmrc.epayeapi.models.JsonFixtures.{emptyAnnualStatementJsonWith, emptyEpayeAnnualStatement}
+import uk.gov.hmrc.epayeapi.models.in.TaxYear
 
-class AnnualStatementJsonSpec extends WordSpec {
+class AnnualStatementJsonSpec extends WordSpec with Matchers {
   "AnnualStatementJson.apply" should {
-    "convert a EpayeAnnualStatement object to a AnnualStatementJson object" in {
-      val input =
-        EpayeAnnualStatement(
-          rti = AnnualStatementTable(
-            lineItems = Seq(
-              LineItem(
-                taxYear = TaxYear(2016),
-                // What if this is an Earlier Year Update?
-                taxMonth = Some(TaxMonth(1)),
-                charges = DebitAndCredit(debit = 10, credit = 20),
-                cleared = Cleared(payment = 20, credit = 23),
-                balance = DebitAndCredit(debit = 10, credit = 20),
-                dueDate = new LocalDate(2016, 5, 22),
-                // What if the month has specified charges?
-                isSpecified = true,
-                codeText = None
-              )
-            ),
-            totals = AnnualTotal(
-              charges = DebitAndCredit(23, 44),
-              cleared = Cleared(13, 14),
-              balance = DebitAndCredit(12, 23)
-            )
-          ),
-          nonRti = AnnualStatementTable(
-            lineItems = Seq(
-              LineItem(
-                taxYear = TaxYear(2016),
-                taxMonth = None,
-                charges = DebitAndCredit(23, 123),
-                cleared = Cleared(124),
-                balance = DebitAndCredit(13, 13),
-                dueDate = new LocalDate(2016, 5, 22),
-                isSpecified = false,
-                codeText = Some("I am the walrus")
-              )
-            ),
-            totals = AnnualTotal(
-              charges = DebitAndCredit(131, 23),
-              cleared = Cleared(3125),
-              balance = DebitAndCredit(126, 3127)
-            )
-          )
-        )
+    val empRef = EmpRef("123", "AB45678")
+    val taxYear = TaxYear(2016)
 
-      val expectedOutput =
-        AnnualStatementJson(
-          taxYear = PeriodJson(new LocalDate(2017, 2, 3), new LocalDate(2017, 2, 3)),
-          _embedded = EmbeddedRtiChargesJson(
-            Seq(
-              RtiChargesJson(
-                taxMonth = TaxMonthJson(134, new LocalDate(2017, 2, 3), new LocalDate(2017, 2, 3)),
-                amount = 135,
-                clearedByCredits = 14141,
-                clearedByPayments = 1414,
-                balance = 136,
-                dueDate = new LocalDate(),
-                _links = SelfLinks(Link("wefwefw"))
-              )
-            )
-          ),
-          nonRtiCharges = Seq(
-            NonRtiChargesJson(
-              code = "Roger",
-              taxPeriod = PeriodJson(new LocalDate(2017, 2, 3), new LocalDate(2017, 2, 3)),
-              amount = 128,
-              clearedByCredits = 124,
-              clearedByPayments = 245,
-              balance = 45,
-              dueDate = new LocalDate(2017, 4, 23)
-            )
-          ),
-          summary = SummaryJson(
-            rtiCharges = ChargesSummaryJson(
-              amount = ???,
-              clearedByCredits = ???,
-              clearedByPayments = ???,
-              balance = ???
-            ),
-            nonRtiCharges = ChargesSummaryJson(
-              amount = 129,
-              clearedByCredits = 130,
-              clearedByPayments = 131,
-              balance = 132
-            ),
-            unallocated = PaymentsAndCreditsJson(133, 41414)
-          ),
-          _links = AnnualStatementLinksJson(
-            empRefs = Link("wdw"),
-            statements = Link("adw"),
-            self = Link("wdbv"),
-            next = Link("wddv"),
-            previous = Link("errdw")
-          )
-        )
+    "return an empty response with links given an empty annual statement json" in {
+      AnnualStatementJson(empRef, taxYear, emptyEpayeAnnualStatement) shouldBe emptyAnnualStatementJsonWith(empRef, taxYear)
     }
   }
+
 }
 

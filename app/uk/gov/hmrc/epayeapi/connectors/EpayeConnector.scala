@@ -45,16 +45,12 @@ case class EpayeConnector @Inject() (
     get[EpayeTotalsResponse](url, headers)
   }
 
-  def getAnnualStatement(empRef: EmpRef, taxYear: Option[TaxYear], headers: HeaderCarrier): Future[ApiResponse[EpayeAnnualStatement]] = {
+  def getAnnualStatement(empRef: EmpRef, taxYear: TaxYear, headers: HeaderCarrier): Future[ApiResponse[EpayeAnnualStatement]] = {
     val url =
       s"${config.baseUrl}" +
         s"/epaye" +
         s"/${empRef.encodedValue}" +
-        s"/api/v1/annual-statement" +
-        taxYear
-        .map(TaxYear.asString)
-        .map(q => s"/$q")
-        .getOrElse("")
+        s"/api/v1/annual-statement/${taxYear.asString}"
 
     get[EpayeAnnualStatement](url, headers)
   }

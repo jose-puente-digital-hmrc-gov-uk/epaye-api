@@ -17,7 +17,8 @@
 package uk.gov.hmrc.epayeapi.models.out
 
 import org.joda.time.LocalDate
-import uk.gov.hmrc.epayeapi.models.in.EpayeAnnualStatement
+import uk.gov.hmrc.domain.EmpRef
+import uk.gov.hmrc.epayeapi.models.in.{EpayeAnnualStatement, TaxYear}
 
 case class PeriodJson(firstDay: LocalDate, lastDay: LocalDate)
 
@@ -84,5 +85,38 @@ case class AnnualStatementJson(
 )
 
 object AnnualStatementJson {
-  def apply(annualStatement: EpayeAnnualStatement): AnnualStatementJson = ???
+  val baseUrl = "/organisations/paye"
+
+  def baseUrlFor(empRef: EmpRef): String =
+    s"$baseUrl/${empRef.taxOfficeNumber}/${empRef.taxOfficeReference}"
+
+  def apply(empRef: EmpRef, taxYear: TaxYear, epayeAnnualStatement: EpayeAnnualStatement): AnnualStatementJson =
+    AnnualStatementJson(
+      taxYear = PeriodJson(taxYear.firstDay, taxYear.lastDay),
+      _embedded = EmbeddedRtiChargesJson(Seq()),
+      nonRtiCharges = Seq(),
+      summary = SummaryJson(
+        rtiCharges = ChargesSummaryJson(
+          amount = 0,
+          clearedByCredits = 0,
+          clearedByPayments = 0,
+          balance = 0
+        ),
+        nonRtiCharges = ChargesSummaryJson(
+          amount = 0,
+          clearedByCredits = 0,
+          clearedByPayments = 0,
+          balance = 0
+        ),
+        unallocated = PaymentsAndCreditsJson(0, 0)
+      ),
+      _links = AnnualStatementLinksJson(
+        empRefs = Link(baseUrl),
+        statements = Link(s"${baseUrlFor(empRef)}/statements"),
+        self = Link(s"${baseUrlFor(empRef)}/statements/${taxYear.asString}"),
+        next = Link(s"{${baseUrlFor(empRef)}/statements/${taxYear.next.asString}"),
+        previous = Link(s"${baseUrlFor(empRef)}/statements/${taxYear.previous.asString}")
+      )
+    )
+
 }

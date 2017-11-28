@@ -26,6 +26,8 @@ case class TaxYear(yearFrom: Int) {
   val asString: String = s"$yearFrom-${yearTo % 100}"
   val firstDay: LocalDate = TaxYearResolver.startOfTaxYear(yearFrom)
   val lastDay: LocalDate = firstDay.plusYears(1).minusDays(1)
+  def next: TaxYear = TaxYear(yearTo)
+  def previous = TaxYear(yearFrom - 1)
 }
 
 object TaxYear {
