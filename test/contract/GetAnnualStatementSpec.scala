@@ -16,26 +16,32 @@
 
 package contract
 
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.github.fge.jsonschema.main.JsonSchemaFactory
 import play.api.Application
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.routing.Router
 import uk.gov.hmrc.epayeapi.router.RoutesProvider
 
-class GetEpayeAnnualStatementSpec extends WiremockSetup with EmpRefGenerator with RestAssertions{
+import scala.io.{BufferedSource, Source}
+
+class GetAnnualStatementSpec extends WiremockSetup with EmpRefGenerator with RestAssertions {
 
   override implicit lazy val app: Application =
     new GuiceApplicationBuilder().overrides(bind[Router].toProvider[RoutesProvider]).build()
 
-  "/organisation/epaye/{ton}/{tor}/statements/{taxyear}" should {
+  val annualStatementSchemaPath: String =
+    s"${app.path.toURI}/resources/public/api/conf/1.0/schemas/AnnualStatement.get.schema.json"
+
+  "/organisations/epaye/{ton}/{tor}/statements/{taxYear}" should {
 
     "returns a response body that conforms with the Annual Statement schema" in {
+
       val empRef = randomEmpRef()
 
       val annualStatementUrl =
         s"$baseUrl/${empRef.taxOfficeNumber}/${empRef.taxOfficeReference}/statements/2016-17"
-
-      val annualStatementSchemaPath = s"${app.path.toURI}/resources/public/api/conf/1.0/schemas/AnnualStatement.get.schema.json"
 
       given()
         .clientWith(empRef).isAuthorized
@@ -45,8 +51,19 @@ class GetEpayeAnnualStatementSpec extends WiremockSetup with EmpRefGenerator wit
         .thenAssertThat()
         .bodyIsOfSchema(annualStatementSchemaPath)
     }
+  }
 
+  "The provided example for the Annual Statement" should {
+    "conform to the schema" in {
+      val examplePath = s"${app.path.toURI}/resources/public/api/conf/1.0/examples/AnnualStatement.get.json"
+
+      val exampleJson = Source.fromURL(examplePath).getLines.mkString
+
+      val validator = JsonSchemaFactory.byDefault().getJsonSchema(annualStatementSchemaPath)
+      val report = validator.validate(new ObjectMapper().readTree(exampleJson), true)
+
+      withClue(report.toString) { report.isSuccess shouldBe true }
+    }
   }
 }
-
 
