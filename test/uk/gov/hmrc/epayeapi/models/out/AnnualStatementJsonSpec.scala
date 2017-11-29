@@ -30,7 +30,7 @@ class AnnualStatementJsonSpec extends WordSpec with Matchers {
 
   "AnnualStatementJson.apply.taxYear" should {
     "contain the right taxYear" in {
-      AnnualStatementJson(empRef, taxYear, emptyEpayeAnnualStatement).taxYear shouldBe PeriodJson(taxYear.firstDay, taxYear.lastDay)
+      AnnualStatementJson(empRef, taxYear, emptyEpayeAnnualStatement).taxYear shouldBe TaxYearJson(taxYear.asString, taxYear.firstDay, taxYear.lastDay)
     }
   }
 
@@ -98,6 +98,44 @@ class AnnualStatementJsonSpec extends WordSpec with Matchers {
         )
     }
   }
+
+//  "AnnualStatementJson.apply.endOfYearUpdate" should {
+//    "contain the end of year update" in {
+//      val emptyTotals = AnnualTotal(
+//        charges = DebitAndCredit(),
+//        cleared = Cleared(),
+//        balance = DebitAndCredit()
+//      )
+//
+//      val epayeAnnualStatement =
+//        emptyEpayeAnnualStatement
+//          .copy(
+//            nonRti =
+//              AnnualStatementTable(
+//                lineItems = Seq(
+//                  LineItem(
+//                    taxYear,
+//                    None,
+//                    DebitAndCredit(123),
+//                    Cleared(123, 123),
+//                    DebitAndCredit(123),
+//                    dueDate,
+//                    codeText = Some("EARLIER_YEAR_UPDATE")
+//                  )
+//                ),
+//                totals = emptyTotals
+//              )
+//          )
+//
+//      AnnualStatementJson(empRef, taxYear, epayeAnnualStatement).earlierYearUpdate shouldBe
+//        ChargesSummaryJson(
+//          100,
+//          20,
+//          10,
+//          100 - 30
+//        )
+//    }
+//  }
 
   "RtiChargesJson.from(lineItem)" should {
     "convert an rti charge from the epaye annual statement" in {
@@ -169,6 +207,5 @@ class AnnualStatementJsonSpec extends WordSpec with Matchers {
         ))
     }
   }
-
 }
 

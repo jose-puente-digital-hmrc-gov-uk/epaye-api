@@ -20,6 +20,8 @@ import org.joda.time.LocalDate
 import uk.gov.hmrc.domain.EmpRef
 import uk.gov.hmrc.epayeapi.models.in.{EpayeAnnualStatement, LineItem, TaxYear}
 
+case class TaxYearJson(year: String, firstDay: LocalDate, lastDay: LocalDate)
+
 case class PeriodJson(firstDay: LocalDate, lastDay: LocalDate)
 
 case class NonRtiChargesJson(
@@ -110,7 +112,7 @@ case class AnnualStatementLinksJson(
 )
 
 case class AnnualStatementJson(
-  taxYear: PeriodJson,
+  taxYear: TaxYearJson,
   nonRtiCharges: Seq[NonRtiChargesJson],
   summary: SummaryJson,
   _embedded: EmbeddedRtiChargesJson,
@@ -125,7 +127,7 @@ object AnnualStatementJson {
 
   def apply(empRef: EmpRef, taxYear: TaxYear, epayeAnnualStatement: EpayeAnnualStatement): AnnualStatementJson =
     AnnualStatementJson(
-      taxYear = PeriodJson(taxYear.firstDay, taxYear.lastDay),
+      taxYear = TaxYearJson(taxYear.asString, taxYear.firstDay, taxYear.lastDay),
       _embedded = EmbeddedRtiChargesJson(
         epayeAnnualStatement.rti.lineItems.flatMap(RtiChargesJson.from(_, empRef, taxYear))
       ),

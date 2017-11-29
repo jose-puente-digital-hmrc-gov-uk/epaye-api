@@ -43,106 +43,11 @@ class ClientGivens(empRef: EmpRef) {
 
   def and(): ClientGivens = this
 
-  val epayeAnnualStatement =
-    """
-      |{
-      |  "rti": {
-      |    "lineItems": [
-      |      {
-      |        "taxYear": {
-      |          "yearFrom": 2017
-      |        },
-      |        "taxMonth": {
-      |          "month": 7
-      |        },
-      |        "charges": {
-      |          "debit": 1200,
-      |          "credit": 0
-      |        },
-      |        "cleared": {
-      |          "cleared": 0,
-      |          "payment": 0,
-      |          "credit": 0
-      |        },
-      |        "balance": {
-      |          "debit": 1200,
-      |          "credit": 0
-      |        },
-      |        "dueDate": "2017-11-22",
-      |        "isSpecified": false,
-      |        "itemType": "month"
-      |      }
-      |    ],
-      |    "totals": {
-      |      "charges": {
-      |        "debit": 1200,
-      |        "credit": 0
-      |      },
-      |      "cleared": {
-      |        "cleared": 0,
-      |        "payment": 0,
-      |        "credit": 0
-      |      },
-      |      "balance": {
-      |        "debit": 1200,
-      |        "credit": 0
-      |      }
-      |    }
-      |  },
-      |  "nonRti": {
-      |    "lineItems": [
-      |      {
-      |        "taxYear": {
-      |          "yearFrom": 2017
-      |        },
-      |        "taxMonth": {
-      |          "month": 1
-      |        },
-      |        "charges": {
-      |          "debit": 100,
-      |          "credit": 0
-      |        },
-      |        "cleared": {
-      |          "cleared": 100,
-      |          "payment": 0,
-      |          "credit": 0
-      |        },
-      |        "balance": {
-      |          "debit": 0,
-      |          "credit": 0
-      |        },
-      |        "dueDate": "2017-05-22",
-      |        "isSpecified": false,
-      |        "itemType": "1481",
-      |        "codeText": "NON_RTI_CIS_FIXED_PENALTY"
-      |      }
-      |    ],
-      |    "totals": {
-      |      "charges": {
-      |        "debit": 100,
-      |        "credit": 0
-      |      },
-      |      "cleared": {
-      |        "cleared": 100,
-      |        "payment": 100,
-      |        "credit": 0
-      |      },
-      |      "balance": {
-      |        "debit": 100,
-      |        "credit": 100
-      |      }
-      |    }
-      |  },
-      |  "unallocated": 2000
-      |}
-    """.stripMargin
-
   def epayeTotalsReturns(owed: BigDecimal): ClientGivens = {
     val response = aResponse()
 
-
     response
-      .withBody(epayeAnnualStatement)
+      .withBody(Fixtures.epayeAnnualStatement)
       .withHeader("Content-Type", "application/json")
       .withStatus(200)
 
@@ -157,7 +62,7 @@ class ClientGivens(empRef: EmpRef) {
     val response = aResponse()
 
     response
-      .withBody(epayeAnnualStatement)
+      .withBody(Fixtures.epayeAnnualStatement)
       .withHeader("Content-Type", "application/json")
       .withStatus(200)
 
@@ -168,41 +73,15 @@ class ClientGivens(empRef: EmpRef) {
     this
   }
 
-
   def isAuthorized: ClientGivens = {
 
-    val responseBody =
-      s"""
-        |{
-        |  "authorisedEnrolments": [
-        |    {
-        |      "key": "IR-PAYE",
-        |      "identifiers": [
-        |        {
-        |          "key": "TaxOfficeNumber",
-        |          "value": "${empRef.taxOfficeNumber}"
-        |        },
-        |        {
-        |          "key": "TaxOfficeReference",
-        |          "value": "${empRef.taxOfficeReference}"
-        |        }],
-        |      "state": "Activated",
-        |      "confidenceLevel": 0,
-        |      "delegatedAuthRule": "epaye-auth",
-        |      "enrolment": "IR-PAYE"
-        |    }
-        |  ]
-        |}
-      """.stripMargin
-
-    val response = aResponse().withBody(responseBody).withStatus(200)
+    val response = aResponse().withBody(Fixtures.authorisedEnrolmentJson(empRef)).withStatus(200)
 
     stubFor(
       post(urlPathEqualTo(s"/auth/authorise")).willReturn(response)
     )
     this
   }
-
 }
 
 class Assertions(response: HttpResponse) extends Matchers {
@@ -212,7 +91,7 @@ class Assertions(response: HttpResponse) extends Matchers {
 
     val report = validator.validate(new ObjectMapper().readTree(response.body), true)
 
-    withClue(report.toString){ report.isSuccess shouldBe true }
+    withClue(report.toString) { report.isSuccess shouldBe true }
   }
 
   def statusCodeIs(statusCode: Int): Assertions = {

@@ -23,6 +23,7 @@ import uk.gov.hmrc.auth.core._
 import uk.gov.hmrc.epayeapi.config._
 import uk.gov.hmrc.epayeapi.connectors.EpayeApiConfig
 import uk.gov.hmrc.epayeapi.connectors.stub.SandboxAuthConnector
+import uk.gov.hmrc.epayeapi.models.{SystemToday, Today, TodayProvider}
 import uk.gov.hmrc.play.auth.microservice.connectors.{AuthConnector => PlayAuthConnector}
 import uk.gov.hmrc.play.config.inject.ServicesConfig
 import uk.gov.hmrc.play.http.HttpPost
@@ -34,6 +35,12 @@ class AppModule() extends AbstractModule {
     bind(classOf[PlayAuthConnector]).to(classOf[MicroserviceAuthConnector]).asEagerSingleton()
     bind(classOf[WSHttp]).to(classOf[WSHttpImpl]).asEagerSingleton()
     bind(classOf[Startup]).to(classOf[AppStartup]).asEagerSingleton()
+  }
+
+  @Provides
+  @Singleton
+  def provideToday: TodayProvider = new TodayProvider {
+    def today: Today = SystemToday
   }
 
   @Provides

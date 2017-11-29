@@ -26,6 +26,7 @@ trait Formats {
   }
   implicit lazy val linkFormat: Format[Link] = format[Link]
 
+  implicit lazy val taxYearJsonFormat: Format[TaxYearJson] = format[TaxYearJson]
   implicit lazy val periodJsonFormat: Format[PeriodJson] = format[PeriodJson]
   implicit lazy val nonRtiChargesJsonFormat: Format[NonRtiChargesJson] = format[NonRtiChargesJson]
   implicit lazy val summaryJsonFormat: Format[SummaryJson] = format[SummaryJson]

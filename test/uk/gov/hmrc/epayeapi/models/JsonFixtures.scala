@@ -36,7 +36,7 @@ object JsonFixtures {
 
   def emptyAnnualStatementJsonWith(empRef: EmpRef, taxYear: TaxYear): AnnualStatementJson =
     AnnualStatementJson(
-      taxYear = PeriodJson(taxYear.firstDay, taxYear.lastDay),
+      taxYear = TaxYearJson(taxYear.asString, taxYear.firstDay, taxYear.lastDay),
       _embedded = EmbeddedRtiChargesJson(Seq()),
       nonRtiCharges = Seq(),
       summary = SummaryJson(
