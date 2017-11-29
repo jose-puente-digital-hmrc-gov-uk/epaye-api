@@ -1,0 +1,74 @@
+{
+  "taxYear": {
+    "year": "2016-17",
+    "startDate": "2016-04-06",
+    "endDate": "2017-04-05"
+  },
+  "nonRtiCharges": [
+    {
+      "code": "NON_RTI_CIS_FIXED_PENALTY",
+      "amount": 5000,
+      "taxPeriod": {
+        "startDate": "2016-04-06",
+        "endDate": "2016-07-05"
+      },
+      "clearedByCredits": 500,
+      "clearedByPayments": 2000,
+      "balance": 2500,
+      "dueDate": "2016-07-22"
+    }
+  ],
+  "summary": {
+    "rtiCharges": {
+      "amount": 1200,
+      "clearedByCredits": 100,
+      "clearedByPayments": 200,
+      "balance": 900
+    },
+    "nonRtiCharges": {
+      "amount": 5000,
+      "clearedByCredits": 500,
+      "clearedByPayments": 2000,
+      "balance": 2500
+    }
+  },
+  "_embedded": {
+    "rtiCharges": [
+      {
+        "taxMonth": {
+          "month": 4,
+          "startDate": "2016-07-06",
+          "endDate": "2016-08-05"
+        },
+        "amount": 1200,
+        "clearedByCredits": 100,
+        "clearedByPayments": 200,
+        "balance": 900,
+        "dueDate": "2016-08-22",
+        "isSpecified": false,
+        "_links": {
+          "self": {
+            "href": "/organisations/paye/840/GZ00064/statements/2016-17/4"
+          }
+        }
+      }
+    ]
+  },
+  "_links": {
+    "empRefs": {
+      "href": "/organisations/paye/"
+    },
+    "statements": {
+      "href": "/organisations/paye/840/GZ00064/statements"
+    },
+    "self": {
+      "href": "/organisations/paye/840/GZ00064/statements/2016-17"
+    },
+    "next": {
+      "href": "/organisations/paye/840/GZ00064/statements/2017-18"
+    },
+    "previous": {
+      "href": "/organisations/paye/840/GZ00064/statements/2015-16"
+    }
+  }
+}
