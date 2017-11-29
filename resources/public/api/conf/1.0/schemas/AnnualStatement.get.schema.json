@@ -116,6 +116,10 @@
                     "description": "Due date for the RTI charge",
                     "$ref": "Definitions.schema.json#/definitions/date"
                   },
+                  "isSpecified": {
+                    "type": "boolean",
+                    "description": "Set to true if the charge is estimated and false otherwise"
+                  },
                   "_links": {
                     "type": "object",
                     "properties": {
@@ -131,6 +135,7 @@
                 "required": [
                   "taxMonth",
                   "dueDate",
+                  "isSpecified",
                   "_links"
                 ]
               }

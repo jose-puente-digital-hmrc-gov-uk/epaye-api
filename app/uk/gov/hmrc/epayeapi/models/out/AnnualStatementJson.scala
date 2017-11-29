@@ -74,6 +74,7 @@ case class RtiChargesJson(
   clearedByPayments: BigDecimal,
   balance: BigDecimal,
   dueDate: LocalDate,
+  isSpecified: Boolean,
   _links: SelfLink
 )
 
@@ -88,6 +89,7 @@ object RtiChargesJson {
       clearedByPayments = lineItem.cleared.payment,
       balance = lineItem.balance.debit,
       dueDate = lineItem.dueDate,
+      isSpecified = lineItem.isSpecified,
       _links = SelfLink(Link(s"${AnnualStatementJson.baseUrlFor(empRef)}/statements/${taxYear.asString}"))
     )
 

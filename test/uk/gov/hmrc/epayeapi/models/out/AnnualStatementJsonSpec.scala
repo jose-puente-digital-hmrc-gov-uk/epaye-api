@@ -149,6 +149,7 @@ class AnnualStatementJsonSpec extends WordSpec with Matchers {
           cleared = Cleared(payment = 10, credit = 20),
           balance = DebitAndCredit(100 - 30, 0),
           dueDate = dueDate,
+          isSpecified = true,
           codeText = None
         )
 
@@ -160,6 +161,7 @@ class AnnualStatementJsonSpec extends WordSpec with Matchers {
           clearedByPayments = 10,
           balance = 100 - 10 - 20,
           dueDate = dueDate,
+          isSpecified = true,
           _links = SelfLink(Link(s"${baseUrlFor(empRef)}/statements/${taxYear.asString}"))
         ))
     }
