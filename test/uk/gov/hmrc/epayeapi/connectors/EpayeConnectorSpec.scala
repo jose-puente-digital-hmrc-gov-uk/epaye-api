@@ -106,7 +106,7 @@ class EpayeConnectorSpec extends UnitSpec with MockitoSugar with ScalaFutures {
               List(LineItem(TaxYear(2017), None, DebitAndCredit(20.0, 0), Cleared(0, 0), DebitAndCredit(20.0, 0), new LocalDate(2018, 2, 22), false, Some("P11D_CLASS_1A_CHARGE"))),
               AnnualTotal(DebitAndCredit(20.0, 0), Cleared(0, 0), DebitAndCredit(20.0, 0))
             ),
-            unallocated = Some(0)
+            unallocated = None
           )
         )
     }

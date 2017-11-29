@@ -1,16 +1,67 @@
 {
+  "$schema": "http://json-schema.org/draft-04/schema#",
   "type": "object",
-  "description": "An object containing the account summary.",
+  "description": "Account summary for the given empRef",
   "properties": {
-    "_links": {
-      "$ref": "Definitions.schema.json#/definitions/summaryLinks"
-    },
     "outstandingCharges": {
-      "$ref": "Definitions.schema.json#/definitions/outstandingCharges"
+      "$ref": "#/definitions/outstandingCharges"
+    },
+    "_links": {
+      "$ref": "#/definitions/summaryLinks"
     }
   },
   "required": [
     "outstandingCharges",
     "_links"
-  ]
+  ],
+  "definitions": {
+    "outstandingCharges": {
+      "type": "object",
+      "description": "Outstanding charges on the account",
+      "properties": {
+        "amount": {
+          "type": "number",
+          "description": "Outstanding amount"
+        },
+        "breakdown": {
+          "type": "object",
+          "description": "Breakdown of outstanding charges",
+          "properties": {
+            "rti": {
+              "type": "number",
+              "description": "Outstanding RTI charges on account."
+            },
+            "nonRti": {
+              "type": "number",
+              "description": "Outstanding Non-RTI charges on account."
+            }
+          },
+          "required": [
+            "rti",
+            "nonRti"
+          ]
+        }
+      },
+      "required": [
+        "amount",
+        "breakdown"
+      ]
+    },
+    "summaryLinks": {
+      "type": "object",
+      "properties": {
+        "self": {
+          "$ref": "Definitions.schema.json#/definitions/link"
+        },
+        "empRefs": {
+          "description": "Link to the list of available empRefs",
+          "$ref": "Definitions.schema.json#/definitions/link"
+        }
+      },
+      "required": [
+        "self",
+        "empRefs"
+      ]
+    }
+  }
 }

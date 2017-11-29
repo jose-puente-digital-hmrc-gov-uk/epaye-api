@@ -1,22 +1,19 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
   "type": "object",
-  "description": "An object containing the annual statement.",
+  "description": "Annual Statement for the requested year",
   "properties": {
     "taxYear": {
       "$ref": "Definitions.schema.json#/definitions/taxYear"
     },
-    "nonRtiCharges": {
-      "$ref": "#/definitions/nonRtiCharges"
-    },
     "summary": {
       "$ref": "#/definitions/summary"
     },
+    "nonRtiCharges": {
+      "$ref": "#/definitions/nonRtiCharges"
+    },
     "_embedded": {
       "$ref": "#/definitions/annualStatementEmbedded"
-    },
-    "earlierYearUpdate": {
-      "$ref": "#/definitions/earlierYearUpdate"
     },
     "_links": {
       "$ref": "#/definitions/annualStatementLinks"
@@ -24,15 +21,15 @@
   },
   "required": [
     "taxYear",
-    "nonRtiCharges",
     "summary",
+    "nonRtiCharges",
     "_embedded",
     "_links"
   ],
   "definitions": {
     "nonRtiCharges": {
       "type": "array",
-      "description": "The non RTI charges on the annual statement",
+      "description": "Non-RTI charges",
       "items": {
         "allOf": [
           {
@@ -42,18 +39,18 @@
             "properties": {
               "code": {
                 "type": "string",
-                "description": "The code name for the non rti charge"
+                "description": "Code name for the non-RTI charge"
               },
               "taxPeriod": {
                 "type": "object",
-                "description": "The tax period of the charge",
+                "description": "Tax period of the non-RTI charge",
                 "properties": {
                   "firstDay": {
-                    "description": "The first day of the tax period",
+                    "description": "First day of the tax period",
                     "$ref": "Definitions.schema.json#/definitions/date"
                   },
                   "lastDay": {
-                    "description": "The last day of the tax period",
+                    "description": "Last day (inclusive) of the tax period",
                     "$ref": "Definitions.schema.json#/definitions/date"
                   }
                 },
@@ -63,7 +60,8 @@
                 ]
               },
               "dueDate": {
-                "$ref": "Definitions.schema.json#/definitions/dueDate"
+                "description": "Due date for the non-RTI charge",
+                "$ref": "Definitions.schema.json#/definitions/date"
               }
             },
             "required": [
@@ -77,16 +75,16 @@
     },
     "summary": {
       "type": "object",
-      "description": "Blah",
+      "description": "Summary of the RTI and non-RTI charges",
       "properties": {
         "rtiCharges": {
           "type": "object",
-          "description": "Blah2",
+          "description": "Summary of the RTI charges",
           "$ref": "#/definitions/chargeSummary"
         },
         "nonRtiCharges": {
           "type": "object",
-          "description": "Blah2",
+          "description": "Summary of the non-RTI charges",
           "$ref": "#/definitions/chargeSummary"
         }
       },
@@ -97,11 +95,11 @@
     },
     "annualStatementEmbedded": {
       "type": "object",
-      "description": "awcafvaev",
+      "description": "Embedded RTI charges",
       "properties": {
         "rtiCharges": {
           "type": "array",
-          "description": "Glasgow rangers",
+          "description": "RTI charges",
           "items": {
             "allOf": [
               {
@@ -109,20 +107,19 @@
               },
               {
                 "type": "object",
-                "description": "Paris",
+                "description": "RTI charge additional details",
                 "properties": {
                   "taxMonth": {
                     "$ref": "Definitions.schema.json#/definitions/taxMonth"
                   },
                   "dueDate": {
-                    "$ref": "Definitions.schema.json#/definitions/dueDate"
+                    "description": "Due date for the RTI charge",
+                    "$ref": "Definitions.schema.json#/definitions/date"
                   },
                   "_links": {
                     "type": "object",
-                    "description": "",
                     "properties": {
                       "self": {
-                        "description": "",
                         "$ref": "Definitions.schema.json#/definitions/link"
                       }
                     },
@@ -145,26 +142,24 @@
     },
     "annualStatementLinks": {
       "type": "object",
-      "description": "",
       "properties": {
         "empRefs": {
-          "description": "",
+          "description": "Link to the list of available empRefs",
           "$ref": "Definitions.schema.json#/definitions/link"
         },
         "statements": {
-          "description": "",
+          "description": "Link to the account summary for the given empRef",
           "$ref": "Definitions.schema.json#/definitions/link"
         },
         "self": {
-          "description": "",
           "$ref": "Definitions.schema.json#/definitions/link"
         },
         "next": {
-          "description": "",
+          "description": "Link to the Annual Statement for the next tax year",
           "$ref": "Definitions.schema.json#/definitions/link"
         },
         "previous": {
-          "description": "",
+          "description": "Link to the Annual Statement for the previous tax year",
           "$ref": "Definitions.schema.json#/definitions/link"
         }
       },
@@ -178,11 +173,11 @@
     },
     "chargeSummary": {
       "type": "object",
-      "description": "meuhh",
+      "description": "Charge summary",
       "properties": {
         "amount": {
           "type": "number",
-          "description": "The amount of the charge"
+          "description": "Charge amount"
         },
         "clearedByCredits": {
           "type": "number",
@@ -194,7 +189,7 @@
         },
         "balance": {
           "type": "number",
-          "description": "The balance on the charge"
+          "description": "Charge balance"
         }
       },
       "required": [
@@ -202,38 +197,6 @@
         "clearedByCredits",
         "clearedByPayments",
         "balance"
-      ]
-    },
-    "outstandingCharges": {
-      "type": "object",
-      "description": "The outstanding charges on account.",
-      "properties": {
-        "amount": {
-          "type": "number",
-          "description": "The outstanding charges on account."
-        },
-        "breakdown": {
-          "type": "object",
-          "description": "The breakdown of outstanding charges.",
-          "properties": {
-            "rti": {
-              "type": "number",
-              "description": "The outstanding RTI charges on account."
-            },
-            "nonRti": {
-              "type": "number",
-              "description": "The outstanding Non-RTI charges on account."
-            }
-          },
-          "required": [
-            "rti",
-            "nonRti"
-          ]
-        }
-      },
-      "required": [
-        "amount",
-        "breakdown"
       ]
     }
   }
