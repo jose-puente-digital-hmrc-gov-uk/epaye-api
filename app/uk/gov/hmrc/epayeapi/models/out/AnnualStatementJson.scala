@@ -50,24 +50,41 @@ object NonRtiChargesJson {
   }
 }
 
-case class SummaryJson(
-  rtiCharges: ChargesSummaryJson,
-  nonRtiCharges: ChargesSummaryJson
-)
-case class ChargesSummaryJson(
-  amount: BigDecimal,
-  clearedByCredits: BigDecimal,
-  clearedByPayments: BigDecimal,
-  balance: BigDecimal
-)
 case class PaymentsAndCreditsJson(
   payments: BigDecimal,
   credits: BigDecimal
 )
 
-case class EmbeddedRtiChargesJson(rtiCharges: Seq[RtiChargesJson])
+case class EarlierYearUpdateJson(
+  amount: BigDecimal,
+  clearedByCredits: BigDecimal,
+  clearedByPayments: BigDecimal,
+  balance: BigDecimal,
+  dueDate: LocalDate
+)
 
-case class RtiChargesJson(
+object EarlierYearUpdateJson {
+  def extractFrom(lineItems: Seq[LineItem]): Option[EarlierYearUpdateJson] = {
+    lineItems
+      .find(_.codeText.contains("eyu"))
+      .map { lineItem =>
+        EarlierYearUpdateJson(
+          lineItem.charges.debit,
+          lineItem.cleared.credit,
+          lineItem.cleared.payment,
+          lineItem.balance.debit,
+          lineItem.dueDate
+        )
+      }
+  }
+}
+
+case class EmbeddedRtiChargesJson(
+  earlierYearUpdate: Option[EarlierYearUpdateJson],
+  rtiCharges: Seq[MonthlyChargesJson]
+)
+
+case class MonthlyChargesJson(
   taxMonth: TaxMonthJson,
   amount: BigDecimal,
   clearedByCredits: BigDecimal,
@@ -78,11 +95,12 @@ case class RtiChargesJson(
   _links: SelfLink
 )
 
-object RtiChargesJson {
-  def from(lineItem: LineItem, empRef: EmpRef, taxYear: TaxYear): Option[RtiChargesJson] = {
+object MonthlyChargesJson {
+
+  def from(lineItem: LineItem, empRef: EmpRef, taxYear: TaxYear): Option[MonthlyChargesJson] = {
     for {
       taxMonth <- lineItem.taxMonth
-    } yield RtiChargesJson(
+    } yield MonthlyChargesJson(
       taxMonth = TaxMonthJson(taxMonth.month, taxMonth.firstDay(taxYear), taxMonth.lastDay(taxYear)),
       amount = lineItem.charges.debit,
       clearedByCredits = lineItem.cleared.credit,
@@ -92,7 +110,6 @@ object RtiChargesJson {
       isSpecified = lineItem.isSpecified,
       _links = SelfLink(Link(s"${AnnualStatementJson.baseUrlFor(empRef)}/statements/${taxYear.asString}"))
     )
-
   }
 }
 
@@ -116,7 +133,6 @@ case class AnnualStatementLinksJson(
 case class AnnualStatementJson(
   taxYear: TaxYearJson,
   nonRtiCharges: Seq[NonRtiChargesJson],
-  summary: SummaryJson,
   _embedded: EmbeddedRtiChargesJson,
   _links: AnnualStatementLinksJson
 )
@@ -131,23 +147,10 @@ object AnnualStatementJson {
     AnnualStatementJson(
       taxYear = TaxYearJson(taxYear.asString, taxYear.firstDay, taxYear.lastDay),
       _embedded = EmbeddedRtiChargesJson(
-        epayeAnnualStatement.rti.lineItems.flatMap(RtiChargesJson.from(_, empRef, taxYear))
+        EarlierYearUpdateJson.extractFrom(epayeAnnualStatement.rti.lineItems),
+        epayeAnnualStatement.rti.lineItems.flatMap(MonthlyChargesJson.from(_, empRef, taxYear))
       ),
       nonRtiCharges = epayeAnnualStatement.nonRti.lineItems.flatMap(NonRtiChargesJson.from(_, taxYear)),
-      summary = SummaryJson(
-        rtiCharges = ChargesSummaryJson(
-          amount = epayeAnnualStatement.rti.totals.charges.debit,
-          clearedByCredits = epayeAnnualStatement.rti.totals.cleared.credit,
-          clearedByPayments = epayeAnnualStatement.rti.totals.cleared.payment,
-          balance = epayeAnnualStatement.rti.totals.balance.debit - epayeAnnualStatement.rti.totals.balance.credit
-        ),
-        nonRtiCharges = ChargesSummaryJson(
-          amount = epayeAnnualStatement.nonRti.totals.charges.debit,
-          clearedByCredits = epayeAnnualStatement.nonRti.totals.cleared.credit,
-          clearedByPayments = epayeAnnualStatement.nonRti.totals.cleared.payment,
-          balance = epayeAnnualStatement.nonRti.totals.balance.debit - epayeAnnualStatement.nonRti.totals.balance.credit
-        )
-      ),
       _links = AnnualStatementLinksJson(
         empRefs = Link(baseUrl),
         statements = Link(s"${baseUrlFor(empRef)}/statements"),

@@ -18,21 +18,14 @@
       "dueDate": "2016-07-22"
     }
   ],
-  "summary": {
-    "rtiCharges": {
-      "amount": 1200,
-      "clearedByCredits": 100,
-      "clearedByPayments": 200,
-      "balance": 900
-    },
-    "nonRtiCharges": {
-      "amount": 5000,
-      "clearedByCredits": 500,
-      "clearedByPayments": 2000,
-      "balance": 2500
-    }
-  },
   "_embedded": {
+    "earlierYearUpdate": {
+      "amount": 2000,
+      "clearedByCredits": 300,
+      "clearedByPayments": 200,
+      "balance": 1500,
+      "dueDate": "2016-05-22"
+    },
     "rtiCharges": [
       {
         "taxMonth": {

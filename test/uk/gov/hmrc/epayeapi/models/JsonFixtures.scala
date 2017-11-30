@@ -37,22 +37,8 @@ object JsonFixtures {
   def emptyAnnualStatementJsonWith(empRef: EmpRef, taxYear: TaxYear): AnnualStatementJson =
     AnnualStatementJson(
       taxYear = TaxYearJson(taxYear.asString, taxYear.firstDay, taxYear.lastDay),
-      _embedded = EmbeddedRtiChargesJson(Seq()),
+      _embedded = EmbeddedRtiChargesJson(None, Seq()),
       nonRtiCharges = Seq(),
-      summary = SummaryJson(
-        rtiCharges = ChargesSummaryJson(
-          amount = 0,
-          clearedByCredits = 0,
-          clearedByPayments = 0,
-          balance = 0
-        ),
-        nonRtiCharges = ChargesSummaryJson(
-          amount = 0,
-          clearedByCredits = 0,
-          clearedByPayments = 0,
-          balance = 0
-        )
-      ),
       _links = AnnualStatementLinksJson(
         empRefs = Link(baseUrl),
         statements = Link(s"${baseUrlFor(empRef)}/statements"),

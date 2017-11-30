@@ -47,95 +47,47 @@ class AnnualStatementJsonSpec extends WordSpec with Matchers {
     }
   }
 
-  "AnnualStatementJson.apply.summary.rtiCharges" should {
-    "contain the right summary" in {
+  "AnnualStatementJson.apply._embedded.earlierYearUpdate" should {
+    "contain the earlier year update if it is present" in {
+      val emptyTotals = AnnualTotal(
+        charges = DebitAndCredit(),
+        cleared = Cleared(),
+        balance = DebitAndCredit()
+      )
+
       val epayeAnnualStatement =
         emptyEpayeAnnualStatement
           .copy(
             rti =
               AnnualStatementTable(
-                lineItems = Seq(),
-                totals = AnnualTotal(
-                  charges = DebitAndCredit(debit = 100),
-                  cleared = Cleared(payment = 10, credit = 20),
-                  balance = DebitAndCredit(debit = 100, credit = 30)
-                )
+                lineItems = Seq(
+                  LineItem(
+                    taxYear,
+                    None,
+                    DebitAndCredit(100),
+                    Cleared(10, 20),
+                    DebitAndCredit(100 - 20 - 10),
+                    dueDate,
+                    codeText = Some("eyu")
+                  )
+                ),
+                totals = emptyTotals
               )
           )
 
-      AnnualStatementJson(empRef, taxYear, epayeAnnualStatement).summary.rtiCharges shouldBe
-        ChargesSummaryJson(
-          100,
-          20,
-          10,
-          100 - 30
-        )
+      AnnualStatementJson(empRef, taxYear, epayeAnnualStatement)._embedded.earlierYearUpdate shouldBe
+        Some(EarlierYearUpdateJson(
+          amount = 100,
+          clearedByCredits = 20,
+          clearedByPayments = 10,
+          balance = 100 - 10 - 20,
+          dueDate = dueDate
+        ))
+    }
+    "return a None if it is not present" in {
+      AnnualStatementJson(empRef, taxYear, emptyEpayeAnnualStatement)._embedded.earlierYearUpdate shouldBe None
     }
   }
-
-  "AnnualStatementJson.apply.summary.nonRtiCharges" should {
-    "contain the right summary" in {
-      val epayeAnnualStatement =
-        emptyEpayeAnnualStatement
-          .copy(
-            nonRti =
-              AnnualStatementTable(
-                lineItems = Seq(),
-                totals = AnnualTotal(
-                  charges = DebitAndCredit(debit = 100),
-                  cleared = Cleared(payment = 10, credit = 20),
-                  balance = DebitAndCredit(debit = 100, credit = 30)
-                )
-              )
-          )
-
-      AnnualStatementJson(empRef, taxYear, epayeAnnualStatement).summary.nonRtiCharges shouldBe
-        ChargesSummaryJson(
-          100,
-          20,
-          10,
-          100 - 30
-        )
-    }
-  }
-
-//  "AnnualStatementJson.apply.endOfYearUpdate" should {
-//    "contain the end of year update" in {
-//      val emptyTotals = AnnualTotal(
-//        charges = DebitAndCredit(),
-//        cleared = Cleared(),
-//        balance = DebitAndCredit()
-//      )
-//
-//      val epayeAnnualStatement =
-//        emptyEpayeAnnualStatement
-//          .copy(
-//            nonRti =
-//              AnnualStatementTable(
-//                lineItems = Seq(
-//                  LineItem(
-//                    taxYear,
-//                    None,
-//                    DebitAndCredit(123),
-//                    Cleared(123, 123),
-//                    DebitAndCredit(123),
-//                    dueDate,
-//                    codeText = Some("EARLIER_YEAR_UPDATE")
-//                  )
-//                ),
-//                totals = emptyTotals
-//              )
-//          )
-//
-//      AnnualStatementJson(empRef, taxYear, epayeAnnualStatement).earlierYearUpdate shouldBe
-//        ChargesSummaryJson(
-//          100,
-//          20,
-//          10,
-//          100 - 30
-//        )
-//    }
-//  }
 
   "RtiChargesJson.from(lineItem)" should {
     "convert an rti charge from the epaye annual statement" in {
@@ -153,8 +105,8 @@ class AnnualStatementJsonSpec extends WordSpec with Matchers {
           codeText = None
         )
 
-      RtiChargesJson.from(lineItem, empRef, taxYear) shouldBe
-        Some(RtiChargesJson(
+      MonthlyChargesJson.from(lineItem, empRef, taxYear) shouldBe
+        Some(MonthlyChargesJson(
           taxMonth = TaxMonthJson(taxMonth.month, taxMonth.firstDay(taxYear), taxMonth.lastDay(taxYear)),
           amount = 100,
           clearedByCredits = 20,
@@ -178,7 +130,7 @@ class AnnualStatementJsonSpec extends WordSpec with Matchers {
           codeText = None
         )
 
-      RtiChargesJson.from(lineItem, empRef, taxYear) shouldBe None
+      MonthlyChargesJson.from(lineItem, empRef, taxYear) shouldBe None
     }
   }
 

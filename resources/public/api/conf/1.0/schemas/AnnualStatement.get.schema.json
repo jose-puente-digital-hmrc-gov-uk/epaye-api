@@ -6,9 +6,6 @@
     "taxYear": {
       "$ref": "Definitions.schema.json#/definitions/taxYear"
     },
-    "summary": {
-      "$ref": "#/definitions/summary"
-    },
     "nonRtiCharges": {
       "$ref": "#/definitions/nonRtiCharges"
     },
@@ -21,7 +18,6 @@
   },
   "required": [
     "taxYear",
-    "summary",
     "nonRtiCharges",
     "_embedded",
     "_links"
@@ -73,30 +69,31 @@
         ]
       }
     },
-    "summary": {
-      "type": "object",
-      "description": "Summary of the RTI and non-RTI charges",
-      "properties": {
-        "rtiCharges": {
-          "type": "object",
-          "description": "Summary of the RTI charges",
-          "$ref": "#/definitions/chargeSummary"
-        },
-        "nonRtiCharges": {
-          "type": "object",
-          "description": "Summary of the non-RTI charges",
-          "$ref": "#/definitions/chargeSummary"
-        }
-      },
-      "required": [
-        "rtiCharges",
-        "nonRtiCharges"
-      ]
-    },
     "annualStatementEmbedded": {
       "type": "object",
       "description": "Embedded RTI charges",
       "properties": {
+        "earlierYearUpdate": {
+          "type": "object",
+          "description": "Earlier year update on RTI charges (optional)",
+          "allOf": [
+              {
+                "$ref": "#/definitions/chargeSummary"
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "dueDate": {
+                    "description": "Due date for the RTI charge",
+                    "$ref": "Definitions.schema.json#/definitions/date"
+                  }
+                },
+                "required": [
+                  "dueDate"
+                ]
+              }
+            ]
+        },
         "rtiCharges": {
           "type": "array",
           "description": "RTI charges",
@@ -143,7 +140,9 @@
           }
         }
       },
-      "required": ["rtiCharges"]
+      "required": [
+        "rtiCharges"
+      ]
     },
     "annualStatementLinks": {
       "type": "object",

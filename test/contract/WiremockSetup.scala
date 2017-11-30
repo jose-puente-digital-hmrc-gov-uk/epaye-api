@@ -19,37 +19,17 @@ package contract
 import com.github.tomakehurst.wiremock.WireMockServer
 import com.github.tomakehurst.wiremock.client.WireMock
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig
-import org.scalatest.concurrent.{Eventually, IntegrationPatience, ScalaFutures}
-import org.scalatest.{BeforeAndAfterAll, BeforeAndAfterEach, Matchers, WordSpec}
-import org.scalatestplus.play.OneServerPerSuite
-import play.api.libs.ws.WSClient
-import uk.gov.hmrc.play.http.HeaderCarrier
+import org.scalatest._
 
-trait WiremockSetup
-  extends WordSpec
-    with Matchers
-    with OneServerPerSuite
-    with Eventually
-    with ScalaFutures
-    with BeforeAndAfterEach
-    with IntegrationPatience
-    with BeforeAndAfterAll
-    with RestAssertions {
-
-  val baseUrl = s"http://localhost:$port"
-
-  implicit val hc = HeaderCarrier()
-
-  implicit val wsClient: WSClient = app.injector.instanceOf[WSClient]
+trait WiremockSetup extends BeforeAndAfterEach with BeforeAndAfterAll { self: Suite =>
 
   lazy val WIREMOCK_PORT: Int = 22222
 
-  protected val wiremockBaseUrl: String = s"http://localhost:$WIREMOCK_PORT"
+  val wiremockBaseUrl: String = s"http://localhost:$WIREMOCK_PORT"
   val wireMockServer = new WireMockServer(wireMockConfig().port(WIREMOCK_PORT))
 
 
   override def beforeAll(): Unit = {
-    wireMockServer.stop()
     wireMockServer.start()
     WireMock.configureFor("localhost", WIREMOCK_PORT)
   }
@@ -58,6 +38,10 @@ trait WiremockSetup
     WireMock.reset()
   }
 
+  override protected def afterAll(): Unit = {
+    super.afterAll()
+    wireMockServer.stop()
+  }
 }
 
 

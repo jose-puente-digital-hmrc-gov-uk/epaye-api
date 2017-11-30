@@ -16,6 +16,7 @@
 
 package contract
 
+import org.scalatest.{Matchers, WordSpec}
 import play.api.Application
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
@@ -24,7 +25,13 @@ import uk.gov.hmrc.epayeapi.router.RoutesProvider
 
 import scala.io.Source
 
-class GetAnnualStatementSpec extends WiremockSetup with EmpRefGenerator with RestAssertions {
+class GetAnnualStatementSpec
+  extends WordSpec
+  with Matchers
+  with WSClientSetup
+  with WiremockSetup
+  with EmpRefGenerator
+  with RestAssertions {
 
   override implicit lazy val app: Application =
     new GuiceApplicationBuilder().overrides(bind[Router].toProvider[RoutesProvider]).build()
