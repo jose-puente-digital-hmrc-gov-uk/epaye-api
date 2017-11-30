@@ -16,15 +16,13 @@
 
 package contract
 
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.github.fge.jsonschema.main.JsonSchemaFactory
 import play.api.Application
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.routing.Router
 import uk.gov.hmrc.epayeapi.router.RoutesProvider
 
-import scala.io.{BufferedSource, Source}
+import scala.io.Source
 
 class GetAnnualStatementSpec extends WiremockSetup with EmpRefGenerator with RestAssertions {
 
@@ -45,7 +43,7 @@ class GetAnnualStatementSpec extends WiremockSetup with EmpRefGenerator with Res
 
       given()
         .clientWith(empRef).isAuthorized
-        .and().epayeAnnualStatementReturns()
+        .and().epayeAnnualStatementReturns(Fixtures.epayeAnnualStatement)
         .when
         .get(annualStatementUrl).withAuthHeader()
         .thenAssertThat()
@@ -55,12 +53,11 @@ class GetAnnualStatementSpec extends WiremockSetup with EmpRefGenerator with Res
 
   "The provided example for the Annual Statement" should {
     "conform to the schema" in {
-      val examplePath = s"${app.path.toURI}/resources/public/api/conf/1.0/examples/AnnualStatement.get.json"
+      val annualStatementExampleJson: String =
+        Source.fromURL(s"${app.path.toURI}/resources/public/api/conf/1.0/examples/AnnualStatement.get.json")
+          .getLines.mkString
 
-      val exampleJson = Source.fromURL(examplePath).getLines.mkString
-
-      val validator = JsonSchemaFactory.byDefault().getJsonSchema(annualStatementSchemaPath)
-      val report = validator.validate(new ObjectMapper().readTree(exampleJson), true)
+      val report = Schema(annualStatementSchemaPath).validate(annualStatementExampleJson)
 
       withClue(report.toString) { report.isSuccess shouldBe true }
     }

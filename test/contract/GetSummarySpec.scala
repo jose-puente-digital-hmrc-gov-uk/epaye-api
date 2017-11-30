@@ -39,7 +39,7 @@ class GetSummarySpec extends WiremockSetup with EmpRefGenerator with RestAsserti
 
       given()
         .clientWith(empRef).isAuthorized
-        .and().epayeTotalsReturns(owed = 0)
+        .and().epayeTotalsReturns(Fixtures.epayeAnnualStatement)
         .when
         .get(totalsUrl).withAuthHeader()
         .thenAssertThat()

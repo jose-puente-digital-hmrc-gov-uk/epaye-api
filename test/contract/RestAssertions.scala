@@ -43,11 +43,11 @@ class ClientGivens(empRef: EmpRef) {
 
   def and(): ClientGivens = this
 
-  def epayeTotalsReturns(owed: BigDecimal): ClientGivens = {
+  def epayeTotalsReturns(body: String): ClientGivens = {
     val response = aResponse()
 
     response
-      .withBody(Fixtures.epayeAnnualStatement)
+      .withBody(body)
       .withHeader("Content-Type", "application/json")
       .withStatus(200)
 
@@ -58,11 +58,11 @@ class ClientGivens(empRef: EmpRef) {
     this
   }
 
-  def epayeAnnualStatementReturns(): ClientGivens = {
+  def epayeAnnualStatementReturns(body: String): ClientGivens = {
     val response = aResponse()
 
     response
-      .withBody(Fixtures.epayeAnnualStatement)
+      .withBody(body)
       .withHeader("Content-Type", "application/json")
       .withStatus(200)
 
@@ -87,9 +87,8 @@ class ClientGivens(empRef: EmpRef) {
 class Assertions(response: HttpResponse) extends Matchers {
 
   def bodyIsOfSchema(schemaPath: String): Unit = {
-    val validator = JsonSchemaFactory.byDefault().getJsonSchema(schemaPath)
 
-    val report = validator.validate(new ObjectMapper().readTree(response.body), true)
+    val report = Schema(schemaPath).validate(response.body)
 
     withClue(report.toString) { report.isSuccess shouldBe true }
   }
