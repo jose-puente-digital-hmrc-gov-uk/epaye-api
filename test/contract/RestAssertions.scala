@@ -20,6 +20,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.github.fge.jsonschema.main.JsonSchemaFactory
 import com.github.tomakehurst.wiremock.client.WireMock._
 import org.scalatest.Matchers
+import play.api.libs.json.{JsValue, Json}
 import play.api.libs.ws.{WSClient, WSRequest}
 import uk.gov.hmrc.domain.EmpRef
 import uk.gov.hmrc.play.http.HttpResponse
@@ -85,6 +86,10 @@ class ClientGivens(empRef: EmpRef) {
 }
 
 class Assertions(response: HttpResponse) extends Matchers {
+  def bodyIsOfJson(json: JsValue) = {
+    Json.parse(response.body) shouldEqual json
+    this
+  }
 
   def bodyIsOfSchema(schemaPath: String): Unit = {
 

@@ -114,6 +114,96 @@ object Fixtures {
       |}
     """.stripMargin
 
+  val epayeAnnualStatementWithEyu: String =
+    """
+      |{
+      |  "rti": {
+      |    "lineItems": [
+      |      {
+      |        "taxYear": {
+      |          "yearFrom": 2017
+      |        },
+      |        "taxMonth": {
+      |          "month": 7
+      |        },
+      |        "charges": {
+      |          "debit": 1200,
+      |          "credit": 0
+      |        },
+      |        "cleared": {
+      |          "cleared": 0,
+      |          "payment": 0,
+      |          "credit": 0
+      |        },
+      |        "balance": {
+      |          "debit": 1200,
+      |          "credit": 0
+      |        },
+      |        "dueDate": "2017-11-22",
+      |        "isSpecified": false,
+      |        "itemType": "month"
+      |      },
+      |      {
+      |        "taxYear": {
+      |          "yearFrom": 2017
+      |        },
+      |        "charges": {
+      |          "debit": 700,
+      |          "credit": 0
+      |        },
+      |        "cleared": {
+      |          "cleared": 0,
+      |          "payment": 300,
+      |          "credit": 200
+      |        },
+      |        "balance": {
+      |          "debit": 200,
+      |          "credit": 0
+      |        },
+      |        "dueDate": "2017-04-22",
+      |        "isSpecified": false,
+      |        "itemType": "eyu"
+      |      }
+      |    ],
+      |    "totals": {
+      |      "charges": {
+      |        "debit": 1900,
+      |        "credit": 0
+      |      },
+      |      "cleared": {
+      |        "cleared": 0,
+      |        "payment": 300,
+      |        "credit": 200
+      |      },
+      |      "balance": {
+      |        "debit": 1400,
+      |        "credit": 0
+      |      }
+      |    }
+      |  },
+      |  "nonRti": {
+      |    "lineItems": [
+      |    ],
+      |    "totals": {
+      |      "charges": {
+      |        "debit": 0,
+      |        "credit": 0
+      |      },
+      |      "cleared": {
+      |        "cleared": 0,
+      |        "payment": 0,
+      |        "credit": 0
+      |      },
+      |      "balance": {
+      |        "debit": 0,
+      |        "credit": 0
+      |      }
+      |    }
+      |  },
+      |  "unallocated": 2000
+      |}
+    """.stripMargin
+
   def authorisedEnrolmentJson(empRef: EmpRef): String =
     s"""
        |{

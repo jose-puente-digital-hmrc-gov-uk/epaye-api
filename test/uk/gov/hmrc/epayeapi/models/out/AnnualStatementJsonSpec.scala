@@ -41,7 +41,7 @@ class AnnualStatementJsonSpec extends WordSpec with Matchers {
           empRefs = Link(baseUrl),
           statements = Link(s"${baseUrlFor(empRef)}/statements"),
           self = Link(s"${baseUrlFor(empRef)}/statements/${taxYear.asString}"),
-          next = Link(s"{${baseUrlFor(empRef)}/statements/${taxYear.next.asString}"),
+          next = Link(s"${baseUrlFor(empRef)}/statements/${taxYear.next.asString}"),
           previous = Link(s"${baseUrlFor(empRef)}/statements/${taxYear.previous.asString}")
         )
     }
