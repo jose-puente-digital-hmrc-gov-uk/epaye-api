@@ -66,7 +66,7 @@ case class EarlierYearUpdateJson(
 object EarlierYearUpdateJson {
   def extractFrom(lineItems: Seq[LineItem]): Option[EarlierYearUpdateJson] = {
     lineItems
-      .find(_.codeText.contains("eyu"))
+      .find(_.itemType.contains("eyu"))
       .map { lineItem =>
         EarlierYearUpdateJson(
           lineItem.charges.debit,

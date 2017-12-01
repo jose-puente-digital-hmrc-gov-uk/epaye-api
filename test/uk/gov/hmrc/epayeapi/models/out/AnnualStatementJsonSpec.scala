@@ -68,7 +68,8 @@ class AnnualStatementJsonSpec extends WordSpec with Matchers {
                     Cleared(10, 20),
                     DebitAndCredit(100 - 20 - 10),
                     dueDate,
-                    codeText = Some("eyu")
+                    codeText = None,
+                    itemType = Some("eyu")
                   )
                 ),
                 totals = emptyTotals
