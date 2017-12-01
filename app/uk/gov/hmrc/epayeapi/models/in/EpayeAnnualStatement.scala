@@ -44,7 +44,8 @@ case class LineItem(
   balance: DebitAndCredit,
   dueDate: LocalDate,
   isSpecified: Boolean = false,
-  codeText: Option[String] = None
+  codeText: Option[String] = None,
+  itemType: Option[String] = None
 )
 
 case class AnnualTotal(

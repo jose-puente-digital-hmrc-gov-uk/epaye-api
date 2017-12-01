@@ -41,7 +41,7 @@ class AnnualStatementJsonSpec extends WordSpec with Matchers {
           empRefs = Link(baseUrl),
           statements = Link(s"${baseUrlFor(empRef)}/statements"),
           self = Link(s"${baseUrlFor(empRef)}/statements/${taxYear.asString}"),
-          next = Link(s"{${baseUrlFor(empRef)}/statements/${taxYear.next.asString}"),
+          next = Link(s"${baseUrlFor(empRef)}/statements/${taxYear.next.asString}"),
           previous = Link(s"${baseUrlFor(empRef)}/statements/${taxYear.previous.asString}")
         )
     }
@@ -68,7 +68,8 @@ class AnnualStatementJsonSpec extends WordSpec with Matchers {
                     Cleared(10, 20),
                     DebitAndCredit(100 - 20 - 10),
                     dueDate,
-                    codeText = Some("eyu")
+                    codeText = None,
+                    itemType = Some("eyu")
                   )
                 ),
                 totals = emptyTotals
@@ -89,7 +90,7 @@ class AnnualStatementJsonSpec extends WordSpec with Matchers {
     }
   }
 
-  "RtiChargesJson.from(lineItem)" should {
+  "MonthlyChargesJson.from(lineItem)" should {
     "convert an rti charge from the epaye annual statement" in {
       val taxMonth = TaxMonth(2)
 
@@ -114,7 +115,7 @@ class AnnualStatementJsonSpec extends WordSpec with Matchers {
           balance = 100 - 10 - 20,
           dueDate = dueDate,
           isSpecified = true,
-          _links = SelfLink(Link(s"${baseUrlFor(empRef)}/statements/${taxYear.asString}"))
+          _links = SelfLink(Link(s"${baseUrlFor(empRef)}/statements/${taxYear.asString}/${taxMonth.month}"))
         ))
     }
     "return a None if the taxMonth field is None" in {
@@ -152,7 +153,6 @@ class AnnualStatementJsonSpec extends WordSpec with Matchers {
       NonRtiChargesJson.from(lineItem, taxYear) shouldBe
         Some(NonRtiChargesJson(
           code = code,
-          taxPeriod = PeriodJson(taxYear.firstDay, taxYear.lastDay),
           amount = 100,
           clearedByCredits = 20,
           clearedByPayments = 10,

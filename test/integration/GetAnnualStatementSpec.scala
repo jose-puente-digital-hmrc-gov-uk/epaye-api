@@ -14,46 +14,43 @@
  * limitations under the License.
  */
 
-package contract
+package integration
 
 import common._
+import contract._
 import org.scalatest.{Matchers, WordSpec}
 import play.api.Application
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
+import play.api.libs.json.Json
 import play.api.routing.Router
+import uk.gov.hmrc.domain.EmpRef
 import uk.gov.hmrc.epayeapi.router.RoutesProvider
 
-class GetSummarySpec
-  extends WordSpec
-    with Matchers
-    with WSClientSetup
-    with WiremockSetup
-    with EmpRefGenerator
-    with RestAssertions{
+class GetAnnualStatementSpec extends WordSpec
+  with Matchers
+  with WSClientSetup
+  with WiremockSetup
+  with EmpRefGenerator
+  with RestAssertions {
 
   override implicit lazy val app: Application =
     new GuiceApplicationBuilder().overrides(bind[Router].toProvider[RoutesProvider]).build()
 
-  "/organisation/epaye/{ton}/{tor}/" should {
+  "AnnualStatement API should return a statement " should {
+    "containing EYU data" in {
+      val empRef = EmpRef("840", "GZ00064")
 
-    "returns a response body that conforms with the Summary schema" in {
-      val empRef = randomEmpRef()
-
-      val totalsUrl =
-        s"$baseUrl/${empRef.taxOfficeNumber}/${empRef.taxOfficeReference}/"
-
-      val summarySchemaPath = s"${app.path.toURI}/resources/public/api/conf/1.0/schemas/Summary.get.schema.json"
+      val annualStatementUrl =
+        s"$baseUrl/${empRef.taxOfficeNumber}/${empRef.taxOfficeReference}/statements/2017-18"
 
       given()
         .clientWith(empRef).isAuthorized
-        .and().epayeTotalsReturns(Fixtures.epayeAnnualStatement)
-        .when
-        .get(totalsUrl).withAuthHeader()
+        .and().epayeAnnualStatementReturns(Fixtures.epayeAnnualStatement)
+        .when()
+        .get(annualStatementUrl).withAuthHeader()
         .thenAssertThat()
-        .bodyIsOfSchema(summarySchemaPath)
+        .bodyIsOfJson(Fixtures.expectedAnnualStatementJson)
     }
-
   }
 }
-

@@ -163,32 +163,32 @@
       "type": "boolean",
       "description": "Whether this item is overdue or not",
       "default": false
+    },
+    "epayeLinks": {
+      "type": "object",
+      "description": "An object of links to explore further data.",
+      "properties": {
+        "self": {
+          "description": "Link to the entry endpoint.",
+          "$ref": "#/definitions/link"
+        }
+      },
+      "required": [
+        "self"
+      ]
+    },
+    "empRefLinks": {
+      "type": "object",
+      "description": "An object of links to explore further data.",
+      "properties": {
+        "summary": {
+          "description": "Link to account summary endpoint.",
+          "$ref": "#/definitions/link"
+        }
+      },
+      "required": [
+        "summary"
+      ]
     }
-  },
-  "epayeLinks": {
-    "type": "object",
-    "description": "An object of links to explore further data.",
-    "properties": {
-      "self": {
-        "description": "Link to the entry endpoint.",
-        "$ref": "#/definitions/link"
-      }
-    },
-    "required": [
-      "self"
-    ]
-  },
-  "empRefLinks": {
-    "type": "object",
-    "description": "An object of links to explore further data.",
-    "properties": {
-      "summary": {
-        "description": "Link to account summary endpoint.",
-        "$ref": "#/definitions/link"
-      }
-    },
-    "required": [
-      "summary"
-    ]
   }
 }

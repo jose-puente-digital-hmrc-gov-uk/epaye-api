@@ -26,7 +26,6 @@ case class PeriodJson(firstDay: LocalDate, lastDay: LocalDate)
 
 case class NonRtiChargesJson(
   code: String,
-  taxPeriod: PeriodJson,
   amount: BigDecimal,
   clearedByCredits: BigDecimal,
   clearedByPayments: BigDecimal,
@@ -44,9 +43,7 @@ object NonRtiChargesJson {
       clearedByCredits = lineItem.cleared.credit,
       clearedByPayments = lineItem.cleared.payment,
       balance = lineItem.balance.debit,
-      dueDate = lineItem.dueDate,
-      taxPeriod = PeriodJson(taxYear.firstDay, taxYear.lastDay)
-    )
+      dueDate = lineItem.dueDate)
   }
 }
 
@@ -66,7 +63,7 @@ case class EarlierYearUpdateJson(
 object EarlierYearUpdateJson {
   def extractFrom(lineItems: Seq[LineItem]): Option[EarlierYearUpdateJson] = {
     lineItems
-      .find(_.codeText.contains("eyu"))
+      .find(_.itemType.contains("eyu"))
       .map { lineItem =>
         EarlierYearUpdateJson(
           lineItem.charges.debit,
@@ -108,7 +105,7 @@ object MonthlyChargesJson {
       balance = lineItem.balance.debit,
       dueDate = lineItem.dueDate,
       isSpecified = lineItem.isSpecified,
-      _links = SelfLink(Link(s"${AnnualStatementJson.baseUrlFor(empRef)}/statements/${taxYear.asString}"))
+      _links = SelfLink(Link(s"${AnnualStatementJson.baseUrlFor(empRef)}/statements/${taxYear.asString}/${taxMonth.month}"))
     )
   }
 }
@@ -155,7 +152,7 @@ object AnnualStatementJson {
         empRefs = Link(baseUrl),
         statements = Link(s"${baseUrlFor(empRef)}/statements"),
         self = Link(s"${baseUrlFor(empRef)}/statements/${taxYear.asString}"),
-        next = Link(s"{${baseUrlFor(empRef)}/statements/${taxYear.next.asString}"),
+        next = Link(s"${baseUrlFor(empRef)}/statements/${taxYear.next.asString}"),
         previous = Link(s"${baseUrlFor(empRef)}/statements/${taxYear.previous.asString}")
       )
     )
