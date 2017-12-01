@@ -108,7 +108,7 @@ object MonthlyChargesJson {
       balance = lineItem.balance.debit,
       dueDate = lineItem.dueDate,
       isSpecified = lineItem.isSpecified,
-      _links = SelfLink(Link(s"${AnnualStatementJson.baseUrlFor(empRef)}/statements/${taxYear.asString}"))
+      _links = SelfLink(Link(s"${AnnualStatementJson.baseUrlFor(empRef)}/statements/${taxYear.asString}/${taxMonth.month}"))
     )
   }
 }

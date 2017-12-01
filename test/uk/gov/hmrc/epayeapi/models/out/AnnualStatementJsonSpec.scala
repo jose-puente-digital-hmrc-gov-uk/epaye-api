@@ -89,7 +89,7 @@ class AnnualStatementJsonSpec extends WordSpec with Matchers {
     }
   }
 
-  "RtiChargesJson.from(lineItem)" should {
+  "MonthlyChargesJson.from(lineItem)" should {
     "convert an rti charge from the epaye annual statement" in {
       val taxMonth = TaxMonth(2)
 
@@ -114,7 +114,7 @@ class AnnualStatementJsonSpec extends WordSpec with Matchers {
           balance = 100 - 10 - 20,
           dueDate = dueDate,
           isSpecified = true,
-          _links = SelfLink(Link(s"${baseUrlFor(empRef)}/statements/${taxYear.asString}"))
+          _links = SelfLink(Link(s"${baseUrlFor(empRef)}/statements/${taxYear.asString}/${taxMonth.month}"))
         ))
     }
     "return a None if the taxMonth field is None" in {
