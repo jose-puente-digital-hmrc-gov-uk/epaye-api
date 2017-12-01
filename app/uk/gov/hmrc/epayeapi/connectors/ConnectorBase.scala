@@ -22,7 +22,7 @@ import play.api.libs.json.{JsError, JsSuccess, Reads}
 import uk.gov.hmrc.epayeapi.models.in
 import uk.gov.hmrc.epayeapi.models.in._
 import uk.gov.hmrc.epayeapi.syntax.json._
-import uk.gov.hmrc.play.http.{HeaderCarrier, HttpGet, HttpReads, HttpResponse}
+import uk.gov.hmrc.play.http._
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -38,6 +38,17 @@ trait ConnectorBase {
     } yield reader(jsonReader).read("GET", url, response)
 
     result.recover({
+      case ex: HttpException =>
+        ex.responseCode match {
+          case Status.NOT_FOUND =>
+            ApiNotFound()
+          case statusCode: Int if statusCode < 500 =>
+            ApiError(statusCode, ex.message)
+          case statusCode: Int =>
+            Logger.error(s"Upstream returned unexpected response: status=$statusCode", ex)
+            ApiException(ex.getMessage)
+        }
+
       case ex: Exception =>
         Logger.error("HTTP request threw exception", ex)
         ApiException(ex.getMessage)
