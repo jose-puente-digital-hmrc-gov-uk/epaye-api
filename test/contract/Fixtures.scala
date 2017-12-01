@@ -72,9 +72,6 @@ object Fixtures {
       |        "taxYear": {
       |          "yearFrom": 2017
       |        },
-      |        "taxMonth": {
-      |          "month": 1
-      |        },
       |        "charges": {
       |          "debit": 100,
       |          "credit": 0
@@ -163,6 +160,29 @@ object Fixtures {
       |        "dueDate": "2017-04-22",
       |        "isSpecified": false,
       |        "itemType": "eyu"
+      |      },
+      |      {
+      |        "taxYear": {
+      |          "yearFrom": 2017
+      |        },
+      |        "taxMonth": {
+      |          "month": 3
+      |        },
+      |        "charges": {
+      |          "debit": 700,
+      |          "credit": 0
+      |        },
+      |        "cleared": {
+      |          "cleared": 0,
+      |          "payment": 300,
+      |          "credit": 200
+      |        },
+      |        "balance": {
+      |          "debit": 200,
+      |          "credit": 0
+      |        },
+      |        "dueDate": "2017-07-22",
+      |        "isSpecified": true
       |      }
       |    ],
       |    "totals": {
@@ -183,6 +203,28 @@ object Fixtures {
       |  },
       |  "nonRti": {
       |    "lineItems": [
+      |      {
+      |        "taxYear": {
+      |          "yearFrom": 2017
+      |        },
+      |        "charges": {
+      |          "debit": 300,
+      |          "credit": 0
+      |        },
+      |        "cleared": {
+      |          "cleared": 100,
+      |          "payment": 30,
+      |          "credit": 70
+      |        },
+      |        "balance": {
+      |          "debit": 200,
+      |          "credit": 0
+      |        },
+      |        "dueDate": "2017-07-22",
+      |        "isSpecified": false,
+      |        "itemType": "1481",
+      |        "codeText": "NON_RTI_CIS_FIXED_PENALTY"
+      |      }
       |    ],
       |    "totals": {
       |      "charges": {
