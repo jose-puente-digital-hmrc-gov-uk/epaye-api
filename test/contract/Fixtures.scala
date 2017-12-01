@@ -16,102 +16,12 @@
 
 package contract
 
+import play.api.libs.json.Json
 import uk.gov.hmrc.domain.EmpRef
 
 object Fixtures {
 
   val epayeAnnualStatement: String =
-    """
-      |{
-      |  "rti": {
-      |    "lineItems": [
-      |      {
-      |        "taxYear": {
-      |          "yearFrom": 2017
-      |        },
-      |        "taxMonth": {
-      |          "month": 7
-      |        },
-      |        "charges": {
-      |          "debit": 1200,
-      |          "credit": 0
-      |        },
-      |        "cleared": {
-      |          "cleared": 0,
-      |          "payment": 0,
-      |          "credit": 0
-      |        },
-      |        "balance": {
-      |          "debit": 1200,
-      |          "credit": 0
-      |        },
-      |        "dueDate": "2017-11-22",
-      |        "isSpecified": false,
-      |        "itemType": "month"
-      |      }
-      |    ],
-      |    "totals": {
-      |      "charges": {
-      |        "debit": 1200,
-      |        "credit": 0
-      |      },
-      |      "cleared": {
-      |        "cleared": 0,
-      |        "payment": 0,
-      |        "credit": 0
-      |      },
-      |      "balance": {
-      |        "debit": 1200,
-      |        "credit": 0
-      |      }
-      |    }
-      |  },
-      |  "nonRti": {
-      |    "lineItems": [
-      |      {
-      |        "taxYear": {
-      |          "yearFrom": 2017
-      |        },
-      |        "charges": {
-      |          "debit": 100,
-      |          "credit": 0
-      |        },
-      |        "cleared": {
-      |          "cleared": 100,
-      |          "payment": 0,
-      |          "credit": 0
-      |        },
-      |        "balance": {
-      |          "debit": 0,
-      |          "credit": 0
-      |        },
-      |        "dueDate": "2017-05-22",
-      |        "isSpecified": false,
-      |        "itemType": "1481",
-      |        "codeText": "NON_RTI_CIS_FIXED_PENALTY"
-      |      }
-      |    ],
-      |    "totals": {
-      |      "charges": {
-      |        "debit": 100,
-      |        "credit": 0
-      |      },
-      |      "cleared": {
-      |        "cleared": 100,
-      |        "payment": 100,
-      |        "credit": 0
-      |      },
-      |      "balance": {
-      |        "debit": 100,
-      |        "credit": 100
-      |      }
-      |    }
-      |  },
-      |  "unallocated": 2000
-      |}
-    """.stripMargin
-
-  val epayeAnnualStatementWithEyu: String =
     """
       |{
       |  "rti": {
@@ -246,6 +156,91 @@ object Fixtures {
       |}
     """.stripMargin
 
+  val expectedAnnualStatementJson = Json.parse(
+    """
+      |{
+      |  "taxYear": {
+      |    "year": "2017-18",
+      |    "firstDay": "2017-04-06",
+      |    "lastDay": "2018-04-05"
+      |  },
+      |  "nonRtiCharges": [
+      |    {
+      |      "code": "NON_RTI_CIS_FIXED_PENALTY",
+      |      "amount": 300,
+      |      "clearedByCredits": 70,
+      |      "clearedByPayments": 30,
+      |      "balance": 200,
+      |      "dueDate": "2017-07-22"
+      |    }
+      |  ],
+      |  "_embedded": {
+      |    "earlierYearUpdate": {
+      |      "amount": 700,
+      |      "clearedByCredits": 200,
+      |      "clearedByPayments": 300,
+      |      "balance": 200,
+      |      "dueDate": "2017-04-22"
+      |    },
+      |    "rtiCharges": [
+      |      {
+      |        "taxMonth": {
+      |          "number": 7,
+      |          "firstDay": "2017-10-06",
+      |          "lastDay": "2017-11-05"
+      |        },
+      |        "amount": 1200,
+      |        "clearedByCredits": 0,
+      |        "clearedByPayments": 0,
+      |        "balance": 1200,
+      |        "dueDate": "2017-11-22",
+      |        "isSpecified": false,
+      |        "_links": {
+      |          "self": {
+      |            "href": "/organisations/paye/840/GZ00064/statements/2017-18/7"
+      |          }
+      |        }
+      |      },
+      |      {
+      |        "taxMonth": {
+      |          "number": 3,
+      |          "firstDay": "2017-06-06",
+      |          "lastDay": "2017-07-05"
+      |        },
+      |        "amount": 700,
+      |        "clearedByCredits": 200,
+      |        "clearedByPayments": 300,
+      |        "balance": 200,
+      |        "dueDate": "2017-07-22",
+      |        "isSpecified": true,
+      |        "_links": {
+      |          "self": {
+      |            "href": "/organisations/paye/840/GZ00064/statements/2017-18/3"
+      |          }
+      |        }
+      |      }
+      |    ]
+      |  },
+      |  "_links": {
+      |    "empRefs": {
+      |      "href": "/organisations/paye"
+      |    },
+      |    "statements": {
+      |      "href": "/organisations/paye/840/GZ00064/statements"
+      |    },
+      |    "self": {
+      |      "href": "/organisations/paye/840/GZ00064/statements/2017-18"
+      |    },
+      |    "next": {
+      |      "href": "/organisations/paye/840/GZ00064/statements/2018-19"
+      |    },
+      |    "previous": {
+      |      "href": "/organisations/paye/840/GZ00064/statements/2016-17"
+      |    }
+      |  }
+      |}
+     """.stripMargin)
+
   def authorisedEnrolmentJson(empRef: EmpRef): String =
     s"""
        |{
@@ -269,6 +264,5 @@ object Fixtures {
        |  ]
        |}
       """.stripMargin
-
 
 }

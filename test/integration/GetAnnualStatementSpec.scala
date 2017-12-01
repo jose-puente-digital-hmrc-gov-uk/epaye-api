@@ -43,98 +43,13 @@ class GetAnnualStatementSpec extends WordSpec
       val annualStatementUrl =
         s"$baseUrl/${empRef.taxOfficeNumber}/${empRef.taxOfficeReference}/statements/2017-18"
 
-      val expectedResponse = Json.parse("""
-        |{
-        |  "taxYear": {
-        |    "year": "2017-18",
-        |    "firstDay": "2017-04-06",
-        |    "lastDay": "2018-04-05"
-        |  },
-        |  "nonRtiCharges": [
-        |    {
-        |      "code": "NON_RTI_CIS_FIXED_PENALTY",
-        |      "amount": 300,
-        |      "clearedByCredits": 70,
-        |      "clearedByPayments": 30,
-        |      "balance": 200,
-        |      "dueDate": "2017-07-22"
-        |    }
-        |  ],
-        |  "_embedded": {
-        |    "earlierYearUpdate": {
-        |      "amount": 700,
-        |      "clearedByCredits": 200,
-        |      "clearedByPayments": 300,
-        |      "balance": 200,
-        |      "dueDate": "2017-04-22"
-        |    },
-        |    "rtiCharges": [
-        |      {
-        |        "taxMonth": {
-        |          "number": 7,
-        |          "firstDay": "2017-10-06",
-        |          "lastDay": "2017-11-05"
-        |        },
-        |        "amount": 1200,
-        |        "clearedByCredits": 0,
-        |        "clearedByPayments": 0,
-        |        "balance": 1200,
-        |        "dueDate": "2017-11-22",
-        |        "isSpecified": false,
-        |        "_links": {
-        |          "self": {
-        |            "href": "/organisations/paye/840/GZ00064/statements/2017-18/7"
-        |          }
-        |        }
-        |      },
-        |      {
-        |        "taxMonth": {
-        |          "number": 3,
-        |          "firstDay": "2017-06-06",
-        |          "lastDay": "2017-07-05"
-        |        },
-        |        "amount": 700,
-        |        "clearedByCredits": 200,
-        |        "clearedByPayments": 300,
-        |        "balance": 200,
-        |        "dueDate": "2017-07-22",
-        |        "isSpecified": true,
-        |        "_links": {
-        |          "self": {
-        |            "href": "/organisations/paye/840/GZ00064/statements/2017-18/3"
-        |          }
-        |        }
-        |      }
-        |    ]
-        |  },
-        |  "_links": {
-        |    "empRefs": {
-        |      "href": "/organisations/paye"
-        |    },
-        |    "statements": {
-        |      "href": "/organisations/paye/840/GZ00064/statements"
-        |    },
-        |    "self": {
-        |      "href": "/organisations/paye/840/GZ00064/statements/2017-18"
-        |    },
-        |    "next": {
-        |      "href": "/organisations/paye/840/GZ00064/statements/2018-19"
-        |    },
-        |    "previous": {
-        |      "href": "/organisations/paye/840/GZ00064/statements/2016-17"
-        |    }
-        |  }
-        |}
-      """.stripMargin
-      )
-
       given()
         .clientWith(empRef).isAuthorized
-        .and().epayeAnnualStatementReturns(Fixtures.epayeAnnualStatementWithEyu)
+        .and().epayeAnnualStatementReturns(Fixtures.epayeAnnualStatement)
         .when()
         .get(annualStatementUrl).withAuthHeader()
         .thenAssertThat()
-        .bodyIsOfJson(expectedResponse)
+        .bodyIsOfJson(Fixtures.expectedAnnualStatementJson)
     }
   }
 }
