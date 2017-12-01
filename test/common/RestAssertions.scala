@@ -14,10 +14,8 @@
  * limitations under the License.
  */
 
-package contract
+package common
 
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.github.fge.jsonschema.main.JsonSchemaFactory
 import com.github.tomakehurst.wiremock.client.WireMock._
 import org.scalatest.Matchers
 import play.api.libs.json.{JsValue, Json}

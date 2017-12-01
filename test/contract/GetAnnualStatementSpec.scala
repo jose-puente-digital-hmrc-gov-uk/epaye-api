@@ -16,6 +16,7 @@
 
 package contract
 
+import common._
 import org.scalatest.{Matchers, WordSpec}
 import play.api.Application
 import play.api.inject.bind

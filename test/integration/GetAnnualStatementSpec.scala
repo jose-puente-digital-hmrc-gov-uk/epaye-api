@@ -16,6 +16,7 @@
 
 package integration
 
+import common._
 import contract._
 import org.scalatest.{Matchers, WordSpec}
 import play.api.Application

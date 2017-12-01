@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package contract
+package common
 
 import play.api.libs.json.Json
 import uk.gov.hmrc.domain.EmpRef

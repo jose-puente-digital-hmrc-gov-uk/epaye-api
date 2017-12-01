@@ -14,17 +14,15 @@
  * limitations under the License.
  */
 
-package contract
+package common
 
-import org.scalatest.Suite
-import org.scalatestplus.play.OneServerPerSuite
-import play.api.libs.ws.WSClient
-import uk.gov.hmrc.play.http.HeaderCarrier
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.github.fge.jsonschema.core.report.ProcessingReport
+import com.github.fge.jsonschema.main.JsonSchemaFactory
 
-trait WSClientSetup extends OneServerPerSuite { self: Suite =>
-  val baseUrl = s"http://localhost:$port"
+case class Schema(schemaPath: String) {
+  private val validator = JsonSchemaFactory.byDefault().getJsonSchema(schemaPath)
 
-  implicit val hc = HeaderCarrier()
-
-  implicit val wsClient: WSClient = app.injector.instanceOf[WSClient]
+  def validate(json: String): ProcessingReport =
+    validator.validate(new ObjectMapper().readTree(json), true)
 }
