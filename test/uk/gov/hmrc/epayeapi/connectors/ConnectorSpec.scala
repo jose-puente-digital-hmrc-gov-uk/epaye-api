@@ -85,28 +85,24 @@ class ConnectorSpec extends UnitSpec with MockitoSugar with ScalaFutures {
     }
 
     "return ApiNotFound on 404 exceptions" in new Setup {
-      // Hacky. Http exceptions are checked but `http.GET` has not defined
-      // any checked exceptions as throwble. Therefore mockito won't allow a
-      // `.thenThrow`. So we have to create a subclass and override the method.
-      val thisConnector = new TestConnector(new HttpGet {
-        override protected def doGet(url: String)(implicit hc: HeaderCarrier): Future[HttpResponse] = ???
-        override def GET[A](url: String)(implicit rds: HttpReads[A], hc: HeaderCarrier): Future[A] = Future(throw new NotFoundException("Not found"))
-        override val hooks: Seq[HttpHook] = Seq.empty
-      }, global)
+      when(connector.http.GET(url))
+        .thenReturn {
+          failed {
+            new NotFoundException("Not found")
+          }
+        }
 
-      thisConnector.getData.futureValue shouldEqual ApiNotFound[TestData]()
+      connector.getData.futureValue shouldEqual ApiNotFound[TestData]()
     }
     "return ApiError on unexpected responses with status < 500" in new Setup {
-      // Hacky. Http exceptions are checked but `http.GET` has not defined
-      // any checked exceptions as throwble. Therefore mockito won't allow a
-      // `.thenThrow`. So we have to create a subclass and override the method.
-      val thisConnector = new TestConnector(new HttpGet {
-        override protected def doGet(url: String)(implicit hc: HeaderCarrier): Future[HttpResponse] = ???
-        override def GET[A](url: String)(implicit rds: HttpReads[A], hc: HeaderCarrier): Future[A] = Future(throw new ForbiddenException("Forbidden"))
-        override val hooks: Seq[HttpHook] = Seq.empty
-      }, global)
+      when(connector.http.GET(url))
+        .thenReturn {
+          failed {
+            new ForbiddenException("Forbidden")
+          }
+        }
 
-      thisConnector.getData.futureValue shouldEqual ApiError[TestData](Status.FORBIDDEN, "Forbidden")
+      connector.getData.futureValue shouldEqual ApiError[TestData](Status.FORBIDDEN, "Forbidden")
     }
 
     "return ApiError on unexpected status codes from upstream" in new Setup {
