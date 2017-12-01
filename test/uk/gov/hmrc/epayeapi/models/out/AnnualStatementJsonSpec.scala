@@ -153,7 +153,6 @@ class AnnualStatementJsonSpec extends WordSpec with Matchers {
       NonRtiChargesJson.from(lineItem, taxYear) shouldBe
         Some(NonRtiChargesJson(
           code = code,
-          taxPeriod = PeriodJson(taxYear.firstDay, taxYear.lastDay),
           amount = 100,
           clearedByCredits = 20,
           clearedByPayments = 10,

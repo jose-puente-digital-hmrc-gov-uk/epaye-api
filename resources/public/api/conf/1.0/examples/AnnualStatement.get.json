@@ -8,10 +8,6 @@
     {
       "code": "NON_RTI_CIS_FIXED_PENALTY",
       "amount": 5000,
-      "taxPeriod": {
-        "firstDay": "2016-04-06",
-        "lastDay": "2016-07-05"
-      },
       "clearedByCredits": 500,
       "clearedByPayments": 2000,
       "balance": 2500,

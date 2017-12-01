@@ -53,10 +53,6 @@ class GetAnnualStatementSpec extends WordSpec
         |  "nonRtiCharges": [
         |    {
         |      "code": "NON_RTI_CIS_FIXED_PENALTY",
-        |      "taxPeriod": {
-        |        "firstDay": "2017-04-06",
-        |        "lastDay": "2018-04-05"
-        |      },
         |      "amount": 300,
         |      "clearedByCredits": 70,
         |      "clearedByPayments": 30,

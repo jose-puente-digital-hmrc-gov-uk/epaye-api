@@ -26,7 +26,6 @@ case class PeriodJson(firstDay: LocalDate, lastDay: LocalDate)
 
 case class NonRtiChargesJson(
   code: String,
-  taxPeriod: PeriodJson,
   amount: BigDecimal,
   clearedByCredits: BigDecimal,
   clearedByPayments: BigDecimal,
@@ -44,9 +43,7 @@ object NonRtiChargesJson {
       clearedByCredits = lineItem.cleared.credit,
       clearedByPayments = lineItem.cleared.payment,
       balance = lineItem.balance.debit,
-      dueDate = lineItem.dueDate,
-      taxPeriod = PeriodJson(taxYear.firstDay, taxYear.lastDay)
-    )
+      dueDate = lineItem.dueDate)
   }
 }
 

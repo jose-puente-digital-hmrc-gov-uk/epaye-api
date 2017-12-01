@@ -37,24 +37,6 @@
                 "type": "string",
                 "description": "Code name for the non-RTI charge"
               },
-              "taxPeriod": {
-                "type": "object",
-                "description": "Tax period of the non-RTI charge",
-                "properties": {
-                  "firstDay": {
-                    "description": "First day of the tax period",
-                    "$ref": "Definitions.schema.json#/definitions/date"
-                  },
-                  "lastDay": {
-                    "description": "Last day (inclusive) of the tax period",
-                    "$ref": "Definitions.schema.json#/definitions/date"
-                  }
-                },
-                "required": [
-                  "firstDay",
-                  "lastDay"
-                ]
-              },
               "dueDate": {
                 "description": "Due date for the non-RTI charge",
                 "$ref": "Definitions.schema.json#/definitions/date"
@@ -62,7 +44,6 @@
             },
             "required": [
               "code",
-              "taxPeriod",
               "dueDate"
             ]
           }
