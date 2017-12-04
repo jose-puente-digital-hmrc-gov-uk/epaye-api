@@ -26,11 +26,9 @@ import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.domain.EmpRef
 import uk.gov.hmrc.epayeapi.connectors.EpayeConnector
 import uk.gov.hmrc.epayeapi.models.Formats._
-import uk.gov.hmrc.epayeapi.models.{Today, TodayProvider}
 import uk.gov.hmrc.epayeapi.models.in._
 import uk.gov.hmrc.epayeapi.models.out.ApiError.EmpRefNotFound
 import uk.gov.hmrc.epayeapi.models.out.{AnnualStatementJson, ApiError}
-import uk.gov.hmrc.time.TaxYearResolver
 
 import scala.concurrent.ExecutionContext
 
@@ -38,15 +36,12 @@ import scala.concurrent.ExecutionContext
 case class GetAnnualStatementController @Inject()(
   authConnector: AuthConnector,
   epayeConnector: EpayeConnector,
-  todayProvider: TodayProvider,
   implicit val ec: ExecutionContext,
   implicit val mat: Materializer
 )
   extends ApiController {
 
-  def getAnnualStatement(empRef: EmpRef, maybeTaxYear: Option[TaxYear]): EssentialAction = EmpRefAction(empRef) {
-    val taxYear: TaxYear = maybeTaxYear.getOrElse(TaxYear(TaxYearResolver.taxYearFor(todayProvider.today.date())))
-
+  def getAnnualStatement(empRef: EmpRef, taxYear: TaxYear): EssentialAction = EmpRefAction(empRef) {
     Action.async { request =>
       epayeConnector.getAnnualStatement(empRef, taxYear, hc(request)).map {
         case ApiSuccess(epayeAnnualStatement) =>

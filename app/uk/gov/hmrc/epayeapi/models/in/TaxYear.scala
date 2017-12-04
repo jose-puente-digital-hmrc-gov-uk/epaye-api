@@ -31,12 +31,14 @@ case class TaxYear(yearFrom: Int) {
 }
 
 object TaxYear {
-  private lazy val pattern = """20(\d\d)-(\d\d)""".r
-
   def asString(taxYear: TaxYear): String =
     s"${taxYear.yearFrom}-${taxYear.yearTo % 100}"
+}
 
-  def extractTaxYear(taxYear: String): Option[TaxYear] = {
+object ExtractTaxYear {
+  private lazy val pattern = """20(\d\d)-(\d\d)""".r
+
+  def unapply(taxYear: String): Option[TaxYear] = {
     taxYear match {
       case pattern(fromYear, toYear) =>
         Try(toYear.toInt - fromYear.toInt) match {
