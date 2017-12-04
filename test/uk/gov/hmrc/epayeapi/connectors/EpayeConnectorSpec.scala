@@ -28,8 +28,11 @@ import uk.gov.hmrc.play.http.ws.WSHttp
 import uk.gov.hmrc.play.http.{HeaderCarrier, HttpResponse}
 import uk.gov.hmrc.play.test.UnitSpec
 
+import scala.concurrent.duration._
+import scala.concurrent.Await
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future.successful
+import scala.concurrent.duration.Duration
 
 class EpayeConnectorSpec extends UnitSpec with MockitoSugar with ScalaFutures {
 
@@ -41,7 +44,8 @@ class EpayeConnectorSpec extends UnitSpec with MockitoSugar with ScalaFutures {
     val empRef = EmpRef("123", "456")
     val urlTotals = s"${config.baseUrl}/epaye/${empRef.encodedValue}/api/v1/annual-statement"
     val urlTotalsByType = s"${config.baseUrl}/epaye/${empRef.encodedValue}/api/v1/totals/by-type"
-    val urlAnnualStatement = s"${config.baseUrl}/epaye/${empRef.encodedValue}/api/v1/annual-statement"
+    def urlAnnualStatement(taxYear: TaxYear): String =
+      s"${config.baseUrl}/epaye/${empRef.encodedValue}/api/v1/annual-statement/${taxYear.asString}"
   }
 
   "EpayeConnector" should {
@@ -73,7 +77,7 @@ class EpayeConnectorSpec extends UnitSpec with MockitoSugar with ScalaFutures {
         }
       }
 
-      connector.getTotal(empRef, hc).futureValue shouldBe
+      Await.result(connector.getTotal(empRef, hc), 2.seconds) shouldBe
         ApiSuccess(
           EpayeTotalsResponse(
             EpayeTotalsItem(EpayeTotals(DebitAndCredit(100, 0))),
@@ -81,24 +85,28 @@ class EpayeConnectorSpec extends UnitSpec with MockitoSugar with ScalaFutures {
           )
         )
     }
+
     "retrieve summary for a given empRef" in new Setup {
-      when(connector.http.GET(urlAnnualStatement)).thenReturn {
+      val taxYear = TaxYear(2016)
+
+      when(connector.http.GET(urlAnnualStatement(taxYear))).thenReturn {
         successful {
           HttpResponse(Status.OK, responseString = Some(JsonFixtures.annualStatements.annualStatement))
         }
       }
 
-      connector.getAnnualSummary(empRef, hc, None).futureValue shouldBe
+      connector.getAnnualStatement(empRef, taxYear, hc).futureValue shouldBe
         ApiSuccess(
-          AnnualSummaryResponse(
-            AnnualSummary(
+          EpayeAnnualStatement(
+            rti = AnnualStatementTable(
               List(LineItem(TaxYear(2017), Some(TaxMonth(1)), DebitAndCredit(100.2, 0), Cleared(0, 0), DebitAndCredit(100.2, 0), new LocalDate(2017, 5, 22), isSpecified = false, codeText = None)),
               AnnualTotal(DebitAndCredit(100.2, 0), Cleared(0, 0), DebitAndCredit(100.2, 0))
             ),
-            AnnualSummary(
+            nonRti = AnnualStatementTable(
               List(LineItem(TaxYear(2017), None, DebitAndCredit(20.0, 0), Cleared(0, 0), DebitAndCredit(20.0, 0), new LocalDate(2018, 2, 22), false, Some("P11D_CLASS_1A_CHARGE"))),
               AnnualTotal(DebitAndCredit(20.0, 0), Cleared(0, 0), DebitAndCredit(20.0, 0))
-            )
+            ),
+            unallocated = None
           )
         )
     }

@@ -1,0 +1,188 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "description": "Annual Statement for the requested year",
+  "properties": {
+    "taxYear": {
+      "$ref": "Definitions.schema.json#/definitions/taxYear"
+    },
+    "nonRtiCharges": {
+      "$ref": "#/definitions/nonRtiCharges"
+    },
+    "_embedded": {
+      "$ref": "#/definitions/annualStatementEmbedded"
+    },
+    "_links": {
+      "$ref": "#/definitions/annualStatementLinks"
+    }
+  },
+  "required": [
+    "taxYear",
+    "nonRtiCharges",
+    "_embedded",
+    "_links"
+  ],
+  "definitions": {
+    "nonRtiCharges": {
+      "type": "array",
+      "description": "Non-RTI charges",
+      "items": {
+        "allOf": [
+          {
+            "$ref": "#/definitions/chargeSummary"
+          },
+          {
+            "properties": {
+              "code": {
+                "type": "string",
+                "description": "Code name for the non-RTI charge"
+              },
+              "dueDate": {
+                "description": "Due date for the non-RTI charge",
+                "$ref": "Definitions.schema.json#/definitions/date"
+              }
+            },
+            "required": [
+              "code",
+              "dueDate"
+            ]
+          }
+        ]
+      }
+    },
+    "annualStatementEmbedded": {
+      "type": "object",
+      "description": "Embedded RTI charges",
+      "properties": {
+        "earlierYearUpdate": {
+          "type": "object",
+          "description": "Earlier year update on RTI charges (optional)",
+          "allOf": [
+              {
+                "$ref": "#/definitions/chargeSummary"
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "dueDate": {
+                    "description": "Due date for the RTI charge",
+                    "$ref": "Definitions.schema.json#/definitions/date"
+                  }
+                },
+                "required": [
+                  "dueDate"
+                ]
+              }
+            ]
+        },
+        "rtiCharges": {
+          "type": "array",
+          "description": "RTI charges",
+          "items": {
+            "allOf": [
+              {
+                "$ref": "#/definitions/chargeSummary"
+              },
+              {
+                "type": "object",
+                "description": "RTI charge additional details",
+                "properties": {
+                  "taxMonth": {
+                    "$ref": "Definitions.schema.json#/definitions/taxMonth"
+                  },
+                  "dueDate": {
+                    "description": "Due date for the RTI charge",
+                    "$ref": "Definitions.schema.json#/definitions/date"
+                  },
+                  "isSpecified": {
+                    "type": "boolean",
+                    "description": "Set to true if the charge is estimated and false otherwise"
+                  },
+                  "_links": {
+                    "type": "object",
+                    "properties": {
+                      "self": {
+                        "$ref": "Definitions.schema.json#/definitions/link"
+                      }
+                    },
+                    "required": [
+                      "self"
+                    ]
+                  }
+                },
+                "required": [
+                  "taxMonth",
+                  "dueDate",
+                  "isSpecified",
+                  "_links"
+                ]
+              }
+            ]
+          }
+        }
+      },
+      "required": [
+        "rtiCharges"
+      ]
+    },
+    "annualStatementLinks": {
+      "type": "object",
+      "properties": {
+        "empRefs": {
+          "description": "Link to the list of available empRefs",
+          "$ref": "Definitions.schema.json#/definitions/link"
+        },
+        "statements": {
+          "description": "Link to the account summary for the given empRef",
+          "$ref": "Definitions.schema.json#/definitions/link"
+        },
+        "self": {
+          "$ref": "Definitions.schema.json#/definitions/link"
+        },
+        "next": {
+          "description": "Link to the Annual Statement for the next tax year",
+          "$ref": "Definitions.schema.json#/definitions/link"
+        },
+        "previous": {
+          "description": "Link to the Annual Statement for the previous tax year",
+          "$ref": "Definitions.schema.json#/definitions/link"
+        }
+      },
+      "required": [
+        "empRefs",
+        "statements",
+        "self",
+        "next",
+        "previous"
+      ]
+    },
+    "chargeSummary": {
+      "type": "object",
+      "description": "Charge summary",
+      "properties": {
+        "amount": {
+          "type": "number",
+          "description": "Charge amount"
+        },
+        "clearedByCredits": {
+          "type": "number",
+          "description": "The amount cleared by credits"
+        },
+        "clearedByPayments": {
+          "type": "number",
+          "description": "The amount cleared by payments"
+        },
+        "balance": {
+          "type": "number",
+          "description": "Charge balance"
+        }
+      },
+      "required": [
+        "amount",
+        "clearedByCredits",
+        "clearedByPayments",
+        "balance"
+      ]
+    }
+  }
+}

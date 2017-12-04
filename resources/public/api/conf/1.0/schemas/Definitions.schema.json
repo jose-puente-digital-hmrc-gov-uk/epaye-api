@@ -3,7 +3,7 @@
     "date": {
       "description": "A date representation with format YYYY-MM-DD",
       "type": "string",
-      "pattern": "^(((19|20)([2468][048]|[13579][26]|0[48])|2000)[-]02[-]29|((19|20)[0-9]{2}[-](0[469]|11)[-](0[1-9]|[11][0-9]|30)|(19|20)[0-9]{2}[-](0[13578]|1[02])[-](0[1-9]|[12][0-9]|3[01])|(19|20)[0-9]{2}[-]02[-](0[1-9]|1[0-9]|2[0-8])))$",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
       "example": "2017-05-05"
     },
     "taxYear": {
@@ -14,7 +14,7 @@
         "year": {
           "type": "string",
           "description": "The tax year",
-          "pattern": "^\\d{4}-\\d{2}"
+          "pattern": "^\\d{4}-\\d{2}$"
         },
         "firstDay": {
           "description": "The first day of the tax year",
@@ -24,7 +24,12 @@
           "description": "The last day of the tax year",
           "$ref": "#/definitions/date"
         }
-      }
+      },
+      "required": [
+        "year",
+        "firstDay",
+        "lastDay"
+      ]
     },
     "taxMonth": {
       "type": "object",
@@ -45,7 +50,12 @@
           "description": "The last day of the tax month",
           "$ref": "#/definitions/date"
         }
-      }
+      },
+      "required": [
+        "number",
+        "firstDay",
+        "lastDay"
+      ]
     },
     "link": {
       "type": "object",
@@ -149,50 +159,11 @@
         "NON_RTI_TAX_INTEREST"
       ]
     },
-
-    "dueDate": {
-      "$ref": "#/definitions/date",
-      "description": "The date this item is due"
-    },
     "is_overdue": {
       "type": "boolean",
       "description": "Whether this item is overdue or not",
       "default": false
     },
-
-    "outstandingCharges": {
-      "type": "object",
-      "description": "The outstanding charges on account.",
-      "properties": {
-        "amount": {
-          "type": "number",
-          "description": "The outstanding charges on account."
-        },
-        "breakdown": {
-          "type": "object",
-          "description": "The breakdown of outstanding charges.",
-          "properties": {
-            "rti": {
-              "type": "number",
-              "description": "The outstanding RTI charges on account."
-            },
-            "nonRti": {
-              "type": "number",
-              "description": "The outstanding Non-RTI charges on account."
-            }
-          },
-          "required": [
-            "rti",
-            "nonRti"
-          ]
-        }
-      },
-      "required": [
-        "amount",
-        "breakdown"
-      ]
-    },
-
     "epayeLinks": {
       "type": "object",
       "description": "An object of links to explore further data.",
@@ -201,7 +172,10 @@
           "description": "Link to the entry endpoint.",
           "$ref": "#/definitions/link"
         }
-      }
+      },
+      "required": [
+        "self"
+      ]
     },
     "empRefLinks": {
       "type": "object",
@@ -211,21 +185,10 @@
           "description": "Link to account summary endpoint.",
           "$ref": "#/definitions/link"
         }
-      }
-    },
-    "summaryLinks": {
-      "type": "object",
-      "description": "An object of links to explore further data.",
-      "properties": {
-        "self": {
-          "description": "Link to account summary endpoint.",
-          "$ref": "#/definitions/link"
-        },
-        "empRefs": {
-          "description": "Link to the entry endpoint endpoint.",
-          "$ref": "#/definitions/link"
-        }
-      }
+      },
+      "required": [
+        "summary"
+      ]
     }
   }
 }

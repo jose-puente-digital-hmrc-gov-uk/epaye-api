@@ -26,15 +26,19 @@ case class TaxYear(yearFrom: Int) {
   val asString: String = s"$yearFrom-${yearTo % 100}"
   val firstDay: LocalDate = TaxYearResolver.startOfTaxYear(yearFrom)
   val lastDay: LocalDate = firstDay.plusYears(1).minusDays(1)
+  def next: TaxYear = TaxYear(yearTo)
+  def previous = TaxYear(yearFrom - 1)
 }
 
 object TaxYear {
-  private lazy val pattern = """20(\d\d)-(\d\d)""".r
-
   def asString(taxYear: TaxYear): String =
     s"${taxYear.yearFrom}-${taxYear.yearTo % 100}"
+}
 
-  def extractTaxYear(taxYear: String): Option[TaxYear] = {
+object ExtractTaxYear {
+  private lazy val pattern = """20(\d\d)-(\d\d)""".r
+
+  def unapply(taxYear: String): Option[TaxYear] = {
     taxYear match {
       case pattern(fromYear, toYear) =>
         Try(toYear.toInt - fromYear.toInt) match {

@@ -26,6 +26,20 @@ trait Formats {
   }
   implicit lazy val linkFormat: Format[Link] = format[Link]
 
+  implicit lazy val taxYearJsonFormat: Format[TaxYearJson] = format[TaxYearJson]
+  implicit lazy val periodJsonFormat: Format[PeriodJson] = format[PeriodJson]
+  implicit lazy val earlierYearUpdateJsonFormat: Format[EarlierYearUpdateJson] = format[EarlierYearUpdateJson]
+  implicit lazy val nonRtiChargesJsonFormat: Format[NonRtiChargesJson] = format[NonRtiChargesJson]
+  implicit lazy val paymentsAndCreditsJsonFormat: Format[PaymentsAndCreditsJson] = format[PaymentsAndCreditsJson]
+  implicit lazy val embeddedRtiChargesJsonFormat: Format[EmbeddedRtiChargesJson] = format[EmbeddedRtiChargesJson]
+  implicit lazy val rtiChargesJsonFormat: Format[MonthlyChargesJson] = format[MonthlyChargesJson]
+  implicit lazy val taxMonthJsonFormat: Format[TaxMonthJson] = format[TaxMonthJson]
+  implicit lazy val annualStatementLinksJsonFormat: Format[AnnualStatementLinksJson] = format[AnnualStatementLinksJson]
+  implicit lazy val annualStatementJsonFormat: Format[AnnualStatementJson] = format[AnnualStatementJson]
+
+
+  implicit lazy val selfLinksFormat: Format[SelfLink] = format[SelfLink]
+
   implicit lazy val empRefsLinksFormat: Format[EmpRefsLinks] = format[EmpRefsLinks]
   implicit lazy val empRefLinksFormat: Format[EmpRefLinks] = format[EmpRefLinks]
   implicit lazy val empRefItemFormat: Format[EmpRefItem] = format[EmpRefItem]

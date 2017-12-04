@@ -14,12 +14,11 @@
  * limitations under the License.
  */
 
-package contract
+package common
 
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.github.fge.jsonschema.main.JsonSchemaFactory
 import com.github.tomakehurst.wiremock.client.WireMock._
 import org.scalatest.Matchers
+import play.api.libs.json.{JsValue, Json}
 import play.api.libs.ws.{WSClient, WSRequest}
 import uk.gov.hmrc.domain.EmpRef
 import uk.gov.hmrc.play.http.HttpResponse
@@ -43,30 +42,23 @@ class ClientGivens(empRef: EmpRef) {
 
   def and(): ClientGivens = this
 
-  def epayeTotalsReturns(owed: BigDecimal): ClientGivens = {
+  def epayeTotalsReturns(body: String): ClientGivens = {
     val response = aResponse()
 
-    val body =
-      """
-        |{
-        |  "rti": {
-        |     "totals": {
-        |       "balance": {
-        |         "credit": 10,
-        |         "debit": 20
-        |       }
-        |     }
-        |  },
-        |  "nonRti": {
-        |     "totals": {
-        |       "balance": {
-        |         "credit": 10,
-        |         "debit": 20
-        |       }
-        |     }
-        |  }
-        |}
-      """.stripMargin
+    response
+      .withBody(body)
+      .withHeader("Content-Type", "application/json")
+      .withStatus(200)
+
+    stubFor(
+      get(urlPathEqualTo(s"/epaye/${empRef.encodedValue}/api/v1/annual-statement")).willReturn(response)
+    )
+
+    this
+  }
+
+  def epayeAnnualStatementReturns(body: String): ClientGivens = {
+    val response = aResponse()
 
     response
       .withBody(body)
@@ -82,48 +74,26 @@ class ClientGivens(empRef: EmpRef) {
 
   def isAuthorized: ClientGivens = {
 
-    val responseBody =
-      s"""
-        |{
-        |  "authorisedEnrolments": [
-        |    {
-        |      "key": "IR-PAYE",
-        |      "identifiers": [
-        |        {
-        |          "key": "TaxOfficeNumber",
-        |          "value": "${empRef.taxOfficeNumber}"
-        |        },
-        |        {
-        |          "key": "TaxOfficeReference",
-        |          "value": "${empRef.taxOfficeReference}"
-        |        }],
-        |      "state": "Activated",
-        |      "confidenceLevel": 0,
-        |      "delegatedAuthRule": "epaye-auth",
-        |      "enrolment": "IR-PAYE"
-        |    }
-        |  ]
-        |}
-      """.stripMargin
-
-    val response = aResponse().withBody(responseBody).withStatus(200)
+    val response = aResponse().withBody(Fixtures.authorisedEnrolmentJson(empRef)).withStatus(200)
 
     stubFor(
       post(urlPathEqualTo(s"/auth/authorise")).willReturn(response)
     )
     this
   }
-
 }
 
 class Assertions(response: HttpResponse) extends Matchers {
+  def bodyIsOfJson(json: JsValue) = {
+    Json.parse(response.body) shouldEqual json
+    this
+  }
 
   def bodyIsOfSchema(schemaPath: String): Unit = {
-    val validator = JsonSchemaFactory.byDefault().getJsonSchema(schemaPath)
 
-    val report = validator.validate(new ObjectMapper().readTree(response.body), true)
+    val report = Schema(schemaPath).validate(response.body)
 
-    withClue(report.toString){ report.isSuccess shouldBe true }
+    withClue(report.toString) { report.isSuccess shouldBe true }
   }
 
   def statusCodeIs(statusCode: Int): Assertions = {

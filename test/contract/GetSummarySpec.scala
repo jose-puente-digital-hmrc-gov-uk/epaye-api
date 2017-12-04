@@ -16,20 +16,28 @@
 
 package contract
 
+import common._
+import org.scalatest.{Matchers, WordSpec}
 import play.api.Application
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.routing.Router
 import uk.gov.hmrc.epayeapi.router.RoutesProvider
 
-class TotalsSpec extends WiremockSetup with EmpRefGenerator with RestAssertions {
+class GetSummarySpec
+  extends WordSpec
+    with Matchers
+    with WSClientSetup
+    with WiremockSetup
+    with EmpRefGenerator
+    with RestAssertions{
 
   override implicit lazy val app: Application =
     new GuiceApplicationBuilder().overrides(bind[Router].toProvider[RoutesProvider]).build()
 
   "/organisation/epaye/{ton}/{tor}/" should {
 
-    "return 200 OK on active enrolments given no debit" in {
+    "returns a response body that conforms with the Summary schema" in {
       val empRef = randomEmpRef()
 
       val totalsUrl =
@@ -39,7 +47,7 @@ class TotalsSpec extends WiremockSetup with EmpRefGenerator with RestAssertions 
 
       given()
         .clientWith(empRef).isAuthorized
-        .and().epayeTotalsReturns(owed = 0)
+        .and().epayeTotalsReturns(Fixtures.epayeAnnualStatement)
         .when
         .get(totalsUrl).withAuthHeader()
         .thenAssertThat()
