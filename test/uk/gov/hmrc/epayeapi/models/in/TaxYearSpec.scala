@@ -17,27 +17,26 @@
 package uk.gov.hmrc.epayeapi.models.in
 
 import org.scalatest.{Matchers, WordSpec}
-import TaxYear.extractTaxYear
 
 class TaxYearSpec extends WordSpec with Matchers {
   "Extract tax year" should {
     "retrieve nothing if tax year query string is empty" in {
-      extractTaxYear("") shouldBe None
+      ExtractTaxYear.unapply("") shouldBe None
     }
     "retrieve tax year if it matches pattern yyyy-yy" in {
-      extractTaxYear("2017-18") shouldBe Some(TaxYear(2017))
+      ExtractTaxYear.unapply("2017-18") shouldBe Some(TaxYear(2017))
     }
     "retrieve nothing if the years don't match" in {
-      extractTaxYear("2017-19") shouldBe None
+      ExtractTaxYear.unapply("2017-19") shouldBe None
     }
     "retrieve nothing if the years are reversed" in {
-      extractTaxYear("2018-17")
+      ExtractTaxYear.unapply("2018-17")
     }
     "retrieve nothing if it matches pattern yyyy" in {
-      extractTaxYear("2017") shouldBe None
+      ExtractTaxYear.unapply("2017") shouldBe None
     }
     "retrieve nothing if tax year does not match yyyy-yy" in {
-      extractTaxYear("abc") shouldBe None
+      ExtractTaxYear.unapply("abc") shouldBe None
     }
   }
 }
