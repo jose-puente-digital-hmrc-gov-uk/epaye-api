@@ -22,7 +22,8 @@ import org.scalatest.mock.MockitoSugar
 import play.api.http.Status
 import play.api.libs.json.{JsError, JsPath, Json}
 import uk.gov.hmrc.epayeapi.models.in._
-import uk.gov.hmrc.play.http.{HeaderCarrier, HttpGet, HttpResponse}
+import uk.gov.hmrc.play.http.hooks.HttpHook
+import uk.gov.hmrc.play.http._
 import uk.gov.hmrc.play.test.UnitSpec
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -81,6 +82,27 @@ class ConnectorSpec extends UnitSpec with MockitoSugar with ScalaFutures {
         }
 
       connector.getData.futureValue shouldEqual ApiNotFound[TestData]()
+    }
+
+    "return ApiNotFound on 404 exceptions" in new Setup {
+      when(connector.http.GET(url))
+        .thenReturn {
+          failed {
+            new NotFoundException("Not found")
+          }
+        }
+
+      connector.getData.futureValue shouldEqual ApiNotFound[TestData]()
+    }
+    "return ApiError on unexpected responses with status < 500" in new Setup {
+      when(connector.http.GET(url))
+        .thenReturn {
+          failed {
+            new ForbiddenException("Forbidden")
+          }
+        }
+
+      connector.getData.futureValue shouldEqual ApiError[TestData](Status.FORBIDDEN, "Forbidden")
     }
 
     "return ApiError on unexpected status codes from upstream" in new Setup {
