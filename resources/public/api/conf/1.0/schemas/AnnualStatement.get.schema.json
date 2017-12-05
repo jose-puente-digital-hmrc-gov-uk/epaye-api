@@ -34,8 +34,8 @@
           {
             "properties": {
               "code": {
-                "type": "string",
-                "description": "Code name for the non-RTI charge"
+                "description": "Code name for the non-RTI charge",
+                "$ref": "Definitions.schema.json#/definitions/chargeCode"
               },
               "dueDate": {
                 "description": "Due date for the non-RTI charge",

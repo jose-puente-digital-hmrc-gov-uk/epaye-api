@@ -14,19 +14,8 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.epayeapi.models.out
+package uk.gov.hmrc.epayeapi.models.in
 
-import uk.gov.hmrc.domain.EmpRef
-import uk.gov.hmrc.play.test.UnitSpec
-
-class LinkSpecs extends UnitSpec {
-  "Links" should {
-    "generate the right root link" in {
-      Link.empRefsLink() shouldEqual Link("/organisations/paye/")
-    }
-
-    "generate the summary link" in {
-      Link.summaryLink(EmpRef("123", "1231231")) shouldEqual Link("/organisations/paye/123/1231231/")
-    }
-  }
-}
+case class EpayeCode(
+  name: String
+)

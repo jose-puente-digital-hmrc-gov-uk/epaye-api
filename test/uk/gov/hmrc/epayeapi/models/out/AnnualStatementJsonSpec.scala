@@ -19,20 +19,15 @@ package uk.gov.hmrc.epayeapi.models.out
 import org.joda.time.LocalDate
 import org.scalatest.{Matchers, WordSpec}
 import uk.gov.hmrc.domain.EmpRef
-import uk.gov.hmrc.epayeapi.models.JsonFixtures.{baseUrl, baseUrlFor, emptyAnnualStatementJsonWith, emptyEpayeAnnualStatement}
+import uk.gov.hmrc.epayeapi.models.JsonFixtures.{baseUrl, baseUrlFor, emptyEpayeAnnualStatement}
 import uk.gov.hmrc.epayeapi.models.in._
+import uk.gov.hmrc.epayeapi.models.{TaxMonth, TaxYear}
 
 class AnnualStatementJsonSpec extends WordSpec with Matchers {
   val empRef = EmpRef("123", "AB45678")
-  val taxYear = TaxYear(2016)
-  val taxMonth = TaxMonth(2)
   val dueDate = new LocalDate(2017, 5, 22)
 
-  "AnnualStatementJson.apply.taxYear" should {
-    "contain the right taxYear" in {
-      AnnualStatementJson(empRef, taxYear, emptyEpayeAnnualStatement).taxYear shouldBe TaxYearJson(taxYear.asString, taxYear.firstDay, taxYear.lastDay)
-    }
-  }
+  val taxYear = TaxYear(2016)
 
   "AnnualStatementJson.apply._links" should {
     "contain the right links" in {
@@ -92,12 +87,12 @@ class AnnualStatementJsonSpec extends WordSpec with Matchers {
 
   "MonthlyChargesJson.from(lineItem)" should {
     "convert an rti charge from the epaye annual statement" in {
-      val taxMonth = TaxMonth(2)
+      val taxMonth = TaxMonth(taxYear, 2)
 
       val lineItem =
         LineItem(
           taxYear = taxYear,
-          taxMonth = Some(taxMonth),
+          taxMonth = Some(EpayeTaxMonth(taxMonth.month)),
           charges = DebitAndCredit(100, 0),
           cleared = Cleared(payment = 10, credit = 20),
           balance = DebitAndCredit(100 - 30, 0),
@@ -108,14 +103,14 @@ class AnnualStatementJsonSpec extends WordSpec with Matchers {
 
       MonthlyChargesJson.from(lineItem, empRef, taxYear) shouldBe
         Some(MonthlyChargesJson(
-          taxMonth = TaxMonthJson(taxMonth.month, taxMonth.firstDay(taxYear), taxMonth.lastDay(taxYear)),
+          taxMonth = TaxMonth(taxYear, taxMonth.month),
           amount = 100,
           clearedByCredits = 20,
           clearedByPayments = 10,
           balance = 100 - 10 - 20,
           dueDate = dueDate,
           isSpecified = true,
-          _links = SelfLink(Link(s"${baseUrlFor(empRef)}/statements/${taxYear.asString}/${taxMonth.month}"))
+          _links = SelfLink(Link(s"${baseUrlFor(empRef)}/statements/${taxYear.asString}/${taxMonth.asString}"))
         ))
     }
     "return a None if the taxMonth field is None" in {

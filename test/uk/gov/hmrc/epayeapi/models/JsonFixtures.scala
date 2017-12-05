@@ -16,37 +16,23 @@
 
 package uk.gov.hmrc.epayeapi.models
 
-import org.joda.time.LocalDate
 import uk.gov.hmrc.domain.EmpRef
 import uk.gov.hmrc.epayeapi.models.in._
-import uk.gov.hmrc.epayeapi.models.out._
+
+import scala.io.Source
 
 object JsonFixtures {
-  object annualStatements {
-    lazy val annualStatement: String = getJsonData("epaye/annual-statement/annual-statement.json")
-  }
+  def getResourceAsString(name: String): String =
+    Source.fromURL(getClass.getResource(name), "utf-8").mkString("")
 
-  def getJsonData(fname: String): String =
-    scala.io.Source.fromURL(getClass.getResource(s"/${fname}"), "utf-8").mkString("")
+  object annualStatements {
+    lazy val annualStatement: String = getResourceAsString("/epaye/annual-statement/annual-statement.json")
+  }
 
   val baseUrl = "/organisations/paye"
 
   def baseUrlFor(empRef: EmpRef): String =
     s"$baseUrl/${empRef.taxOfficeNumber}/${empRef.taxOfficeReference}"
-
-  def emptyAnnualStatementJsonWith(empRef: EmpRef, taxYear: TaxYear): AnnualStatementJson =
-    AnnualStatementJson(
-      taxYear = TaxYearJson(taxYear.asString, taxYear.firstDay, taxYear.lastDay),
-      _embedded = EmbeddedRtiChargesJson(None, Seq()),
-      nonRtiCharges = Seq(),
-      _links = AnnualStatementLinksJson(
-        empRefs = Link(baseUrl),
-        statements = Link(s"${baseUrlFor(empRef)}/statements"),
-        self = Link(s"${baseUrlFor(empRef)}/statements/${taxYear.asString}"),
-        next = Link(s"{${baseUrlFor(empRef)}/statements/${taxYear.next.asString}"),
-        previous = Link(s"${baseUrlFor(empRef)}/statements/${taxYear.previous.asString}")
-      )
-    )
 
   val emptyEpayeAnnualStatement =
     EpayeAnnualStatement(

@@ -1,4 +1,6 @@
 {
+  "taxOfficeNumber": "001",
+  "taxOfficeReference": "AB00001",
   "outstandingCharges": {
     "amount": 123,
     "breakdown": {
@@ -6,12 +8,12 @@
       "nonRti": 23
     }
   },
-  "_links" : {
+  "_links": {
     "empRefs": {
-      "href": "/organisation/paye/"
+      "href": "/organisations/paye/"
     },
     "self": {
-      "href": "/organisation/paye/001/AB00001"
+      "href": "/organisations/paye/001/AB00001"
     }
   }
 }

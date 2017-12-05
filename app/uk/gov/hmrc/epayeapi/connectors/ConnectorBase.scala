@@ -19,7 +19,6 @@ package uk.gov.hmrc.epayeapi.connectors
 import play.api.Logger
 import play.api.http.Status
 import play.api.libs.json.{JsError, JsSuccess, Reads}
-import uk.gov.hmrc.epayeapi.models.in
 import uk.gov.hmrc.epayeapi.models.in._
 import uk.gov.hmrc.epayeapi.syntax.json._
 import uk.gov.hmrc.play.http._
@@ -30,7 +29,7 @@ trait ConnectorBase {
   def http: HttpGet
   implicit def ec: ExecutionContext
 
-  private[connectors] def get[A](url: String, headers: HeaderCarrier)(implicit jsonReader: Reads[A]): Future[ApiResponse[A]] = {
+  private[connectors] def get[A](url: String, headers: HeaderCarrier)(implicit jsonReader: Reads[A]): Future[EpayeResponse[A]] = {
     Logger.debug(s"ApiClient GET request: url=$url headers=$headers")
 
     val result = for {
@@ -41,33 +40,33 @@ trait ConnectorBase {
       case ex: HttpException =>
         ex.responseCode match {
           case Status.NOT_FOUND =>
-            ApiNotFound()
+            EpayeNotFound()
           case statusCode: Int if statusCode < 500 =>
-            ApiError(statusCode, ex.message)
+            EpayeError(statusCode, ex.message)
           case statusCode: Int =>
             Logger.error(s"Upstream returned unexpected response: status=$statusCode", ex)
-            ApiException(ex.getMessage)
+            EpayeException(ex.getMessage)
         }
 
       case ex: Exception =>
         Logger.error("HTTP request threw exception", ex)
-        ApiException(ex.getMessage)
+        EpayeException(ex.getMessage)
     })
   }
 
-  private def reader[A](jsonReader: Reads[A]): HttpReads[ApiResponse[A]] =
-    new HttpReads[ApiResponse[A]] {
-      def read(method: String, url: String, response: HttpResponse): ApiResponse[A] = {
+  private def reader[A](jsonReader: Reads[A]): HttpReads[EpayeResponse[A]] =
+    new HttpReads[EpayeResponse[A]] {
+      def read(method: String, url: String, response: HttpResponse): EpayeResponse[A] = {
         response.status match {
           case Status.OK =>
             response.body.parseAndValidate[A](jsonReader) match {
-              case JsSuccess(obj, _) => ApiSuccess(obj)
-              case err: JsError => ApiJsonError(err)
+              case JsSuccess(obj, _) => EpayeSuccess(obj)
+              case err: JsError => EpayeJsonError(err)
             }
           case Status.NOT_FOUND =>
-            ApiNotFound()
+            EpayeNotFound()
           case _ =>
-            in.ApiError(response.status, response.body)
+            EpayeError(response.status, response.body)
         }
       }
     }

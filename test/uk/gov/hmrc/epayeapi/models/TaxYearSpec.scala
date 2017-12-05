@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.epayeapi.models.in
+package uk.gov.hmrc.epayeapi.models
 
 import org.scalatest.{Matchers, WordSpec}
 

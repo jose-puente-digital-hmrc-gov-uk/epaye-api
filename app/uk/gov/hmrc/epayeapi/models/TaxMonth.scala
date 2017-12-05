@@ -16,7 +16,36 @@
 
 package uk.gov.hmrc.epayeapi.models
 
-import uk.gov.hmrc.epayeapi.models.in.EpayeReads
-import uk.gov.hmrc.epayeapi.models.out.JsonWrites
+import org.joda.time.LocalDate
 
-object Formats extends EpayeReads with JsonWrites
+case class TaxMonth(
+  taxYear: TaxYear,
+  month: Int
+) {
+  def asString: String =
+    month.toString
+
+  def isFirst: Boolean =
+    month == 1
+
+  def isLast: Boolean =
+    month == 12
+
+  def firstDay: LocalDate =
+    taxYear.firstDay.plusMonths(month - 1)
+
+  def lastDay: LocalDate =
+    taxYear.firstDay.plusMonths(month).minusDays(1)
+
+  def next: TaxMonth =
+    TaxMonth(
+      if (isLast) taxYear.next else taxYear,
+      if (isLast) 1 else month + 1
+    )
+
+  def previous: TaxMonth =
+    TaxMonth(
+      if (isFirst) taxYear.previous else taxYear,
+      if (isFirst) 12 else month - 1
+    )
+}

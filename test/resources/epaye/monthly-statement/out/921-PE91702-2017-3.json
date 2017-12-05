@@ -1,0 +1,73 @@
+{
+  "taxOfficeNumber": "921",
+  "taxOfficeReference": "PE91702",
+  "taxYear": {
+    "year": "2017-18",
+    "firstDay": "2017-04-06",
+    "lastDay": "2018-04-05"
+  },
+  "taxMonth": {
+    "month": 3,
+    "firstDay": "2017-06-06",
+    "lastDay": "2017-07-05"
+  },
+  "rtiCharges": [
+    {
+      "code": "RTI_IN_YEAR_CHARGE_NIC1",
+      "amount": 200
+    },
+    {
+      "code": "RTI_IN_YEAR_CHARGE_STUDENT_LOAN_DEDUCTION",
+      "amount": 300
+    },
+    {
+      "code": "RTI_IN_YEAR_CHARGE_INCOME_TAX",
+      "amount": 500
+    }
+  ],
+  "interest": [],
+  "allocatedCredits": [
+    {
+      "code": "RTI_EMPLOYMENT_ALLOWANCE_CHARGE",
+      "amount": 300
+    },
+    {
+      "code": "RTI_SHARED_PARENT_PAY",
+      "amount": 200
+    }
+  ],
+  "allocatedPayments": [
+    {
+      "paymentDate": "2017-06-21",
+      "amount": 500
+    }
+  ],
+  "dueDate": "2017-07-22",
+  "summary": {
+    "amount": 1000,
+    "interest": 0,
+    "clearedByCredits": 500,
+    "clearedByPayments": 500,
+    "balance": 0
+  },
+  "_links": {
+    "empRefs": {
+      "href": "/organisations/paye/"
+    },
+    "statements": {
+      "href": "/organisations/paye/921/PE91702/"
+    },
+    "annualStatement": {
+      "href": "/organisations/paye/921/PE91702/statements/2017-18"
+    },
+    "self": {
+      "href": "/organisations/paye/921/PE91702/statements/2017-18/3"
+    },
+    "next": {
+      "href": "/organisations/paye/921/PE91702/statements/2017-18/4"
+    },
+    "previous": {
+      "href": "/organisations/paye/921/PE91702/statements/2017-18/2"
+    }
+  }
+}

@@ -185,7 +185,7 @@ object Fixtures {
       |    "rtiCharges": [
       |      {
       |        "taxMonth": {
-      |          "number": 7,
+      |          "month": 7,
       |          "firstDay": "2017-10-06",
       |          "lastDay": "2017-11-05"
       |        },
@@ -203,7 +203,7 @@ object Fixtures {
       |      },
       |      {
       |        "taxMonth": {
-      |          "number": 3,
+      |          "month": 3,
       |          "firstDay": "2017-06-06",
       |          "lastDay": "2017-07-05"
       |        },

@@ -26,9 +26,9 @@ import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.domain.EmpRef
 import uk.gov.hmrc.epayeapi.connectors.EpayeConnector
 import uk.gov.hmrc.epayeapi.models.Formats._
-import uk.gov.hmrc.epayeapi.models.in.{ApiJsonError, ApiNotFound, ApiResponse, ApiSuccess}
-import uk.gov.hmrc.epayeapi.models.out.ApiError.EmpRefNotFound
-import uk.gov.hmrc.epayeapi.models.out.{ApiError, SummaryResponse}
+import uk.gov.hmrc.epayeapi.models.in.{EpayeJsonError, EpayeNotFound, EpayeResponse, EpayeSuccess}
+import uk.gov.hmrc.epayeapi.models.out.ApiErrorJson.EmpRefNotFound
+import uk.gov.hmrc.epayeapi.models.out.{ApiErrorJson, SummaryJson}
 
 import scala.concurrent.ExecutionContext
 
@@ -41,20 +41,21 @@ case class GetSummaryController @Inject() (
 )
   extends ApiController {
 
-  def getSummary(empRef: EmpRef): EssentialAction = EmpRefAction(empRef) {
-    Action.async { request =>
-      epayeConnector.getTotal(empRef, hc(request)).map {
-        case ApiSuccess(totals) =>
-          Ok(Json.toJson(SummaryResponse(empRef, totals)))
-        case ApiJsonError(err) =>
-          Logger.error(s"Upstream returned invalid json: $err")
-          InternalServerError(Json.toJson(ApiError.InternalServerError))
-        case ApiNotFound() =>
-          NotFound(Json.toJson(EmpRefNotFound))
-        case error: ApiResponse[_] =>
-          Logger.error(s"Error while fetching totals: $error")
-          InternalServerError(Json.toJson(ApiError.InternalServerError))
+  def getSummary(empRef: EmpRef): EssentialAction =
+    EmpRefAction(empRef) {
+      Action.async { request =>
+        epayeConnector.getTotal(empRef, hc(request)).map {
+          case EpayeSuccess(totals) =>
+            Ok(Json.toJson(SummaryJson(empRef, totals)))
+          case EpayeJsonError(err) =>
+            Logger.error(s"Upstream returned invalid json: $err")
+            InternalServerError(Json.toJson(ApiErrorJson.InternalServerError))
+          case EpayeNotFound() =>
+            NotFound(Json.toJson(EmpRefNotFound))
+          case error: EpayeResponse[_] =>
+            Logger.error(s"Error while fetching totals: $error")
+            InternalServerError(Json.toJson(ApiErrorJson.InternalServerError))
+        }
       }
     }
-  }
 }

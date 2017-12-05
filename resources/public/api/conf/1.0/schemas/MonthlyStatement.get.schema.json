@@ -1,0 +1,137 @@
+{
+  "type": "object",
+  "properties": {
+    "taxOfficeNumber": {
+      "$ref": "Definitions.schema.json#/definitions/taxOfficeNumber"
+    },
+    "taxOfficeReference": {
+      "$ref": "Definitions.schema.json#/definitions/taxOfficeReference"
+    },
+    "taxYear": {
+      "$ref": "Definitions.schema.json#/definitions/taxYear"
+    },
+    "taxMonth": {
+      "$ref": "Definitions.schema.json#/definitions/taxMonth"
+    },
+    "rtiCharges": {
+      "$ref": "#/definitions/monthlyItems"
+    },
+    "interest": {
+      "$ref": "#/definitions/monthlyItems"
+    },
+    "allocatedCredits": {
+      "$ref": "#/definitions/monthlyItems"
+    },
+    "allocatedPayments": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "paymentDate": {
+            "$ref": "Definitions.schema.json#/definitions/date"
+          },
+          "amount": {
+            "type": "number"
+          }
+        },
+        "minItems": 0,
+        "required": [
+          "paymentDate",
+          "amount"
+        ]
+      }
+    },
+    "dueDate": {
+      "$ref": "Definitions.schema.json#/definitions/date"
+    },
+    "summary": {
+      "properties": {
+        "amount": {
+          "type": "number"
+        },
+        "interest": {
+          "type": "number"
+        },
+        "clearedByCredits": {
+          "type": "number"
+        },
+        "clearedByPayments": {
+          "type": "number"
+        },
+        "balance": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "amount",
+        "interest",
+        "clearedByCredits",
+        "clearedByPayments",
+        "balance"
+      ]
+    },
+    "_links": {
+      "type": "object",
+      "properties": {
+        "self": {
+          "$ref": "Definitions.schema.json#/definitions/link"
+        },
+        "next": {
+          "$ref": "Definitions.schema.json#/definitions/link"
+        },
+        "previous": {
+          "$ref": "Definitions.schema.json#/definitions/link"
+        },
+        "annualStatement": {
+          "$ref": "Definitions.schema.json#/definitions/link"
+        },
+        "statements": {
+          "$ref": "Definitions.schema.json#/definitions/link"
+        },
+        "empRefs": {
+          "$ref": "Definitions.schema.json#/definitions/link"
+        }
+      },
+      "required": [
+        "self",
+        "annualStatement",
+        "statements",
+        "empRefs"
+      ]
+    }
+  },
+  "required": [
+    "taxOfficeNumber",
+    "taxOfficeReference",
+    "taxYear",
+    "taxMonth",
+    "rtiCharges",
+    "interest",
+    "allocatedCredits",
+    "allocatedPayments",
+    "dueDate",
+    "summary",
+    "_links"
+  ],
+  "definitions": {
+    "monthlyItems": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "$ref": "Definitions.schema.json#/definitions/chargeCode"
+          },
+          "amount": {
+            "type": "number"
+          }
+        },
+        "minItems": 0,
+        "required": [
+          "code",
+          "amount"
+        ]
+      }
+    }
+  }
+}

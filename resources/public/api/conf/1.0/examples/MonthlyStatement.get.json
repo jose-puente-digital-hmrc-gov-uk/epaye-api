@@ -1,0 +1,73 @@
+{
+  "taxOfficeNumber": "001",
+  "taxOfficeReference": "AB00001",
+  "taxYear": {
+    "year": "2016-17",
+    "firstDay": "2016-04-06",
+    "lastDay": "2017-04-05"
+  },
+  "taxMonth": {
+    "month": 3,
+    "firstDay": "2016-06-06",
+    "lastDay": "2016-07-05"
+  },
+  "rtiCharges": [
+    {
+      "code": "RTI_IN_YEAR_CHARGE_NIC1",
+      "amount": 1000
+    }
+  ],
+  "interest": [
+    {
+      "code": "INTEREST",
+      "amount": 100
+    }
+  ],
+  "allocatedCredits": [
+    {
+      "code": "RTI_STATUTORY_MATERNITY_PAY",
+      "amount": 200
+    },
+    {
+      "code": "RTI_IN_YEAR_CHARGE_NIC1",
+      "amount": 100
+    }
+  ],
+  "allocatedPayments": [
+    {
+      "paymentDate": "2016-05-10",
+      "amount": 500
+    }
+  ],
+  "dueDate": "2016-05-22",
+  "summary": {
+    "amount": 1000,
+    "interest": 200,
+    "clearedByCredits": 200,
+    "clearedByPayments": 200,
+    "balance": 800
+  },
+
+  "_links": {
+    "empRefs": {
+      "href": "/organisations/paye-for-employers/"
+    },
+    "statements": {
+      "href": "/organisations/paye-for-employers/001/AB00001/statements/"
+    },
+    "annualStatement": {
+      "href": "/organisations/paye-for-employers/001/AB00001/statements/2016-17"
+    },
+
+    "self": {
+      "href": "/organisations/paye-for-employers/001/AB00001/statements/2016-17/3"
+    },
+
+    "next": {
+      "href": "/organisations/paye-for-employers/001/AB00001/statements/2016-17/2"
+    },
+    "previous": {
+      "href": "/organisations/paye-for-employers/001/AB00001/statements/2016-17/4"
+    }
+  }
+}

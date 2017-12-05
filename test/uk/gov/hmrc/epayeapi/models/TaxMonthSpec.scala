@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.epayeapi.models.in
+package uk.gov.hmrc.epayeapi.models
 
 import org.joda.time.LocalDate
 import org.scalatest.{Matchers, WordSpec}
@@ -23,20 +23,20 @@ class TaxMonthSpec extends WordSpec with Matchers {
 
   "TaxMonth" should {
     "calculate start and end dates correctly" in {
-      TaxMonth(1).firstDay(TaxYear(2015)) shouldBe new LocalDate(2015, 4, 6)
-      TaxMonth(1).lastDay(TaxYear(2015)) shouldBe new LocalDate(2015, 5, 5)
+      TaxMonth(TaxYear(2015), 1).firstDay shouldBe new LocalDate(2015, 4, 6)
+      TaxMonth(TaxYear(2015), 1).lastDay shouldBe new LocalDate(2015, 5, 5)
 
-      TaxMonth(2).firstDay(TaxYear(2015)) shouldBe new LocalDate(2015, 5, 6)
-      TaxMonth(2).lastDay(TaxYear(2015)) shouldBe new LocalDate(2015, 6, 5)
+      TaxMonth(TaxYear(2015), 2).firstDay shouldBe new LocalDate(2015, 5, 6)
+      TaxMonth(TaxYear(2015), 2).lastDay shouldBe new LocalDate(2015, 6, 5)
 
-      TaxMonth(9).firstDay(TaxYear(2015)) shouldBe new LocalDate(2015, 12, 6)
-      TaxMonth(9).lastDay(TaxYear(2015)) shouldBe new LocalDate(2016, 1, 5)
+      TaxMonth(TaxYear(2015), 9).firstDay shouldBe new LocalDate(2015, 12, 6)
+      TaxMonth(TaxYear(2015), 9).lastDay shouldBe new LocalDate(2016, 1, 5)
 
-      TaxMonth(11).firstDay(TaxYear(2015)) shouldBe new LocalDate(2016, 2, 6)
-      TaxMonth(11).lastDay(TaxYear(2015)) shouldBe new LocalDate(2016, 3, 5)
+      TaxMonth(TaxYear(2015), 11).firstDay shouldBe new LocalDate(2016, 2, 6)
+      TaxMonth(TaxYear(2015), 11).lastDay shouldBe new LocalDate(2016, 3, 5)
 
-      TaxMonth(12).firstDay(TaxYear(2015)) shouldBe new LocalDate(2016, 3, 6)
-      TaxMonth(12).lastDay(TaxYear(2015)) shouldBe new LocalDate(2016, 4, 5)
+      TaxMonth(TaxYear(2015), 12).firstDay shouldBe new LocalDate(2016, 3, 6)
+      TaxMonth(TaxYear(2015), 12).lastDay shouldBe new LocalDate(2016, 4, 5)
     }
   }
 }

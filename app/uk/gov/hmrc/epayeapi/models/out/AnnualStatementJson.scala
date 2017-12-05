@@ -18,9 +18,9 @@ package uk.gov.hmrc.epayeapi.models.out
 
 import org.joda.time.LocalDate
 import uk.gov.hmrc.domain.EmpRef
-import uk.gov.hmrc.epayeapi.models.in.{EpayeAnnualStatement, LineItem, TaxYear}
-
-case class TaxYearJson(year: String, firstDay: LocalDate, lastDay: LocalDate)
+import uk.gov.hmrc.epayeapi.models
+import uk.gov.hmrc.epayeapi.models.in.{EpayeAnnualStatement, LineItem}
+import uk.gov.hmrc.epayeapi.models.{TaxMonth, TaxYear}
 
 case class PeriodJson(firstDay: LocalDate, lastDay: LocalDate)
 
@@ -43,7 +43,8 @@ object NonRtiChargesJson {
       clearedByCredits = lineItem.cleared.credit,
       clearedByPayments = lineItem.cleared.payment,
       balance = lineItem.balance.debit,
-      dueDate = lineItem.dueDate)
+      dueDate = lineItem.dueDate
+    )
   }
 }
 
@@ -82,7 +83,7 @@ case class EmbeddedRtiChargesJson(
 )
 
 case class MonthlyChargesJson(
-  taxMonth: TaxMonthJson,
+  taxMonth: TaxMonth,
   amount: BigDecimal,
   clearedByCredits: BigDecimal,
   clearedByPayments: BigDecimal,
@@ -98,7 +99,7 @@ object MonthlyChargesJson {
     for {
       taxMonth <- lineItem.taxMonth
     } yield MonthlyChargesJson(
-      taxMonth = TaxMonthJson(taxMonth.month, taxMonth.firstDay(taxYear), taxMonth.lastDay(taxYear)),
+      taxMonth = models.TaxMonth(taxYear, taxMonth.month),
       amount = lineItem.charges.debit,
       clearedByCredits = lineItem.cleared.credit,
       clearedByPayments = lineItem.cleared.payment,
@@ -110,11 +111,6 @@ object MonthlyChargesJson {
   }
 }
 
-case class TaxMonthJson(
-  number: Int,
-  firstDay: LocalDate,
-  lastDay: LocalDate
-)
 case class SelfLink(
   self: Link
 )
@@ -128,7 +124,7 @@ case class AnnualStatementLinksJson(
 )
 
 case class AnnualStatementJson(
-  taxYear: TaxYearJson,
+  taxYear: TaxYear,
   nonRtiCharges: Seq[NonRtiChargesJson],
   _embedded: EmbeddedRtiChargesJson,
   _links: AnnualStatementLinksJson
@@ -142,7 +138,7 @@ object AnnualStatementJson {
 
   def apply(empRef: EmpRef, taxYear: TaxYear, epayeAnnualStatement: EpayeAnnualStatement): AnnualStatementJson =
     AnnualStatementJson(
-      taxYear = TaxYearJson(taxYear.asString, taxYear.firstDay, taxYear.lastDay),
+      taxYear = taxYear,
       _embedded = EmbeddedRtiChargesJson(
         EarlierYearUpdateJson.extractFrom(epayeAnnualStatement.rti.lineItems),
         epayeAnnualStatement.rti.lineItems.flatMap(MonthlyChargesJson.from(_, empRef, taxYear))

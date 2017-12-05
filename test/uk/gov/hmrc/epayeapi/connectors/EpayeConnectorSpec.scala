@@ -22,17 +22,16 @@ import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.mock.MockitoSugar
 import play.api.http.Status
 import uk.gov.hmrc.domain.EmpRef
-import uk.gov.hmrc.epayeapi.models.JsonFixtures
 import uk.gov.hmrc.epayeapi.models.in._
+import uk.gov.hmrc.epayeapi.models.{JsonFixtures, TaxYear}
 import uk.gov.hmrc.play.http.ws.WSHttp
 import uk.gov.hmrc.play.http.{HeaderCarrier, HttpResponse}
 import uk.gov.hmrc.play.test.UnitSpec
 
-import scala.concurrent.duration._
 import scala.concurrent.Await
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future.successful
-import scala.concurrent.duration.Duration
+import scala.concurrent.duration._
 
 class EpayeConnectorSpec extends UnitSpec with MockitoSugar with ScalaFutures {
 
@@ -78,7 +77,7 @@ class EpayeConnectorSpec extends UnitSpec with MockitoSugar with ScalaFutures {
       }
 
       Await.result(connector.getTotal(empRef, hc), 2.seconds) shouldBe
-        ApiSuccess(
+        EpayeSuccess(
           EpayeTotalsResponse(
             EpayeTotalsItem(EpayeTotals(DebitAndCredit(100, 0))),
             EpayeTotalsItem(EpayeTotals(DebitAndCredit(23, 0)))
@@ -96,10 +95,10 @@ class EpayeConnectorSpec extends UnitSpec with MockitoSugar with ScalaFutures {
       }
 
       connector.getAnnualStatement(empRef, taxYear, hc).futureValue shouldBe
-        ApiSuccess(
+        EpayeSuccess(
           EpayeAnnualStatement(
             rti = AnnualStatementTable(
-              List(LineItem(TaxYear(2017), Some(TaxMonth(1)), DebitAndCredit(100.2, 0), Cleared(0, 0), DebitAndCredit(100.2, 0), new LocalDate(2017, 5, 22), isSpecified = false, codeText = None)),
+              List(LineItem(TaxYear(2017), Some(EpayeTaxMonth(1)), DebitAndCredit(100.2, 0), Cleared(0, 0), DebitAndCredit(100.2, 0), new LocalDate(2017, 5, 22), isSpecified = false, codeText = None)),
               AnnualTotal(DebitAndCredit(100.2, 0), Cleared(0, 0), DebitAndCredit(100.2, 0))
             ),
             nonRti = AnnualStatementTable(

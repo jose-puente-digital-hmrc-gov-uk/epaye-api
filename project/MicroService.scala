@@ -5,7 +5,6 @@ import sbt.Tests.{Group, SubProcess}
 import sbt._
 import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin._
 
-
 trait MicroService {
 
   import uk.gov.hmrc._
@@ -17,14 +16,13 @@ trait MicroService {
 
   val appName: String
 
-  lazy val appDependencies : Seq[ModuleID] = ???
-  lazy val plugins : Seq[Plugins] = Seq.empty
-  lazy val playSettings : Seq[Setting[_]] = Seq.empty
-
+  lazy val appDependencies: Seq[ModuleID] = ???
+  lazy val plugins: Seq[Plugins] = Seq.empty
+  lazy val playSettings: Seq[Setting[_]] = Seq.empty
 
   lazy val microservice = Project(appName, file("."))
-    .enablePlugins(Seq(play.sbt.PlayScala,SbtAutoBuildPlugin, SbtGitVersioning, SbtDistributablesPlugin) ++ plugins : _*)
-    .settings(playSettings : _*)
+    .enablePlugins(Seq(play.sbt.PlayScala, SbtAutoBuildPlugin, SbtGitVersioning, SbtDistributablesPlugin) ++ plugins: _*)
+    .settings(playSettings: _*)
     .settings(scalaSettings: _*)
     .settings(publishingSettings: _*)
     .settings(defaultSettings(): _*)
@@ -33,7 +31,7 @@ trait MicroService {
       retrieveManaged := true,
       evictionWarningOptions in update := EvictionWarningOptions.default.withWarnScalaVersionEviction(false),
       routesGenerator := StaticRoutesGenerator,
-      routesImport += "uk.gov.hmrc.epayeapi.controllers.ApiController._"
+      routesImport ++= Seq("uk.gov.hmrc.epayeapi.controllers.ApiController._")
     )
     .configs(IntegrationTest)
     .settings(inConfig(IntegrationTest)(Defaults.itSettings): _*)
@@ -42,11 +40,12 @@ trait MicroService {
       unmanagedSourceDirectories in IntegrationTest <<= (baseDirectory in IntegrationTest)(base => Seq(base / "it")),
       addTestReportOption(IntegrationTest, "int-test-reports"),
       testGrouping in IntegrationTest := oneForkedJvmPerTest((definedTests in IntegrationTest).value),
-      parallelExecution in IntegrationTest := false)
-      .settings(resolvers ++= Seq(
-        Resolver.bintrayRepo("hmrc", "releases"),
-        Resolver.jcenterRepo
-      ))
+      parallelExecution in IntegrationTest := false
+    )
+    .settings(resolvers ++= Seq(
+      Resolver.bintrayRepo("hmrc", "releases"),
+      Resolver.jcenterRepo
+    ))
     .settings(
       scalacOptions ++= Seq(
         "-unchecked",
@@ -54,7 +53,8 @@ trait MicroService {
         "-feature",
         "-Xfatal-warnings",
         "-language:implicitConversions",
-        "-Ywarn-unused"),
+        "-Ywarn-unused"
+      ),
       unmanagedResourceDirectories in Compile += baseDirectory.value / "resources"
     )
 }

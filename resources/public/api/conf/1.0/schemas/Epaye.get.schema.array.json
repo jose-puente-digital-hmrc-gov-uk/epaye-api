@@ -1,24 +1,68 @@
 {
-  "type": "object",
   "description": "Wrapper object for individual EmpRefs.",
+  "type": "object",
   "properties": {
-    "empRefs": {
-      "type": "array",
-      "items": {
-        "type": "object",
-        "description": "An array of objects which you can use to access further data.",
-        "properties": {
-          "_links": {
-            "$ref": "Definitions.schema.json#/definitions/empRefLinks"
-          },
-          "empRef": {
-            "$ref": "Definitions.schema.json#/definitions/empRef"
+    "_embedded": {
+      "type": "object",
+      "properties": {
+        "empRefs": {
+          "type": "array",
+          "items": {
+            "description": "An array of objects which you can use to access further data.",
+            "type": "object",
+            "properties": {
+              "taxOfficeNumber": {
+                "$ref": "Definitions.schema.json#/definitions/taxOfficeNumber"
+              },
+              "taxOfficeReference": {
+                "$ref": "Definitions.schema.json#/definitions/taxOfficeReference"
+              },
+              "_links": {
+                "type": "object",
+                "properties": {
+                  "self": {
+                    "$ref": "Definitions.schema.json#/definitions/link"
+                  },
+                  "statements": {
+                    "$ref": "Definitions.schema.json#/definitions/link"
+                  },
+                  "currentStatement": {
+                    "$ref": "Definitions.schema.json#/definitions/link"
+                  }
+                },
+                "required": [
+                  "self",
+                  "statements",
+                  "currentStatement"
+                ]
+              }
+            },
+            "required": [
+              "taxOfficeNumber",
+              "taxOfficeReference",
+              "_links"
+            ]
           }
         }
-      }
+      },
+      "required": [
+        "empRefs"
+      ]
     },
     "_links": {
-      "$ref": "Definitions.schema.json#/definitions/epayeLinks"
+      "type": "object",
+      "properties": {
+        "self": {
+          "$ref": "Definitions.schema.json#/definitions/link"
+        }
+      },
+      "required": [
+        "self"
+      ]
     }
-  }
+  },
+  "required": [
+    "_embedded",
+    "_links"
+  ]
 }

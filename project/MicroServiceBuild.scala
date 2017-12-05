@@ -1,15 +1,8 @@
 import sbt._
-import play.sbt.PlayImport._
-import play.core.PlayVersion
-import uk.gov.hmrc.SbtAutoBuildPlugin
-import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin
-import uk.gov.hmrc.versioning.SbtGitVersioning
-import play.sbt.PlayImport._
-import play.core.PlayVersion
 
 private object AppDependencies {
-  import play.sbt.PlayImport._
   import play.core.PlayVersion
+  import play.sbt.PlayImport._
 
   private val apiPlatformlibVersion = "1.3.0"
   private val domainVersion = "4.1.0"
@@ -80,5 +73,6 @@ private object AppDependencies {
 
 object MicroServiceBuild extends Build with MicroService {
   val appName = "epaye-api"
+
   override lazy val appDependencies: Seq[ModuleID] = AppDependencies()
 }

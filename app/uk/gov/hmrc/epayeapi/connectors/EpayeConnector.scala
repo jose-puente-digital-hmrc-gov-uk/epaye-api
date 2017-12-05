@@ -20,7 +20,8 @@ import javax.inject.{Inject, Singleton}
 
 import uk.gov.hmrc.domain.EmpRef
 import uk.gov.hmrc.epayeapi.models.Formats._
-import uk.gov.hmrc.epayeapi.models.in.{EpayeAnnualStatement, ApiResponse, EpayeTotalsResponse, TaxYear}
+import uk.gov.hmrc.epayeapi.models.in._
+import uk.gov.hmrc.epayeapi.models.{TaxMonth, TaxYear}
 import uk.gov.hmrc.play.http.HeaderCarrier
 import uk.gov.hmrc.play.http.ws.WSHttp
 
@@ -35,7 +36,7 @@ case class EpayeConnector @Inject() (
   implicit val ec: ExecutionContext
 ) extends ConnectorBase {
 
-  def getTotal(empRef: EmpRef, headers: HeaderCarrier): Future[ApiResponse[EpayeTotalsResponse]] = {
+  def getTotal(empRef: EmpRef, headers: HeaderCarrier): Future[EpayeResponse[EpayeTotalsResponse]] = {
     val url =
       s"${config.baseUrl}" +
         s"/epaye" +
@@ -45,7 +46,7 @@ case class EpayeConnector @Inject() (
     get[EpayeTotalsResponse](url, headers)
   }
 
-  def getAnnualStatement(empRef: EmpRef, taxYear: TaxYear, headers: HeaderCarrier): Future[ApiResponse[EpayeAnnualStatement]] = {
+  def getAnnualStatement(empRef: EmpRef, taxYear: TaxYear, headers: HeaderCarrier): Future[EpayeResponse[EpayeAnnualStatement]] = {
     val url =
       s"${config.baseUrl}" +
         s"/epaye" +
@@ -53,6 +54,16 @@ case class EpayeConnector @Inject() (
         s"/api/v1/annual-statement/${taxYear.asString}"
 
     get[EpayeAnnualStatement](url, headers)
+  }
+
+  def getMonthlyStatement(empRef: EmpRef, headers: HeaderCarrier, taxYear: TaxYear, taxMonth: TaxMonth): Future[EpayeResponse[EpayeMonthlyStatement]] = {
+    val url =
+      s"${config.baseUrl}" +
+        s"/epaye/${empRef.encodedValue}" +
+        s"/api/v1" +
+        s"/monthly-statement/${taxYear.asString}/${taxMonth.asString}"
+
+    get[EpayeMonthlyStatement](url, headers)
   }
 }
 

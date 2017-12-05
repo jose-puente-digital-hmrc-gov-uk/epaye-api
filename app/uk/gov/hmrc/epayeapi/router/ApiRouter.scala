@@ -19,24 +19,33 @@ package uk.gov.hmrc.epayeapi.router
 import javax.inject.{Inject, Singleton}
 
 import play.api.routing.Router.Routes
-import play.api.routing.{Router, SimpleRouter}
 import play.api.routing.sird._
+import play.api.routing.{Router, SimpleRouter}
 import uk.gov.hmrc.domain.EmpRef
-import uk.gov.hmrc.epayeapi.controllers.{GetAnnualStatementController, GetSummaryController}
-import uk.gov.hmrc.epayeapi.models.in.{ExtractTaxYear, TaxYear}
+import uk.gov.hmrc.epayeapi.controllers.{GetAnnualStatementController, GetEmpRefsController, GetMonthlyStatementController, GetSummaryController}
+import uk.gov.hmrc.epayeapi.models.{ExtractTaxYear, TaxMonth}
 
 @Singleton
 case class ApiRouter @Inject() (
   prodRoutes: prod.Routes,
+  getEmpRefsController: GetEmpRefsController,
   getTotalsController: GetSummaryController,
-  getAnnualStatementController: GetAnnualStatementController
+  getAnnualStatementController: GetAnnualStatementController,
+  getMonthlyStatementController: GetMonthlyStatementController
 ) extends SimpleRouter {
 
   val appRoutes = Router.from {
-    case GET(p"/$taxOfficeNumber/$taxOfficeReference/") =>
+    case GET(p"/") =>
+      getEmpRefsController.getEmpRefs()
+
+    case GET(p"/$taxOfficeNumber/$taxOfficeReference") =>
       getTotalsController.getSummary(EmpRef(taxOfficeNumber, taxOfficeReference))
-    case GET(p"/$taxOfficeNumber/$taxOfficeReference/statements/${ExtractTaxYear(taxYear)}") =>
+
+    case GET(p"/$taxOfficeNumber/$taxOfficeReference/statements/${ ExtractTaxYear(taxYear) }") =>
       getAnnualStatementController.getAnnualStatement(EmpRef(taxOfficeNumber, taxOfficeReference), taxYear)
+
+    case GET(p"/$taxOfficeNumber/$taxOfficeReference/statements/${ ExtractTaxYear(taxYear) }/${ int(month) }") if 1 <= month && month <= 12 =>
+      getMonthlyStatementController.getStatement(EmpRef(taxOfficeNumber, taxOfficeReference), taxYear, TaxMonth(taxYear, month))
   }
 
   val routes: Routes = appRoutes.routes.orElse(prodRoutes.routes)

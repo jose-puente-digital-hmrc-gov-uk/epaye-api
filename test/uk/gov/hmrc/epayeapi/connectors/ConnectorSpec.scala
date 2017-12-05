@@ -38,7 +38,7 @@ object TestData {
 
 case class TestConnector(http: HttpGet, implicit val ec: ExecutionContext) extends ConnectorBase {
   val url = "http://localhost/testdata"
-  def getData(implicit hc: HeaderCarrier): Future[ApiResponse[TestData]] =
+  def getData(implicit hc: HeaderCarrier): Future[EpayeResponse[TestData]] =
     get[TestData](url, hc)
 }
 
@@ -60,7 +60,7 @@ class ConnectorSpec extends UnitSpec with MockitoSugar with ScalaFutures {
         }
       }
 
-      connector.getData.futureValue shouldEqual ApiSuccess(TestData(1))
+      connector.getData.futureValue shouldEqual EpayeSuccess(TestData(1))
     }
     "return ApiJsonError in case the JSON contains errors" in new Setup {
       when(connector.http.GET(url))
@@ -70,7 +70,7 @@ class ConnectorSpec extends UnitSpec with MockitoSugar with ScalaFutures {
           }
         }
 
-      connector.getData.futureValue shouldEqual ApiJsonError(JsError(JsPath \ "num", "error.path.missing"))
+      connector.getData.futureValue shouldEqual EpayeJsonError(JsError(JsPath \ "num", "error.path.missing"))
     }
 
     "return ApiNotFound on 404s from upstream" in new Setup {
@@ -81,7 +81,7 @@ class ConnectorSpec extends UnitSpec with MockitoSugar with ScalaFutures {
           }
         }
 
-      connector.getData.futureValue shouldEqual ApiNotFound[TestData]()
+      connector.getData.futureValue shouldEqual EpayeNotFound[TestData]()
     }
 
     "return ApiNotFound on 404 exceptions" in new Setup {
@@ -92,7 +92,7 @@ class ConnectorSpec extends UnitSpec with MockitoSugar with ScalaFutures {
           }
         }
 
-      connector.getData.futureValue shouldEqual ApiNotFound[TestData]()
+      connector.getData.futureValue shouldEqual EpayeNotFound[TestData]()
     }
     "return ApiError on unexpected responses with status < 500" in new Setup {
       when(connector.http.GET(url))
@@ -102,7 +102,7 @@ class ConnectorSpec extends UnitSpec with MockitoSugar with ScalaFutures {
           }
         }
 
-      connector.getData.futureValue shouldEqual ApiError[TestData](Status.FORBIDDEN, "Forbidden")
+      connector.getData.futureValue shouldEqual EpayeError[TestData](Status.FORBIDDEN, "Forbidden")
     }
 
     "return ApiError on unexpected status codes from upstream" in new Setup {
@@ -113,7 +113,7 @@ class ConnectorSpec extends UnitSpec with MockitoSugar with ScalaFutures {
           }
         }
 
-      connector.getData.futureValue shouldEqual ApiError[TestData](Status.BAD_REQUEST, "Bad Request")
+      connector.getData.futureValue shouldEqual EpayeError[TestData](Status.BAD_REQUEST, "Bad Request")
     }
 
     "return ApiException when throwing exceptions while requesting data" in new Setup {
@@ -124,7 +124,7 @@ class ConnectorSpec extends UnitSpec with MockitoSugar with ScalaFutures {
           }
         }
 
-      connector.getData.futureValue shouldEqual ApiException[TestData]("Error fetching data")
+      connector.getData.futureValue shouldEqual EpayeException[TestData]("Error fetching data")
     }
   }
 }

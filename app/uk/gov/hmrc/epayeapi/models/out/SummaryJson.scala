@@ -29,14 +29,14 @@ case class OutstandingCharges(
   breakdown: Breakdown
 )
 
-case class SummaryResponse(
+case class SummaryJson(
   outstandingCharges: OutstandingCharges,
   _links: SummaryLinks
 )
 
-object SummaryResponse {
-  def apply(empRef: EmpRef, total: EpayeTotalsResponse): SummaryResponse =
-    SummaryResponse(
+object SummaryJson {
+  def apply(empRef: EmpRef, total: EpayeTotalsResponse): SummaryJson =
+    SummaryJson(
       OutstandingCharges(
         total.overall,
         Breakdown(
