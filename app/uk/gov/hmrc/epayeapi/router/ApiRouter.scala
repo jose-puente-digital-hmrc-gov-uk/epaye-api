@@ -48,5 +48,6 @@ case class ApiRouter @Inject() (
       getMonthlyStatementController.getStatement(EmpRef(taxOfficeNumber, taxOfficeReference), taxYear, TaxMonth(taxYear, month))
   }
 
-  val routes: Routes = appRoutes.routes.orElse(prodRoutes.routes)
+  val routes: Routes = prodRoutes.routes.orElse(appRoutes.routes)
+
 }
