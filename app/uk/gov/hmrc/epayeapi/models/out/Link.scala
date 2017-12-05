@@ -28,7 +28,7 @@ object Link {
     Link(s"$prefix/")
 
   def summaryLink(empRef: EmpRef): Link =
-  Link(s"$prefix/${empRef.taxOfficeNumber}/${empRef.taxOfficeReference}/")
+  Link(s"$prefix/${empRef.taxOfficeNumber}/${empRef.taxOfficeReference}")
 
   def statementsLink(empRef: EmpRef): Link =
   Link(s"$prefix/${empRef.taxOfficeNumber}/${empRef.taxOfficeReference}/statements")

@@ -1,6 +1,6 @@
 {
-  "taxOfficeNumber": "921",
-  "taxOfficeReference": "PE91702",
+  "taxOfficeNumber": "%{ton}",
+  "taxOfficeReference": "%{tor}",
   "taxYear": {
     "year": "2017-18",
     "firstDay": "2017-04-06",
@@ -55,19 +55,19 @@
       "href": "/organisations/paye/"
     },
     "statements": {
-      "href": "/organisations/paye/921/PE91702/"
+      "href": "/organisations/paye/%{ton}/%{tor}"
     },
     "annualStatement": {
-      "href": "/organisations/paye/921/PE91702/statements/2017-18"
+      "href": "/organisations/paye/%{ton}/%{tor}/statements/2017-18"
     },
     "self": {
-      "href": "/organisations/paye/921/PE91702/statements/2017-18/3"
+      "href": "/organisations/paye/%{ton}/%{tor}/statements/2017-18/3"
     },
     "next": {
-      "href": "/organisations/paye/921/PE91702/statements/2017-18/4"
+      "href": "/organisations/paye/%{ton}/%{tor}/statements/2017-18/4"
     },
     "previous": {
-      "href": "/organisations/paye/921/PE91702/statements/2017-18/2"
+      "href": "/organisations/paye/%{ton}/%{tor}/statements/2017-18/2"
     }
   }
 }

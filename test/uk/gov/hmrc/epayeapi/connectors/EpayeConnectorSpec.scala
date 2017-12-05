@@ -16,6 +16,7 @@
 
 package uk.gov.hmrc.epayeapi.connectors
 
+import common.EmpRefGenerator
 import org.joda.time.LocalDate
 import org.mockito.Mockito._
 import org.scalatest.concurrent.ScalaFutures
@@ -40,7 +41,7 @@ class EpayeConnectorSpec extends UnitSpec with MockitoSugar with ScalaFutures {
     val http = mock[WSHttp]
     val config = EpayeApiConfig("https://EPAYE")
     val connector = EpayeConnector(config, http, global)
-    val empRef = EmpRef("123", "456")
+    val empRef = EmpRefGenerator.getEmpRef
     val urlTotals = s"${config.baseUrl}/epaye/${empRef.encodedValue}/api/v1/annual-statement"
     val urlTotalsByType = s"${config.baseUrl}/epaye/${empRef.encodedValue}/api/v1/totals/by-type"
     def urlAnnualStatement(taxYear: TaxYear): String =

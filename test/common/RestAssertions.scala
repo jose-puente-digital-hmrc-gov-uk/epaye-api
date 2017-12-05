@@ -37,7 +37,6 @@ class Givens {
 }
 
 class ClientGivens(empRef: EmpRef) {
-
   def when()(implicit wsClient: WSClient): When = new When(wsClient)
 
   def and(): ClientGivens = this
@@ -102,13 +101,12 @@ class ClientGivens(empRef: EmpRef) {
 }
 
 class Assertions(response: HttpResponse) extends Matchers {
-  def bodyIsOfJson(json: JsValue) = {
+  def bodyIsOfJson(json: JsValue): Assertions = {
     Json.parse(response.body) shouldEqual json
     this
   }
 
   def bodyIsOfSchema(schemaPath: String): Unit = {
-
     val report = Schema(schemaPath).validate(response.body)
 
     withClue(report.toString) { report.isSuccess shouldBe true }
@@ -119,6 +117,15 @@ class Assertions(response: HttpResponse) extends Matchers {
     this
   }
 
+  def printBody(): Assertions = {
+    println(s"Response body=${response.body}")
+    this
+  }
+
+  def printStatus(): Assertions = {
+    println(s"Response status=${response.status}")
+    this
+  }
 }
 
 case class RequestExecutor(request: WSRequest) {

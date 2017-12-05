@@ -117,7 +117,7 @@ class GetSummarySpec extends AppSpec with BeforeAndAfterEach {
           |      "href": "/organisations/paye/"
           |    },
           |    "self": {
-          |      "href": "/organisations/paye/001/AB00001/"
+          |      "href": "/organisations/paye/001/AB00001"
           |    }
           |  }
           |}

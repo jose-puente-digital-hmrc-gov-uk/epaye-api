@@ -62,6 +62,8 @@ trait ApiController extends BaseController with AuthorisedFunctions {
   def EmpRefAction(empRefFromUrl: EmpRef)(action: EssentialAction): EssentialAction = {
     EmpRefsAction { empRefsFromAuth =>
       EssentialAction { request =>
+        println(s"EmpRefs from auth: $empRefsFromAuth")
+        println(s"EmpRef from URL: $empRefFromUrl")
         empRefsFromAuth.find(_ == empRefFromUrl) match {
           case Some(empRef) => action(request)
           case None => Accumulator.done(invalidEmpRef)

@@ -16,6 +16,8 @@
 
 package uk.gov.hmrc.epayeapi.controllers
 
+import akka.stream.Materializer
+import akka.util.Timeout
 import org.mockito.Matchers._
 import org.mockito.Mockito.reset
 import org.mockito.{Matchers, Mockito}
@@ -89,7 +91,7 @@ class MonthlyStatementSpec extends AppSpec with BeforeAndAfterEach {
       status(request) shouldBe NOT_FOUND
     }
     "return 200 OK with the found statement" in new App(app.withAuth(activeEnrolment).build) {
-      val inputJsonString: String = getResourceAsString("/epaye/monthly-statement/in/921-PE91702-2017-3.json")
+      val inputJsonString: String = getResourceAsString("/epaye/monthly-statement/in/2017-3.json")
       val epayeUrl =
         s"${config.baseUrl}" +
           s"/epaye/${empRef.encodedValue}" +
@@ -102,10 +104,22 @@ class MonthlyStatementSpec extends AppSpec with BeforeAndAfterEach {
       }
 
       status(request) shouldBe OK
-      val expectedJson: JsValue = getResourceAsJson("/epaye/monthly-statement/out/921-PE91702-2017-3.json")
-      contentAsJson(request) shouldBe expectedJson
+      val expectedJsonString = prettyPrint(getResourceAsString("/epaye/monthly-statement/out/2017-3.json")
+                                                .replaceAllLiterally("%{ton}", empRef.taxOfficeNumber)
+                                                .replaceAllLiterally("%{tor}", empRef.taxOfficeReference))
+      contentAsPrettyJson(request) shouldBe expectedJsonString
     }
   }
+
+  def contentAsPrettyJson(result : Future[play.api.mvc.Result]): String = {
+    Json.prettyPrint(contentAsJson(result))
+  }
+
+  def prettyPrint(string: String): String =
+    prettyPrint(Json.parse(string))
+
+  def prettyPrint(json: JsValue): String =
+    Json.prettyPrint(json)
 
   def getResourceAsString(name: String): String =
     Source.fromURL(getClass.getResource(name), "utf-8").mkString("")

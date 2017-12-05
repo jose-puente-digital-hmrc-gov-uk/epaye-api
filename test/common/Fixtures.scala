@@ -16,7 +16,7 @@
 
 package common
 
-import play.api.libs.json.Json
+import play.api.libs.json.{JsValue, Json}
 import uk.gov.hmrc.domain.EmpRef
 
 object Fixtures {
@@ -156,8 +156,8 @@ object Fixtures {
       |}
     """.stripMargin
 
-  val expectedAnnualStatementJson = Json.parse(
-    """
+  def expectedAnnualStatementJson(empRef: EmpRef): JsValue = Json.parse(
+    s"""
       |{
       |  "taxYear": {
       |    "year": "2017-18",
@@ -197,7 +197,7 @@ object Fixtures {
       |        "isSpecified": false,
       |        "_links": {
       |          "self": {
-      |            "href": "/organisations/paye/840/GZ00064/statements/2017-18/7"
+      |            "href": "/organisations/paye/${empRef.taxOfficeNumber}/${empRef.taxOfficeReference}/statements/2017-18/7"
       |          }
       |        }
       |      },
@@ -215,7 +215,7 @@ object Fixtures {
       |        "isSpecified": true,
       |        "_links": {
       |          "self": {
-      |            "href": "/organisations/paye/840/GZ00064/statements/2017-18/3"
+      |            "href": "/organisations/paye/${empRef.taxOfficeNumber}/${empRef.taxOfficeReference}/statements/2017-18/3"
       |          }
       |        }
       |      }
@@ -226,22 +226,22 @@ object Fixtures {
       |      "href": "/organisations/paye"
       |    },
       |    "statements": {
-      |      "href": "/organisations/paye/840/GZ00064/statements"
+      |      "href": "/organisations/paye/${empRef.taxOfficeNumber}/${empRef.taxOfficeReference}/statements"
       |    },
       |    "self": {
-      |      "href": "/organisations/paye/840/GZ00064/statements/2017-18"
+      |      "href": "/organisations/paye/${empRef.taxOfficeNumber}/${empRef.taxOfficeReference}/statements/2017-18"
       |    },
       |    "next": {
-      |      "href": "/organisations/paye/840/GZ00064/statements/2018-19"
+      |      "href": "/organisations/paye/${empRef.taxOfficeNumber}/${empRef.taxOfficeReference}/statements/2018-19"
       |    },
       |    "previous": {
-      |      "href": "/organisations/paye/840/GZ00064/statements/2016-17"
+      |      "href": "/organisations/paye/${empRef.taxOfficeNumber}/${empRef.taxOfficeReference}/statements/2016-17"
       |    }
       |  }
       |}
      """.stripMargin)
 
-  def authorisedEnrolmentJson(empRef: EmpRef): String =
+  def authorisedEnrolmentJson(empRef: EmpRef): String = {
     s"""
        |{
        |  "authorisedEnrolments": [
@@ -264,5 +264,7 @@ object Fixtures {
        |  ]
        |}
       """.stripMargin
+  }
+
 
 }

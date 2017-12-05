@@ -65,7 +65,7 @@ types:
                       "code" : "INSUFFICIENT_ENROLMENTS",
                       "message" : "You are not currently enrolled for ePAYE"
                     }
-  /{taxOfficeNumber}/{taxOfficeReference}/:
+  /{taxOfficeNumber}/{taxOfficeReference}:
     uriParameters:
       taxOfficeNumber:
         description: A unique identifier made up of tax office number
@@ -99,46 +99,44 @@ types:
                       "code" : "INVALID_EMPREF",
                       "message" : "Provided EmpRef is not associated with your account"
                     }
-    /{taxOfficeNumber}/{taxOfficeReference}/statements/{taxYear}:
-      uriParameters:
-        taxOfficeNumber:
-          description: A unique identifier made up of tax office number
-          type: string
-          example: "001"
-        taxOfficeReference:
-          description: A unique identifier made up of the tax office reference
-          type: string
-          example: "A000001"
-        taxYear:
-          description: The tax year...
-          type: string
-          example: "2017-18"
-      get:
-        is: [ headers.acceptHeader ]
-        displayName: Get the Annual Statement for a given tax year
-        description: This resource returns the Annual Statement including a summary and breakdown of both RTI and non-RTI charges
-        (annotations.scope): "read:epaye"
-        securedBy: [ sec.oauth_2_0: { scopes: [ "read:epaye" ] } ]
-        responses:
-          200:
-            body:
-              application/json:
-                type: !include schemas/AnnualStatement.get.schema.json
-                example: !include examples/AnnualStatement.get.json
-          403:
-            body:
-              application/json:
-                type: !include schemas/ErrorCodes.schema.json
-                examples:
-                  notOpenStatus:
-                    description: You don't currently have an ePAYE enrolment on this account.
-                    value: |
-                      {
-                        "code" : "INVALID_EMPREF",
-                        "message" : "Provided EmpRef is not associated with your account"
-                      }
-
-
+  /{taxOfficeNumber}/{taxOfficeReference}/statements/{taxYear}:
+    uriParameters:
+      taxOfficeNumber:
+        description: A unique identifier made up of tax office number
+        type: string
+        example: "001"
+      taxOfficeReference:
+        description: A unique identifier made up of the tax office reference
+        type: string
+        example: "A000001"
+      taxYear:
+        description: The tax year...
+        type: string
+        example: "2017-18"
+    get:
+      is: [ headers.acceptHeader ]
+      displayName: Get the Annual Statement for a given tax year
+      description: This resource returns the Annual Statement including a summary and breakdown of both RTI and non-RTI charges
+      (annotations.scope): "read:epaye"
+      securedBy: [ sec.oauth_2_0: { scopes: [ "read:epaye" ] } ]
+      responses:
+        200:
+          body:
+            application/json:
+              type: !include schemas/AnnualStatement.get.schema.json
+              example: !include examples/AnnualStatement.get.json
+        403:
+          body:
+            application/json:
+              type: !include schemas/ErrorCodes.schema.json
+              examples:
+                notOpenStatus:
+                  description: You don't currently have an ePAYE enrolment on this account.
+                  value: |
+                    {
+                      "code" : "INVALID_EMPREF",
+                      "message" : "Provided EmpRef is not associated with your account"
+                    }
   /{taxOfficeNumber}/{taxOfficeReference}/statements/{taxYear}/{taxMonth}:
     uriParameters:
       taxOfficeNumber:
@@ -178,4 +176,3 @@ types:
                       "code" : "INVALID_EMPREF",
                       "message" : "Provided EmpRef is not associated with your account"
                     }
-

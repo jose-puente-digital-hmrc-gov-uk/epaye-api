@@ -48,11 +48,9 @@ class GetMonthlyStatementSpec
   "/organisations/epaye/{ton}/{tor}/statements/{taxYear}/{taxMonth}" should {
 
     "returns a response body that conforms with the Monthly Statement schema" in {
-      val empRef = EmpRef("921", "PE91702")
-
-      val monthlyStatementUrl = s"$baseUrl/921/PE91702/statements/2017-18/3"
-
-      val inputJsonString = getResourceAsString("/epaye/monthly-statement/in/921-PE91702-2017-3.json")
+      val empRef = EmpRefGenerator.getEmpRef
+      val monthlyStatementUrl = s"$baseUrl/${empRef.taxOfficeNumber}/${empRef.taxOfficeReference}/statements/2017-18/3"
+      val inputJsonString = getResourceAsString("/epaye/monthly-statement/in/2017-3.json")
 
       given()
         .clientWith(empRef).isAuthorized
@@ -60,6 +58,8 @@ class GetMonthlyStatementSpec
         .when
         .get(monthlyStatementUrl).withAuthHeader()
         .thenAssertThat()
+        .printStatus()
+        .printBody()
         .bodyIsOfSchema(monthlyStatementSchemaPath)
     }
   }
