@@ -27,7 +27,10 @@ import uk.gov.hmrc.play.http.ws.WSHttp
 
 import scala.concurrent.{ExecutionContext, Future}
 
-case class EpayeApiConfig(baseUrl: String)
+case class EpayeApiConfig(
+  epayeBaseUrl: String,
+  apiBaseUrl: String
+)
 
 @Singleton
 case class EpayeConnector @Inject() (
@@ -38,7 +41,7 @@ case class EpayeConnector @Inject() (
 
   def getTotal(empRef: EmpRef, headers: HeaderCarrier): Future[EpayeResponse[EpayeTotalsResponse]] = {
     val url =
-      s"${config.baseUrl}" +
+      s"${config.epayeBaseUrl}" +
         s"/epaye" +
         s"/${empRef.encodedValue}" +
         s"/api/v1/annual-statement"
@@ -48,7 +51,7 @@ case class EpayeConnector @Inject() (
 
   def getAnnualStatement(empRef: EmpRef, taxYear: TaxYear, headers: HeaderCarrier): Future[EpayeResponse[EpayeAnnualStatement]] = {
     val url =
-      s"${config.baseUrl}" +
+      s"${config.epayeBaseUrl}" +
         s"/epaye" +
         s"/${empRef.encodedValue}" +
         s"/api/v1/annual-statement/${taxYear.asString}"
@@ -58,7 +61,7 @@ case class EpayeConnector @Inject() (
 
   def getMonthlyStatement(empRef: EmpRef, headers: HeaderCarrier, taxYear: TaxYear, taxMonth: TaxMonth): Future[EpayeResponse[EpayeMonthlyStatement]] = {
     val url =
-      s"${config.baseUrl}" +
+      s"${config.epayeBaseUrl}" +
         s"/epaye/${empRef.encodedValue}" +
         s"/api/v1" +
         s"/monthly-statement/${taxYear.asString}/${taxMonth.asString}"

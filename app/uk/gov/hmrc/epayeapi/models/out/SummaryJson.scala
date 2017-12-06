@@ -35,7 +35,7 @@ case class SummaryJson(
 )
 
 object SummaryJson {
-  def apply(empRef: EmpRef, total: EpayeTotalsResponse): SummaryJson =
+  def apply(apiBaseUrl: String, empRef: EmpRef, total: EpayeTotalsResponse): SummaryJson =
     SummaryJson(
       OutstandingCharges(
         total.overall,
@@ -44,7 +44,7 @@ object SummaryJson {
           nonRti = total.nonRti.totals.balance.debit
         )
       ),
-      SummaryLinks(empRef)
+      SummaryLinks(apiBaseUrl, empRef)
     )
 }
 
@@ -54,9 +54,9 @@ case class SummaryLinks(
 )
 
 object SummaryLinks {
-  def apply(empRef: EmpRef): SummaryLinks = SummaryLinks(
-    Link.empRefsLink(),
-    Link.summaryLink(empRef)
+  def apply(apiBaseUrl: String, empRef: EmpRef): SummaryLinks = SummaryLinks(
+    Link.empRefsLink(apiBaseUrl),
+    Link.summaryLink(apiBaseUrl, empRef)
   )
 }
 

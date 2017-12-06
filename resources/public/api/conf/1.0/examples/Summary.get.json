@@ -10,10 +10,10 @@
   },
   "_links": {
     "empRefs": {
-      "href": "/organisations/paye/"
+      "href": "https://api.service.hmrc.gov.uk/organisations/paye/"
     },
     "self": {
-      "href": "/organisations/paye/001/AB00001"
+      "href": "https://api.service.hmrc.gov.uk/organisations/paye/001/AB00001"
     }
   }
 }

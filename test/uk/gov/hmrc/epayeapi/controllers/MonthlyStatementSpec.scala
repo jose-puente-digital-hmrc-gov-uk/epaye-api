@@ -16,8 +16,6 @@
 
 package uk.gov.hmrc.epayeapi.controllers
 
-import akka.stream.Materializer
-import akka.util.Timeout
 import org.mockito.Matchers._
 import org.mockito.Mockito.reset
 import org.mockito.{Matchers, Mockito}
@@ -78,7 +76,7 @@ class MonthlyStatementSpec extends AppSpec with BeforeAndAfterEach {
     }
     "return 404 NotFound when the statements are not found" in new App(app.withAuth(activeEnrolment).build) {
       val epayeUrl =
-        s"${config.baseUrl}" +
+        s"${config.epayeBaseUrl}" +
           s"/epaye/${empRef.encodedValue}" +
           s"/api/v1" +
           s"/monthly-statement/${taxYear.asString}/${taxMonth.asString}"
@@ -93,7 +91,7 @@ class MonthlyStatementSpec extends AppSpec with BeforeAndAfterEach {
     "return 200 OK with the found statement" in new App(app.withAuth(activeEnrolment).build) {
       val inputJsonString: String = getResourceAsString("/epaye/monthly-statement/in/2017-3.json")
       val epayeUrl =
-        s"${config.baseUrl}" +
+        s"${config.epayeBaseUrl}" +
           s"/epaye/${empRef.encodedValue}" +
           s"/api/v1" +
           s"/monthly-statement/${taxYear.asString}/${taxMonth.asString}"
@@ -104,14 +102,18 @@ class MonthlyStatementSpec extends AppSpec with BeforeAndAfterEach {
       }
 
       status(request) shouldBe OK
-      val expectedJsonString = prettyPrint(getResourceAsString("/epaye/monthly-statement/out/2017-3.json")
-                                                .replaceAllLiterally("%{ton}", empRef.taxOfficeNumber)
-                                                .replaceAllLiterally("%{tor}", empRef.taxOfficeReference))
-      contentAsPrettyJson(request) shouldBe expectedJsonString
+      val expectedJson =
+        Json.parse(
+          getResourceAsString("/epaye/monthly-statement/out/2017-3.json")
+            .replaceAllLiterally("%{ton}", empRef.taxOfficeNumber)
+            .replaceAllLiterally("%{tor}", empRef.taxOfficeReference)
+            .replaceAllLiterally("%{apiBaseUrl}", apiBaseUrl)
+        )
+      contentAsJson(request) shouldBe expectedJson
     }
   }
 
-  def contentAsPrettyJson(result : Future[play.api.mvc.Result]): String = {
+  def contentAsPrettyJson(result: Future[play.api.mvc.Result]): String = {
     Json.prettyPrint(contentAsJson(result))
   }
 

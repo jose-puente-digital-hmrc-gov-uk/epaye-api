@@ -70,7 +70,7 @@ class GetSummarySpec extends AppSpec with BeforeAndAfterEach {
 
   "The summary endpoint" should {
     "return 200 OK on active enrolments" in new App(app.withAuth(activeEnrolment).build) {
-      val firstUrl =  s"${config.baseUrl}" +
+      val firstUrl =  s"${config.epayeBaseUrl}" +
                       s"/epaye" +
                       s"/${empRef.encodedValue}" +
                       s"/api/v1/annual-statement"
@@ -103,7 +103,7 @@ class GetSummarySpec extends AppSpec with BeforeAndAfterEach {
       }
 
       contentAsString(request) shouldBe Json.parse(
-        """
+        s"""
           |{
           |  "outstandingCharges": {
           |    "amount": 123,
@@ -114,10 +114,10 @@ class GetSummarySpec extends AppSpec with BeforeAndAfterEach {
           |  },
           |  "_links" : {
           |    "empRefs": {
-          |      "href": "/organisations/paye/"
+          |      "href": "$apiBaseUrl/organisations/paye/"
           |    },
           |    "self": {
-          |      "href": "/organisations/paye/001/AB00001"
+          |      "href": "$apiBaseUrl/organisations/paye/001/AB00001"
           |    }
           |  }
           |}

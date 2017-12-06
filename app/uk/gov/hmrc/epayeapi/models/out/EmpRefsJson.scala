@@ -24,29 +24,30 @@ case class EmpRefsJson(
 )
 
 object EmpRefsJson {
-  def fromSeq(seq: Seq[EmpRef]): EmpRefsJson =
-    EmpRefsJson(seq.map(EmpRefItem(_)), EmpRefsLinks())
-  def apply(empRef: EmpRef): EmpRefsJson =
-    EmpRefsJson(Seq(EmpRefItem(empRef)), EmpRefsLinks())
+  def fromSeq(apiBaseUrl: String, seq: Seq[EmpRef]): EmpRefsJson =
+    EmpRefsJson(seq.map(EmpRefItem(apiBaseUrl, _)), EmpRefsLinks(apiBaseUrl))
+  def apply(apiBaseUrl: String, empRef: EmpRef): EmpRefsJson =
+    EmpRefsJson(Seq(EmpRefItem(apiBaseUrl, empRef)), EmpRefsLinks(apiBaseUrl))
 }
 
 case class EmpRefItem(empRef: EmpRef, _links: EmpRefLinks)
 
 object EmpRefItem {
-  def apply(empRef: EmpRef): EmpRefItem =
-    EmpRefItem(empRef, EmpRefLinks(empRef))
+  def apply(apiBaseUrl: String, empRef: EmpRef): EmpRefItem =
+    EmpRefItem(empRef, EmpRefLinks(apiBaseUrl, empRef))
 }
 
-case class EmpRefsLinks(self: Link = Link.empRefsLink())
+case class EmpRefsLinks(self: Link)
+
+object EmpRefsLinks {
+  def apply(apiBaseUrl: String): EmpRefsLinks =
+    new EmpRefsLinks(self = Link.empRefsLink(apiBaseUrl))
+}
 
 case class EmpRefLinks(summary: Link)
 
 object EmpRefLinks {
-  def apply(empRef: EmpRef): EmpRefLinks =
-    EmpRefLinks(summary = Link.summaryLink(empRef))
+  def apply(apiBaseUrl: String, empRef: EmpRef): EmpRefLinks =
+    EmpRefLinks(summary = Link.summaryLink(apiBaseUrl, empRef))
 }
-
-
-
-
 

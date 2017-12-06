@@ -63,7 +63,7 @@ case class MonthlyStatementLinksJson(
 )
 
 object MonthlyStatementJson {
-  def apply(empRef: EmpRef, taxYear: TaxYear, taxMonth: TaxMonth, json: EpayeMonthlyStatement): MonthlyStatementJson =
+  def apply(apiBaseUrl: String, empRef: EmpRef, taxYear: TaxYear, taxMonth: TaxMonth, json: EpayeMonthlyStatement): MonthlyStatementJson =
     MonthlyStatementJson(
       taxOfficeNumber = empRef.taxOfficeNumber,
       taxOfficeReference = empRef.taxOfficeReference,
@@ -75,7 +75,7 @@ object MonthlyStatementJson {
       allocatedPayments = Payments(json.payments),
       dueDate = json.balance.dueDate,
       summary = MonthlySummaryJson(json),
-      _links = MonthlyStatementLinksJson(empRef, taxYear, taxMonth)
+      _links = MonthlyStatementLinksJson(apiBaseUrl, empRef, taxYear, taxMonth)
     )
 }
 
@@ -111,19 +111,19 @@ object MonthlySummaryJson {
 }
 
 object MonthlyStatementLinksJson {
-  def apply(empRef: EmpRef, taxYear: TaxYear, taxMonth: TaxMonth): MonthlyStatementLinksJson =
+  def apply(apiBaseUrl: String, empRef: EmpRef, taxYear: TaxYear, taxMonth: TaxMonth): MonthlyStatementLinksJson =
     MonthlyStatementLinksJson(
       empRefs =
-        Link.empRefsLink(),
+        Link.empRefsLink(apiBaseUrl),
       statements =
-        Link.summaryLink(empRef),
+        Link.summaryLink(apiBaseUrl, empRef),
       annualStatement =
-        Link.anualStatementLink(empRef, taxYear),
+        Link.anualStatementLink(apiBaseUrl, empRef, taxYear),
       self =
-        Link.monthlyStatementLink(empRef, taxYear, taxMonth),
+        Link.monthlyStatementLink(apiBaseUrl, empRef, taxYear, taxMonth),
       next =
-        Link.monthlyStatementLink(empRef, if (taxMonth.isLast) taxYear.next else taxYear, taxMonth.next),
+        Link.monthlyStatementLink(apiBaseUrl, empRef, if (taxMonth.isLast) taxYear.next else taxYear, taxMonth.next),
       previous =
-        Link.monthlyStatementLink(empRef, if (taxMonth.isFirst) taxYear.previous else taxYear, taxMonth.previous)
+        Link.monthlyStatementLink(apiBaseUrl, empRef, if (taxMonth.isFirst) taxYear.previous else taxYear, taxMonth.previous)
     )
 }

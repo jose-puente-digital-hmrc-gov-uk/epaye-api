@@ -52,22 +52,22 @@
   },
   "_links": {
     "empRefs": {
-      "href": "/organisations/paye/"
+      "href": "%{apiBaseUrl}/organisations/paye/"
     },
     "statements": {
-      "href": "/organisations/paye/%{ton}/%{tor}"
+      "href": "%{apiBaseUrl}/organisations/paye/%{ton}/%{tor}"
     },
     "annualStatement": {
-      "href": "/organisations/paye/%{ton}/%{tor}/statements/2017-18"
+      "href": "%{apiBaseUrl}/organisations/paye/%{ton}/%{tor}/statements/2017-18"
     },
     "self": {
-      "href": "/organisations/paye/%{ton}/%{tor}/statements/2017-18/3"
+      "href": "%{apiBaseUrl}/organisations/paye/%{ton}/%{tor}/statements/2017-18/3"
     },
     "next": {
-      "href": "/organisations/paye/%{ton}/%{tor}/statements/2017-18/4"
+      "href": "%{apiBaseUrl}/organisations/paye/%{ton}/%{tor}/statements/2017-18/4"
     },
     "previous": {
-      "href": "/organisations/paye/%{ton}/%{tor}/statements/2017-18/2"
+      "href": "%{apiBaseUrl}/organisations/paye/%{ton}/%{tor}/statements/2017-18/2"
     }
   }
 }

@@ -17,27 +17,31 @@
 package uk.gov.hmrc.epayeapi.models.out
 
 import common.EmpRefGenerator
-import uk.gov.hmrc.domain.EmpRef
 import uk.gov.hmrc.epayeapi.models.{TaxMonth, TaxYear}
 import uk.gov.hmrc.play.test.UnitSpec
 
 class LinkSpecs extends UnitSpec {
   val empRef = EmpRefGenerator.getEmpRef
+  val apiBaseUrl = "[API_BASE_URL]"
   "Links" should {
     "generate the right root link" in {
-      Link.empRefsLink() shouldEqual Link("/organisations/paye/")
+      Link.empRefsLink(apiBaseUrl) shouldEqual Link(s"$apiBaseUrl/organisations/paye/")
     }
 
     "generate the summary link" in {
-      Link.summaryLink(empRef) shouldEqual Link(s"/organisations/paye/${empRef.taxOfficeNumber}/${empRef.taxOfficeReference}")
+      Link.summaryLink(apiBaseUrl, empRef) shouldEqual Link(s"$apiBaseUrl/organisations/paye/${empRef.taxOfficeNumber}/${empRef.taxOfficeReference}")
+    }
+
+    "generate the statements link" in {
+      Link.statementsLink(apiBaseUrl, empRef) shouldEqual Link(s"$apiBaseUrl/organisations/paye/${empRef.taxOfficeNumber}/${empRef.taxOfficeReference}/statements")
     }
 
     "generate the annual statement link" in {
-      Link.anualStatementLink(empRef, TaxYear(2017)) shouldEqual Link(s"/organisations/paye/${empRef.taxOfficeNumber}/${empRef.taxOfficeReference}/statements/2017-18")
+      Link.anualStatementLink(apiBaseUrl, empRef, TaxYear(2017)) shouldEqual Link(s"$apiBaseUrl/organisations/paye/${empRef.taxOfficeNumber}/${empRef.taxOfficeReference}/statements/2017-18")
     }
 
     "generate the monthly statement link" in {
-      Link.monthlyStatementLink(empRef, TaxYear(2017), TaxMonth(TaxYear(2017), 1)) shouldEqual Link(s"/organisations/paye/${empRef.taxOfficeNumber}/${empRef.taxOfficeReference}/statements/2017-18/1")
+      Link.monthlyStatementLink(apiBaseUrl, empRef, TaxYear(2017), TaxMonth(TaxYear(2017), 1)) shouldEqual Link(s"$apiBaseUrl/organisations/paye/${empRef.taxOfficeNumber}/${empRef.taxOfficeReference}/statements/2017-18/1")
     }
   }
 }

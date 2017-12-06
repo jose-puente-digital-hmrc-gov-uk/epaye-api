@@ -24,7 +24,7 @@ import play.api.libs.json.Json
 import play.api.mvc.{Action, EssentialAction}
 import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.domain.EmpRef
-import uk.gov.hmrc.epayeapi.connectors.EpayeConnector
+import uk.gov.hmrc.epayeapi.connectors.{EpayeApiConfig, EpayeConnector}
 import uk.gov.hmrc.epayeapi.models.Formats._
 import uk.gov.hmrc.epayeapi.models.in.{EpayeJsonError, EpayeNotFound, EpayeResponse, EpayeSuccess}
 import uk.gov.hmrc.epayeapi.models.out.ApiErrorJson.EmpRefNotFound
@@ -35,6 +35,7 @@ import scala.concurrent.ExecutionContext
 
 @Singleton
 case class GetMonthlyStatementController @Inject() (
+  config: EpayeApiConfig,
   authConnector: AuthConnector,
   epayeConnector: EpayeConnector,
   implicit val ec: ExecutionContext,
@@ -54,6 +55,7 @@ case class GetMonthlyStatementController @Inject() (
             case EpayeSuccess(json) =>
               Ok(Json.toJson(
                 MonthlyStatementJson(
+                  config.apiBaseUrl,
                   empRef,
                   taxYear,
                   taxMonth,

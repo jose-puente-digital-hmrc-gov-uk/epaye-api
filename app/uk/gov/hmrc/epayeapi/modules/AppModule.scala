@@ -39,7 +39,10 @@ class AppModule() extends AbstractModule {
   @Provides
   @Singleton
   def provideEpayeApiConfig(context: AppContext): EpayeApiConfig = {
-    EpayeApiConfig(context.config.baseUrl("epaye"))
+    EpayeApiConfig(
+      context.config.baseUrl("epaye"),
+      context.apiBaseUrl
+    )
   }
 
   @Provides
