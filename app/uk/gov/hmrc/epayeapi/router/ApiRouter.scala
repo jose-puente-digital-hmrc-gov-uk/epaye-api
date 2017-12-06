@@ -34,18 +34,40 @@ case class ApiRouter @Inject() (
   getMonthlyStatementController: GetMonthlyStatementController
 ) extends SimpleRouter {
 
+  object TaxOfficeNumber {
+    val regex = "([0-9a-zA-Z]{3})".r
+    def unapply(string: String): Option[String] = {
+      string match {
+        case regex(result) => Some(result)
+        case _ => None
+      }
+    }
+  }
+
+
+  object TaxOfficeReference {
+    val regex = "([0-9a-zA-Z]{7,10})".r
+    def unapply(string: String): Option[String] = {
+      string match {
+        case regex(result) => Some(result)
+        case _ => None
+      }
+    }
+  }
+
+
   val appRoutes = Router.from {
     case GET(p"/") =>
       getEmpRefsController.getEmpRefs()
 
-    case GET(p"/$taxOfficeNumber/$taxOfficeReference") =>
-      getTotalsController.getSummary(EmpRef(taxOfficeNumber, taxOfficeReference))
+    case GET(p"/${TaxOfficeNumber(ton)}/${TaxOfficeReference(tor)}") =>
+      getTotalsController.getSummary(EmpRef(ton, tor))
 
-    case GET(p"/$taxOfficeNumber/$taxOfficeReference/statements/${ ExtractTaxYear(taxYear) }") =>
-      getAnnualStatementController.getAnnualStatement(EmpRef(taxOfficeNumber, taxOfficeReference), taxYear)
+    case GET(p"/${TaxOfficeNumber(ton)}/${TaxOfficeReference(tor)}/statements/${ ExtractTaxYear(taxYear) }") =>
+      getAnnualStatementController.getAnnualStatement(EmpRef(ton, tor), taxYear)
 
-    case GET(p"/$taxOfficeNumber/$taxOfficeReference/statements/${ ExtractTaxYear(taxYear) }/${ int(month) }") if 1 <= month && month <= 12 =>
-      getMonthlyStatementController.getStatement(EmpRef(taxOfficeNumber, taxOfficeReference), taxYear, TaxMonth(taxYear, month))
+    case GET(p"/${TaxOfficeNumber(ton)}/${TaxOfficeReference(tor)}/statements/${ ExtractTaxYear(taxYear) }/${ int(month) }") if 1 <= month && month <= 12 =>
+      getMonthlyStatementController.getStatement(EmpRef(ton, tor), taxYear, TaxMonth(taxYear, month))
   }
 
   val routes: Routes = prodRoutes.routes.orElse(appRoutes.routes)
