@@ -16,6 +16,7 @@
 
 package uk.gov.hmrc.epayeapi.models.out
 
+import common.EmpRefGenerator
 import org.joda.time.LocalDate
 import org.scalatest.{Matchers, WordSpec}
 import uk.gov.hmrc.domain.EmpRef
@@ -24,7 +25,7 @@ import uk.gov.hmrc.epayeapi.models.in._
 import uk.gov.hmrc.epayeapi.models.{TaxMonth, TaxYear}
 
 class AnnualStatementJsonSpec extends WordSpec with Matchers {
-  val empRef = EmpRef("123", "AB45678")
+  val empRef = EmpRefGenerator.getEmpRef
   val dueDate = new LocalDate(2017, 5, 22)
 
   val taxYear = TaxYear(2016)

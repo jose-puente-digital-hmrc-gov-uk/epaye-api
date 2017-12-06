@@ -21,6 +21,8 @@ import uk.gov.hmrc.domain.EmpRef
 import scala.util.Random
 
 trait EmpRefGenerator {
+  def getEmpRef: EmpRef = randomEmpRef()
+
   def randomEmpRef(excluding: EmpRef*): EmpRef =
     randomExcluding[EmpRef](excluding) {
       EmpRef(nextTaxOfficeNumber(), nextTaxOfficeReference())
@@ -66,3 +68,5 @@ trait EmpRefGenerator {
   private def nextIntInRange(from: Int, to: Int): Int =
     from + Random.nextInt(to - from + 1)
 }
+
+object EmpRefGenerator extends EmpRefGenerator
