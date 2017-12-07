@@ -24,7 +24,7 @@ import play.api.libs.json.Json
 import play.api.mvc.{Action, EssentialAction}
 import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.domain.EmpRef
-import uk.gov.hmrc.epayeapi.connectors.EpayeConnector
+import uk.gov.hmrc.epayeapi.connectors.{EpayeApiConfig, EpayeConnector}
 import uk.gov.hmrc.epayeapi.models.Formats._
 import uk.gov.hmrc.epayeapi.models.TaxYear
 import uk.gov.hmrc.epayeapi.models.in._
@@ -35,6 +35,7 @@ import scala.concurrent.ExecutionContext
 
 @Singleton
 case class GetAnnualStatementController @Inject() (
+  config: EpayeApiConfig,
   authConnector: AuthConnector,
   epayeConnector: EpayeConnector,
   implicit val ec: ExecutionContext,
@@ -42,12 +43,12 @@ case class GetAnnualStatementController @Inject() (
 )
   extends ApiController {
 
-  def getAnnualStatement(empRef: EmpRef, taxYear:TaxYear): EssentialAction =
+  def getAnnualStatement(empRef: EmpRef, taxYear: TaxYear): EssentialAction =
     EmpRefAction(empRef) {
       Action.async { request =>
         epayeConnector.getAnnualStatement(empRef, taxYear, hc(request)).map {
           case EpayeSuccess(epayeAnnualStatement) =>
-            Ok(Json.toJson(AnnualStatementJson(empRef, taxYear, epayeAnnualStatement)))
+            Ok(Json.toJson(AnnualStatementJson(config.apiBaseUrl, empRef, taxYear, epayeAnnualStatement)))
           case EpayeJsonError(err) =>
             Logger.error(s"Upstream returned invalid json: $err")
             InternalServerError(Json.toJson(ApiErrorJson.InternalServerError))

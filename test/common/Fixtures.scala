@@ -156,7 +156,7 @@ object Fixtures {
       |}
     """.stripMargin
 
-  def expectedAnnualStatementJson(empRef: EmpRef): JsValue = Json.parse(
+  def expectedAnnualStatementJson(apiBaseUrl: String, empRef: EmpRef): JsValue = Json.parse(
     s"""
       |{
       |  "taxYear": {
@@ -197,7 +197,7 @@ object Fixtures {
       |        "isSpecified": false,
       |        "_links": {
       |          "self": {
-      |            "href": "/organisations/paye/${empRef.taxOfficeNumber}/${empRef.taxOfficeReference}/statements/2017-18/7"
+      |            "href": "$apiBaseUrl/organisations/paye/${empRef.taxOfficeNumber}/${empRef.taxOfficeReference}/statements/2017-18/7"
       |          }
       |        }
       |      },
@@ -215,7 +215,7 @@ object Fixtures {
       |        "isSpecified": true,
       |        "_links": {
       |          "self": {
-      |            "href": "/organisations/paye/${empRef.taxOfficeNumber}/${empRef.taxOfficeReference}/statements/2017-18/3"
+      |            "href": "$apiBaseUrl/organisations/paye/${empRef.taxOfficeNumber}/${empRef.taxOfficeReference}/statements/2017-18/3"
       |          }
       |        }
       |      }
@@ -223,23 +223,24 @@ object Fixtures {
       |  },
       |  "_links": {
       |    "empRefs": {
-      |      "href": "/organisations/paye"
+      |      "href": "$apiBaseUrl/organisations/paye/"
       |    },
       |    "statements": {
-      |      "href": "/organisations/paye/${empRef.taxOfficeNumber}/${empRef.taxOfficeReference}/statements"
+      |      "href": "$apiBaseUrl/organisations/paye/${empRef.taxOfficeNumber}/${empRef.taxOfficeReference}/statements"
       |    },
       |    "self": {
-      |      "href": "/organisations/paye/${empRef.taxOfficeNumber}/${empRef.taxOfficeReference}/statements/2017-18"
+      |      "href": "$apiBaseUrl/organisations/paye/${empRef.taxOfficeNumber}/${empRef.taxOfficeReference}/statements/2017-18"
       |    },
       |    "next": {
-      |      "href": "/organisations/paye/${empRef.taxOfficeNumber}/${empRef.taxOfficeReference}/statements/2018-19"
+      |      "href": "$apiBaseUrl/organisations/paye/${empRef.taxOfficeNumber}/${empRef.taxOfficeReference}/statements/2018-19"
       |    },
       |    "previous": {
-      |      "href": "/organisations/paye/${empRef.taxOfficeNumber}/${empRef.taxOfficeReference}/statements/2016-17"
+      |      "href": "$apiBaseUrl/organisations/paye/${empRef.taxOfficeNumber}/${empRef.taxOfficeReference}/statements/2016-17"
       |    }
       |  }
       |}
-     """.stripMargin)
+     """.stripMargin
+  )
 
   def authorisedEnrolmentJson(empRef: EmpRef): String = {
     s"""
@@ -265,6 +266,5 @@ object Fixtures {
        |}
       """.stripMargin
   }
-
 
 }
