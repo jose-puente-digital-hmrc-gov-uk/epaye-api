@@ -19,12 +19,12 @@ package uk.gov.hmrc.epayeapi.models.out
 import common.EmpRefGenerator
 import org.joda.time.LocalDate
 import org.scalatest.{Matchers, WordSpec}
-import uk.gov.hmrc.domain.EmpRef
-import uk.gov.hmrc.epayeapi.models.JsonFixtures.{baseUrl, baseUrlFor, emptyEpayeAnnualStatement}
+import uk.gov.hmrc.epayeapi.models.JsonFixtures.emptyEpayeAnnualStatement
 import uk.gov.hmrc.epayeapi.models.in._
 import uk.gov.hmrc.epayeapi.models.{TaxMonth, TaxYear}
 
 class AnnualStatementJsonSpec extends WordSpec with Matchers {
+  val apiBaseUrl = "[API_BASE_URL]"
   val empRef = EmpRefGenerator.getEmpRef
   val dueDate = new LocalDate(2017, 5, 22)
 
@@ -32,13 +32,13 @@ class AnnualStatementJsonSpec extends WordSpec with Matchers {
 
   "AnnualStatementJson.apply._links" should {
     "contain the right links" in {
-      AnnualStatementJson(empRef, taxYear, emptyEpayeAnnualStatement)._links shouldBe
+      AnnualStatementJson(apiBaseUrl, empRef, taxYear, emptyEpayeAnnualStatement)._links shouldBe
         AnnualStatementLinksJson(
-          empRefs = Link(baseUrl),
-          statements = Link(s"${baseUrlFor(empRef)}/statements"),
-          self = Link(s"${baseUrlFor(empRef)}/statements/${taxYear.asString}"),
-          next = Link(s"${baseUrlFor(empRef)}/statements/${taxYear.next.asString}"),
-          previous = Link(s"${baseUrlFor(empRef)}/statements/${taxYear.previous.asString}")
+          empRefs = Link.empRefsLink(apiBaseUrl),
+          statements = Link.statementsLink(apiBaseUrl, empRef),
+          self = Link.anualStatementLink(apiBaseUrl, empRef, taxYear),
+          next = Link.anualStatementLink(apiBaseUrl, empRef, taxYear.next),
+          previous = Link.anualStatementLink(apiBaseUrl, empRef, taxYear.previous)
         )
     }
   }
@@ -72,7 +72,7 @@ class AnnualStatementJsonSpec extends WordSpec with Matchers {
               )
           )
 
-      AnnualStatementJson(empRef, taxYear, epayeAnnualStatement)._embedded.earlierYearUpdate shouldBe
+      AnnualStatementJson(apiBaseUrl, empRef, taxYear, epayeAnnualStatement)._embedded.earlierYearUpdate shouldBe
         Some(EarlierYearUpdateJson(
           amount = 100,
           clearedByCredits = 20,
@@ -82,7 +82,7 @@ class AnnualStatementJsonSpec extends WordSpec with Matchers {
         ))
     }
     "return a None if it is not present" in {
-      AnnualStatementJson(empRef, taxYear, emptyEpayeAnnualStatement)._embedded.earlierYearUpdate shouldBe None
+      AnnualStatementJson(apiBaseUrl, empRef, taxYear, emptyEpayeAnnualStatement)._embedded.earlierYearUpdate shouldBe None
     }
   }
 
@@ -102,7 +102,7 @@ class AnnualStatementJsonSpec extends WordSpec with Matchers {
           codeText = None
         )
 
-      MonthlyChargesJson.from(lineItem, empRef, taxYear) shouldBe
+      MonthlyChargesJson.from(apiBaseUrl, lineItem, empRef, taxYear) shouldBe
         Some(MonthlyChargesJson(
           taxMonth = TaxMonth(taxYear, taxMonth.month),
           amount = 100,
@@ -111,7 +111,7 @@ class AnnualStatementJsonSpec extends WordSpec with Matchers {
           balance = 100 - 10 - 20,
           dueDate = dueDate,
           isSpecified = true,
-          _links = SelfLink(Link(s"${baseUrlFor(empRef)}/statements/${taxYear.asString}/${taxMonth.asString}"))
+          _links = SelfLink(Link.monthlyStatementLink(apiBaseUrl, empRef, taxYear, taxMonth))
         ))
     }
     "return a None if the taxMonth field is None" in {
@@ -127,7 +127,7 @@ class AnnualStatementJsonSpec extends WordSpec with Matchers {
           codeText = None
         )
 
-      MonthlyChargesJson.from(lineItem, empRef, taxYear) shouldBe None
+      MonthlyChargesJson.from(apiBaseUrl, lineItem, empRef, taxYear) shouldBe None
     }
   }
 

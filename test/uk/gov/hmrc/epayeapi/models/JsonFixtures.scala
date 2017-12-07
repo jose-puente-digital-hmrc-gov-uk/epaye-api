@@ -29,11 +29,6 @@ object JsonFixtures {
     lazy val annualStatement: String = getResourceAsString("/epaye/annual-statement/annual-statement.json")
   }
 
-  val baseUrl = "/organisations/paye"
-
-  def baseUrlFor(empRef: EmpRef): String =
-    s"$baseUrl/${empRef.taxOfficeNumber}/${empRef.taxOfficeReference}"
-
   val emptyEpayeAnnualStatement =
     EpayeAnnualStatement(
       rti = AnnualStatementTable(

@@ -18,7 +18,6 @@ package uk.gov.hmrc.epayeapi.models.out
 
 import org.joda.time.LocalDate
 import uk.gov.hmrc.domain.EmpRef
-import uk.gov.hmrc.epayeapi.models
 import uk.gov.hmrc.epayeapi.models.in.{EpayeAnnualStatement, LineItem}
 import uk.gov.hmrc.epayeapi.models.{TaxMonth, TaxYear}
 
@@ -95,18 +94,19 @@ case class MonthlyChargesJson(
 
 object MonthlyChargesJson {
 
-  def from(lineItem: LineItem, empRef: EmpRef, taxYear: TaxYear): Option[MonthlyChargesJson] = {
+  def from(apiBaseUrl: String, lineItem: LineItem, empRef: EmpRef, taxYear: TaxYear): Option[MonthlyChargesJson] = {
     for {
-      taxMonth <- lineItem.taxMonth
+      epayeTaxMonth <- lineItem.taxMonth
+      taxMonth = TaxMonth(taxYear, epayeTaxMonth.month)
     } yield MonthlyChargesJson(
-      taxMonth = models.TaxMonth(taxYear, taxMonth.month),
+      taxMonth = taxMonth,
       amount = lineItem.charges.debit,
       clearedByCredits = lineItem.cleared.credit,
       clearedByPayments = lineItem.cleared.payment,
       balance = lineItem.balance.debit,
       dueDate = lineItem.dueDate,
       isSpecified = lineItem.isSpecified,
-      _links = SelfLink(Link(s"${AnnualStatementJson.baseUrlFor(empRef)}/statements/${taxYear.asString}/${taxMonth.month}"))
+      _links = SelfLink(Link.monthlyStatementLink(apiBaseUrl, empRef, taxYear, taxMonth))
     )
   }
 }
@@ -131,25 +131,20 @@ case class AnnualStatementJson(
 )
 
 object AnnualStatementJson {
-  val baseUrl = "/organisations/paye"
-
-  def baseUrlFor(empRef: EmpRef): String =
-    s"$baseUrl/${empRef.taxOfficeNumber}/${empRef.taxOfficeReference}"
-
-  def apply(empRef: EmpRef, taxYear: TaxYear, epayeAnnualStatement: EpayeAnnualStatement): AnnualStatementJson =
+  def apply(apiBaseUrl: String, empRef: EmpRef, taxYear: TaxYear, epayeAnnualStatement: EpayeAnnualStatement): AnnualStatementJson =
     AnnualStatementJson(
       taxYear = taxYear,
       _embedded = EmbeddedRtiChargesJson(
         EarlierYearUpdateJson.extractFrom(epayeAnnualStatement.rti.lineItems),
-        epayeAnnualStatement.rti.lineItems.flatMap(MonthlyChargesJson.from(_, empRef, taxYear))
+        epayeAnnualStatement.rti.lineItems.flatMap(MonthlyChargesJson.from(apiBaseUrl, _, empRef, taxYear))
       ),
       nonRtiCharges = epayeAnnualStatement.nonRti.lineItems.flatMap(NonRtiChargesJson.from(_, taxYear)),
       _links = AnnualStatementLinksJson(
-        empRefs = Link(baseUrl),
-        statements = Link(s"${baseUrlFor(empRef)}/statements"),
-        self = Link(s"${baseUrlFor(empRef)}/statements/${taxYear.asString}"),
-        next = Link(s"${baseUrlFor(empRef)}/statements/${taxYear.next.asString}"),
-        previous = Link(s"${baseUrlFor(empRef)}/statements/${taxYear.previous.asString}")
+        empRefs = Link.empRefsLink(apiBaseUrl),
+        statements = Link.statementsLink(apiBaseUrl, empRef),
+        self = Link.anualStatementLink(apiBaseUrl, empRef, taxYear),
+        next = Link.anualStatementLink(apiBaseUrl, empRef, taxYear.next),
+        previous = Link.anualStatementLink(apiBaseUrl, empRef, taxYear.previous)
       )
     )
 
