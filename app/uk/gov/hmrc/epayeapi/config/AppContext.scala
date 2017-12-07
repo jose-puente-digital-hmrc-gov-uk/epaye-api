@@ -18,7 +18,7 @@ package uk.gov.hmrc.epayeapi.config
 
 import javax.inject.{Inject, Singleton}
 
-import play.api.{Configuration, Environment, Logger}
+import play.api.{Configuration, Logger}
 import uk.gov.hmrc.play.config.inject.DefaultServicesConfig
 
 import scala.util.Try
@@ -31,8 +31,9 @@ case class AppContext @Inject() (config: DefaultServicesConfig) {
   val appName: String = current.getString("appName").getOrElse(throw new RuntimeException("appName is not configured"))
   val appUrl: String = current.getString("appUrl").getOrElse(throw new RuntimeException("appUrl is not configured"))
   val serviceLocatorUrl: String = config.baseUrl("service-locator")
-  val apiContext: String = current.getString(s"api.context").getOrElse(throw new RuntimeException(s"Missing Key $env.api.context"))
-  val apiStatus: String = current.getString("api.status").getOrElse(throw new RuntimeException(s"Missing Key $env.api.status"))
+  val apiContext: String = current.getString("api.context").getOrElse(throw new RuntimeException(s"Missing Key 'api.context' in environment $env."))
+  val apiStatus: String = current.getString("api.status").getOrElse(throw new RuntimeException(s"Missing Key 'api.status' in environment $env."))
+  val apiBaseUrl : String = current.getString("api.baseUrl").getOrElse(throw new RuntimeException(s"Missing Key 'api.baseUrl' in environment $env."))
   val useSandboxConnectors: Boolean =
     Try(current.getString("useSandboxConnectors").getOrElse("false").toBoolean)
       .getOrElse(false)

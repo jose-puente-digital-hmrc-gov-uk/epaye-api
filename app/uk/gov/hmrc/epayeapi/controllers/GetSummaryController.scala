@@ -24,7 +24,7 @@ import play.api.libs.json.Json
 import play.api.mvc.{Action, EssentialAction}
 import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.domain.EmpRef
-import uk.gov.hmrc.epayeapi.connectors.EpayeConnector
+import uk.gov.hmrc.epayeapi.connectors.{EpayeApiConfig, EpayeConnector}
 import uk.gov.hmrc.epayeapi.models.Formats._
 import uk.gov.hmrc.epayeapi.models.in.{EpayeJsonError, EpayeNotFound, EpayeResponse, EpayeSuccess}
 import uk.gov.hmrc.epayeapi.models.out.ApiErrorJson.EmpRefNotFound
@@ -34,6 +34,7 @@ import scala.concurrent.ExecutionContext
 
 @Singleton
 case class GetSummaryController @Inject() (
+  config: EpayeApiConfig,
   authConnector: AuthConnector,
   epayeConnector: EpayeConnector,
   implicit val ec: ExecutionContext,
@@ -46,7 +47,7 @@ case class GetSummaryController @Inject() (
       Action.async { request =>
         epayeConnector.getTotal(empRef, hc(request)).map {
           case EpayeSuccess(totals) =>
-            Ok(Json.toJson(SummaryJson(empRef, totals)))
+            Ok(Json.toJson(SummaryJson(config.apiBaseUrl, empRef, totals)))
           case EpayeJsonError(err) =>
             Logger.error(s"Upstream returned invalid json: $err")
             InternalServerError(Json.toJson(ApiErrorJson.InternalServerError))

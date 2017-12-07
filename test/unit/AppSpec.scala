@@ -67,4 +67,7 @@ abstract class AppSpec
 
   // Turning Accumulators into Futures requires materializers
   implicit def materializer(implicit a: Application): Materializer = inject[Materializer]
+
+  def apiBaseUrl(implicit a: Application): String =
+    a.configuration.underlying.getString("api.baseUrl")
 }
