@@ -46,9 +46,9 @@ class AnnualStatementJsonSpec extends WordSpec with Matchers {
   "AnnualStatementJson.apply._embedded.earlierYearUpdate" should {
     "contain the earlier year update if it is present" in {
       val emptyTotals = AnnualTotal(
-        charges = DebitAndCredit(),
+        charges = 0,
         cleared = Cleared(),
-        balance = DebitAndCredit()
+        balance = 0
       )
 
       val epayeAnnualStatement =
@@ -60,9 +60,9 @@ class AnnualStatementJsonSpec extends WordSpec with Matchers {
                   LineItem(
                     taxYear,
                     None,
-                    DebitAndCredit(100),
+                    100,
                     Cleared(10, 20),
-                    DebitAndCredit(100 - 20 - 10),
+                    100 - 20 - 10,
                     dueDate,
                     codeText = None,
                     itemType = Some("eyu")
@@ -94,9 +94,9 @@ class AnnualStatementJsonSpec extends WordSpec with Matchers {
         LineItem(
           taxYear = taxYear,
           taxMonth = Some(EpayeTaxMonth(taxMonth.month)),
-          charges = DebitAndCredit(100, 0),
+          charges = 100,
           cleared = Cleared(payment = 10, credit = 20),
-          balance = DebitAndCredit(100 - 30, 0),
+          balance = 100 - 30,
           dueDate = dueDate,
           isSpecified = true,
           codeText = None
@@ -120,9 +120,9 @@ class AnnualStatementJsonSpec extends WordSpec with Matchers {
         LineItem(
           taxYear = taxYear,
           taxMonth = None,
-          charges = DebitAndCredit(100, 0),
+          charges = 100,
           cleared = Cleared(payment = 10, credit = 20),
-          balance = DebitAndCredit(100 - 30, 0),
+          balance = 100 - 30,
           dueDate = dueDate,
           codeText = None
         )
@@ -139,9 +139,9 @@ class AnnualStatementJsonSpec extends WordSpec with Matchers {
         LineItem(
           taxYear = taxYear,
           taxMonth = None,
-          charges = DebitAndCredit(100, 0),
+          charges = 100,
           cleared = Cleared(payment = 10, credit = 20),
-          balance = DebitAndCredit(100 - 30, 0),
+          balance = 100 - 30,
           dueDate = dueDate,
           codeText = Some(code)
         )

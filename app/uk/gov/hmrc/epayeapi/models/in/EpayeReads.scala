@@ -24,7 +24,6 @@ trait EpayeReads {
   implicit lazy val taxYearReads: Reads[TaxYear] = reads[TaxYear]
   implicit lazy val epayeTaxMonthReads: Reads[EpayeTaxMonth] = reads[EpayeTaxMonth]
 
-  implicit lazy val debitAndCreditReads: Reads[DebitAndCredit] = reads[DebitAndCredit]
   implicit lazy val clearedReads: Reads[Cleared] = reads[Cleared]
   implicit lazy val annualTotalReads: Reads[AnnualTotal] = reads[AnnualTotal]
   implicit lazy val lineItemReads: Reads[LineItem] = reads[LineItem]
