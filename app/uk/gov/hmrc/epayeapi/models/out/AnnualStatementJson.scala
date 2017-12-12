@@ -38,10 +38,10 @@ object NonRtiChargesJson {
       code <- lineItem.codeText
     } yield NonRtiChargesJson(
       code = code,
-      amount = lineItem.charges.debit,
-      clearedByCredits = lineItem.cleared.credit,
-      clearedByPayments = lineItem.cleared.payment,
-      balance = lineItem.balance.debit,
+      amount = lineItem.charges,
+      clearedByCredits = lineItem.credits,
+      clearedByPayments = lineItem.payments,
+      balance = lineItem.balance,
       dueDate = lineItem.dueDate
     )
   }
@@ -66,10 +66,10 @@ object EarlierYearUpdateJson {
       .find(_.itemType.contains("eyu"))
       .map { lineItem =>
         EarlierYearUpdateJson(
-          lineItem.charges.debit,
-          lineItem.cleared.credit,
-          lineItem.cleared.payment,
-          lineItem.balance.debit,
+          lineItem.charges,
+          lineItem.credits,
+          lineItem.payments,
+          lineItem.balance,
           lineItem.dueDate
         )
       }
@@ -100,10 +100,10 @@ object MonthlyChargesJson {
       taxMonth = TaxMonth(taxYear, epayeTaxMonth.month)
     } yield MonthlyChargesJson(
       taxMonth = taxMonth,
-      amount = lineItem.charges.debit,
-      clearedByCredits = lineItem.cleared.credit,
-      clearedByPayments = lineItem.cleared.payment,
-      balance = lineItem.balance.debit,
+      amount = lineItem.charges,
+      clearedByCredits = lineItem.credits,
+      clearedByPayments = lineItem.payments,
+      balance = lineItem.balance,
       dueDate = lineItem.dueDate,
       isSpecified = lineItem.isSpecified,
       _links = SelfLink(Link.monthlyStatementLink(apiBaseUrl, empRef, taxYear, taxMonth))

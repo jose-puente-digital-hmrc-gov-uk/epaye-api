@@ -57,18 +57,12 @@ class EpayeConnectorSpec extends UnitSpec with MockitoSugar with ScalaFutures {
               |{
               |  "rti": {
               |    "totals": {
-              |      "balance": {
-              |        "debit": 100,
-              |        "credit": 0
-              |      }
+              |      "balance": 100
               |    }
               |  },
               |  "nonRti": {
               |    "totals": {
-              |      "balance": {
-              |        "debit": 23,
-              |        "credit": 0
-              |      }
+              |      "balance": 23
               |    }
               |  }
               |}
@@ -80,8 +74,8 @@ class EpayeConnectorSpec extends UnitSpec with MockitoSugar with ScalaFutures {
       Await.result(connector.getTotal(empRef, hc), 2.seconds) shouldBe
         EpayeSuccess(
           EpayeTotalsResponse(
-            EpayeTotalsItem(EpayeTotals(DebitAndCredit(100, 0))),
-            EpayeTotalsItem(EpayeTotals(DebitAndCredit(23, 0)))
+            EpayeTotalsItem(EpayeTotals(100)),
+            EpayeTotalsItem(EpayeTotals(23))
           )
         )
     }
@@ -99,12 +93,12 @@ class EpayeConnectorSpec extends UnitSpec with MockitoSugar with ScalaFutures {
         EpayeSuccess(
           EpayeAnnualStatement(
             rti = AnnualStatementTable(
-              List(LineItem(TaxYear(2017), Some(EpayeTaxMonth(1)), DebitAndCredit(100.2, 0), Cleared(0, 0), DebitAndCredit(100.2, 0), new LocalDate(2017, 5, 22), isSpecified = false, codeText = None)),
-              AnnualTotal(DebitAndCredit(100.2, 0), Cleared(0, 0), DebitAndCredit(100.2, 0))
+              List(LineItem(TaxYear(2017), Some(EpayeTaxMonth(1)), 100.2, 0, 0, 100.2, new LocalDate(2017, 5, 22), isSpecified = false, codeText = None)),
+              AnnualTotal(100.2, 0, 0, 100.2)
             ),
             nonRti = AnnualStatementTable(
-              List(LineItem(TaxYear(2017), None, DebitAndCredit(20.0, 0), Cleared(0, 0), DebitAndCredit(20.0, 0), new LocalDate(2018, 2, 22), false, Some("P11D_CLASS_1A_CHARGE"))),
-              AnnualTotal(DebitAndCredit(20.0, 0), Cleared(0, 0), DebitAndCredit(20.0, 0))
+              List(LineItem(TaxYear(2017), None, 20.0, 0, 0, 20.0, new LocalDate(2018, 2, 22), false, Some("P11D_CLASS_1A_CHARGE"))),
+              AnnualTotal(20.0, 0, 0, 20.0)
             ),
             unallocated = None
           )

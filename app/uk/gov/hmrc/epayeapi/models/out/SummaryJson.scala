@@ -40,8 +40,8 @@ object SummaryJson {
       OutstandingCharges(
         total.overall,
         Breakdown(
-          rti = total.rti.totals.balance.debit,
-          nonRti = total.nonRti.totals.balance.debit
+          rti = total.rti.totals.balance,
+          nonRti = total.nonRti.totals.balance
         )
       ),
       SummaryLinks(apiBaseUrl, empRef)

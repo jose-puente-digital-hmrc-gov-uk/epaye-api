@@ -16,8 +16,8 @@
 
 package uk.gov.hmrc.epayeapi.models.in
 
-case class EpayeTotals(balance: DebitAndCredit)
+case class EpayeTotals(balance: BigDecimal)
 case class EpayeTotalsItem(totals: EpayeTotals)
 case class EpayeTotalsResponse(rti: EpayeTotalsItem, nonRti: EpayeTotalsItem) {
-  def overall: BigDecimal = rti.totals.balance.debit + nonRti.totals.balance.debit
+  def overall: BigDecimal = rti.totals.balance + nonRti.totals.balance
 }

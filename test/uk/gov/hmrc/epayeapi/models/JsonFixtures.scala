@@ -34,17 +34,19 @@ object JsonFixtures {
       rti = AnnualStatementTable(
         lineItems = Seq(),
         totals = AnnualTotal(
-          charges = DebitAndCredit(0, 0),
-          cleared = Cleared(0, 0),
-          balance = DebitAndCredit(0, 0)
+          charges = 0,
+          payments = 0,
+          credits = 0,
+          balance = 0
         )
       ),
       nonRti = AnnualStatementTable(
         lineItems = Seq(),
         totals = AnnualTotal(
-          charges = DebitAndCredit(0, 0),
-          cleared = Cleared(0),
-          balance = DebitAndCredit(0, 0)
+          charges = 0,
+          payments = 0,
+          credits = 0,
+          balance = 0
         )
       ),
       unallocated = None
