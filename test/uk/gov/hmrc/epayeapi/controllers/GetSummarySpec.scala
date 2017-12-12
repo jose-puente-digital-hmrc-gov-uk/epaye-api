@@ -82,18 +82,12 @@ class GetSummarySpec extends AppSpec with BeforeAndAfterEach {
               |{
               |  "rti": {
               |    "totals": {
-              |      "balance": {
-              |        "debit": 100,
-              |        "credit": 0
-              |      }
+              |      "balance": 100
               |    }
               |  },
               |  "nonRti": {
               |    "totals": {
-              |      "balance": {
-              |        "debit": 23,
-              |        "credit": 0
-              |      }
+              |      "balance": 23
               |    }
               |  }
               |}

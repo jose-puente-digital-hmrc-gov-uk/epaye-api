@@ -8,35 +8,19 @@
         "taxMonth": {
           "month": 1
         },
-        "charges": {
-          "debit": 100.2,
-          "credit": 0
-        },
-        "cleared": {
-          "payment": 0,
-          "credit": 0
-        },
-        "balance": {
-          "debit": 100.2,
-          "credit": 0
-        },
+        "charges": 100.2,
+        "payments": 0,
+        "credits": 0,
+        "balance": 100.2,
         "dueDate": "2017-05-22",
         "isSpecified": false
       }
     ],
     "totals": {
-      "charges": {
-        "debit": 100.2,
-        "credit": 0
-      },
-      "cleared": {
-        "payment": 0,
-        "credit": 0
-      },
-      "balance": {
-        "debit": 100.2,
-        "credit": 0
-      }
+      "charges": 100.2,
+      "payments": 0,
+      "credits": 0,
+      "balance": 100.2
     }
   },
   "nonRti": {
@@ -45,36 +29,20 @@
         "taxYear": {
           "yearFrom": 2017
         },
-        "charges": {
-          "debit": 20.0,
-          "credit": 0
-        },
-        "cleared": {
-          "payment": 0,
-          "credit": 0
-        },
-        "balance": {
-          "debit": 20.0,
-          "credit": 0
-        },
+        "charges": 20.0,
+        "payments": 0,
+        "credits": 0,
+        "balance": 20.0,
         "dueDate": "2018-02-22",
         "isSpecified": false,
         "codeText": "P11D_CLASS_1A_CHARGE"
       }
     ],
     "totals": {
-      "charges": {
-        "debit": 20.0,
-        "credit": 0
-      },
-      "cleared": {
-        "payment": 0,
-        "credit": 0
-      },
-      "balance": {
-        "debit": 20.0,
-        "credit": 0
-      }
+      "charges": 20.0,
+      "payments": 0,
+      "credits": 0,
+      "balance": 20.0
     }
   }
 }

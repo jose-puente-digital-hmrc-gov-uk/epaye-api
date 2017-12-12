@@ -33,19 +33,10 @@ object Fixtures {
       |        "taxMonth": {
       |          "month": 7
       |        },
-      |        "charges": {
-      |          "debit": 1200,
-      |          "credit": 0
-      |        },
-      |        "cleared": {
-      |          "cleared": 0,
-      |          "payment": 0,
-      |          "credit": 0
-      |        },
-      |        "balance": {
-      |          "debit": 1200,
-      |          "credit": 0
-      |        },
+      |        "charges":1200,
+      |        "payments": 0,
+      |        "credits": 0,
+      |        "balance": 1200,
       |        "dueDate": "2017-11-22",
       |        "isSpecified": false,
       |        "itemType": "month"
@@ -54,19 +45,10 @@ object Fixtures {
       |        "taxYear": {
       |          "yearFrom": 2017
       |        },
-      |        "charges": {
-      |          "debit": 700,
-      |          "credit": 0
-      |        },
-      |        "cleared": {
-      |          "cleared": 0,
-      |          "payment": 300,
-      |          "credit": 200
-      |        },
-      |        "balance": {
-      |          "debit": 200,
-      |          "credit": 0
-      |        },
+      |        "charges":700,
+      |        "payments": 300,
+      |        "credits": 200,
+      |        "balance": 200,
       |        "dueDate": "2017-04-22",
       |        "isSpecified": false,
       |        "itemType": "eyu"
@@ -78,37 +60,19 @@ object Fixtures {
       |        "taxMonth": {
       |          "month": 3
       |        },
-      |        "charges": {
-      |          "debit": 700,
-      |          "credit": 0
-      |        },
-      |        "cleared": {
-      |          "cleared": 0,
-      |          "payment": 300,
-      |          "credit": 200
-      |        },
-      |        "balance": {
-      |          "debit": 200,
-      |          "credit": 0
-      |        },
+      |        "charges":700,
+      |        "payments": 300,
+      |        "credits": 200,
+      |        "balance": 200,
       |        "dueDate": "2017-07-22",
       |        "isSpecified": true
       |      }
       |    ],
       |    "totals": {
-      |      "charges": {
-      |        "debit": 1900,
-      |        "credit": 0
-      |      },
-      |      "cleared": {
-      |        "cleared": 0,
-      |        "payment": 300,
-      |        "credit": 200
-      |      },
-      |      "balance": {
-      |        "debit": 1400,
-      |        "credit": 0
-      |      }
+      |      "charges":1900,
+      |      "payments": 300,
+      |      "credits": 200,
+      |      "balance": 1400
       |    }
       |  },
       |  "nonRti": {
@@ -117,19 +81,10 @@ object Fixtures {
       |        "taxYear": {
       |          "yearFrom": 2017
       |        },
-      |        "charges": {
-      |          "debit": 300,
-      |          "credit": 0
-      |        },
-      |        "cleared": {
-      |          "cleared": 100,
-      |          "payment": 30,
-      |          "credit": 70
-      |        },
-      |        "balance": {
-      |          "debit": 200,
-      |          "credit": 0
-      |        },
+      |        "charges":300,
+      |        "payments": 30,
+      |        "credits": 70,
+      |        "balance": 200,
       |        "dueDate": "2017-07-22",
       |        "isSpecified": false,
       |        "itemType": "1481",
@@ -137,19 +92,10 @@ object Fixtures {
       |      }
       |    ],
       |    "totals": {
-      |      "charges": {
-      |        "debit": 0,
-      |        "credit": 0
-      |      },
-      |      "cleared": {
-      |        "cleared": 0,
-      |        "payment": 0,
-      |        "credit": 0
-      |      },
-      |      "balance": {
-      |        "debit": 0,
-      |        "credit": 0
-      |      }
+      |      "charges":0,
+      |      "payments": 0,
+      |      "credits": 0,
+      |      "balance": 0
       |    }
       |  },
       |  "unallocated": 2000

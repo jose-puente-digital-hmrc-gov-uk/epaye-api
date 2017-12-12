@@ -39,8 +39,8 @@ object NonRtiChargesJson {
     } yield NonRtiChargesJson(
       code = code,
       amount = lineItem.charges,
-      clearedByCredits = lineItem.cleared.credit,
-      clearedByPayments = lineItem.cleared.payment,
+      clearedByCredits = lineItem.credits,
+      clearedByPayments = lineItem.payments,
       balance = lineItem.balance,
       dueDate = lineItem.dueDate
     )
@@ -67,8 +67,8 @@ object EarlierYearUpdateJson {
       .map { lineItem =>
         EarlierYearUpdateJson(
           lineItem.charges,
-          lineItem.cleared.credit,
-          lineItem.cleared.payment,
+          lineItem.credits,
+          lineItem.payments,
           lineItem.balance,
           lineItem.dueDate
         )
@@ -101,8 +101,8 @@ object MonthlyChargesJson {
     } yield MonthlyChargesJson(
       taxMonth = taxMonth,
       amount = lineItem.charges,
-      clearedByCredits = lineItem.cleared.credit,
-      clearedByPayments = lineItem.cleared.payment,
+      clearedByCredits = lineItem.credits,
+      clearedByPayments = lineItem.payments,
       balance = lineItem.balance,
       dueDate = lineItem.dueDate,
       isSpecified = lineItem.isSpecified,

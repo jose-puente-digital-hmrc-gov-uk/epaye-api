@@ -19,16 +19,12 @@ package uk.gov.hmrc.epayeapi.models.in
 import org.joda.time.LocalDate
 import uk.gov.hmrc.epayeapi.models.TaxYear
 
-case class Cleared(
-  payment: BigDecimal = 0,
-  credit: BigDecimal = 0
-)
-
 case class LineItem(
   taxYear: TaxYear,
   taxMonth: Option[EpayeTaxMonth],
   charges: BigDecimal,
-  cleared: Cleared,
+  payments: BigDecimal,
+  credits: BigDecimal,
   balance: BigDecimal,
   dueDate: LocalDate,
   isSpecified: Boolean = false,
@@ -38,7 +34,8 @@ case class LineItem(
 
 case class AnnualTotal(
   charges: BigDecimal,
-  cleared: Cleared,
+  payments: BigDecimal,
+  credits: BigDecimal,
   balance: BigDecimal
 )
 

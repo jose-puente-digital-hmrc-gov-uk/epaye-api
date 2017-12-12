@@ -57,18 +57,12 @@ class EpayeConnectorSpec extends UnitSpec with MockitoSugar with ScalaFutures {
               |{
               |  "rti": {
               |    "totals": {
-              |      "balance": {
-              |        "debit": 100,
-              |        "credit": 0
-              |      }
+              |      "balance": 100
               |    }
               |  },
               |  "nonRti": {
               |    "totals": {
-              |      "balance": {
-              |        "debit": 23,
-              |        "credit": 0
-              |      }
+              |      "balance": 23
               |    }
               |  }
               |}
@@ -99,12 +93,12 @@ class EpayeConnectorSpec extends UnitSpec with MockitoSugar with ScalaFutures {
         EpayeSuccess(
           EpayeAnnualStatement(
             rti = AnnualStatementTable(
-              List(LineItem(TaxYear(2017), Some(EpayeTaxMonth(1)), 100.2, Cleared(0, 0), 100.2, new LocalDate(2017, 5, 22), isSpecified = false, codeText = None)),
-              AnnualTotal(100.2, Cleared(0, 0), 100.2)
+              List(LineItem(TaxYear(2017), Some(EpayeTaxMonth(1)), 100.2, 0, 0, 100.2, new LocalDate(2017, 5, 22), isSpecified = false, codeText = None)),
+              AnnualTotal(100.2, 0, 0, 100.2)
             ),
             nonRti = AnnualStatementTable(
-              List(LineItem(TaxYear(2017), None, 20.0, Cleared(0, 0), 20.0, new LocalDate(2018, 2, 22), false, Some("P11D_CLASS_1A_CHARGE"))),
-              AnnualTotal(20.0, Cleared(0, 0), 20.0)
+              List(LineItem(TaxYear(2017), None, 20.0, 0, 0, 20.0, new LocalDate(2018, 2, 22), false, Some("P11D_CLASS_1A_CHARGE"))),
+              AnnualTotal(20.0, 0, 0, 20.0)
             ),
             unallocated = None
           )

@@ -47,7 +47,8 @@ class AnnualStatementJsonSpec extends WordSpec with Matchers {
     "contain the earlier year update if it is present" in {
       val emptyTotals = AnnualTotal(
         charges = 0,
-        cleared = Cleared(),
+        payments = 0,
+        credits = 0,
         balance = 0
       )
 
@@ -61,7 +62,8 @@ class AnnualStatementJsonSpec extends WordSpec with Matchers {
                     taxYear,
                     None,
                     100,
-                    Cleared(10, 20),
+                    10,
+                    20,
                     100 - 20 - 10,
                     dueDate,
                     codeText = None,
@@ -95,7 +97,8 @@ class AnnualStatementJsonSpec extends WordSpec with Matchers {
           taxYear = taxYear,
           taxMonth = Some(EpayeTaxMonth(taxMonth.month)),
           charges = 100,
-          cleared = Cleared(payment = 10, credit = 20),
+          payments = 10,
+          credits = 20,
           balance = 100 - 30,
           dueDate = dueDate,
           isSpecified = true,
@@ -121,7 +124,8 @@ class AnnualStatementJsonSpec extends WordSpec with Matchers {
           taxYear = taxYear,
           taxMonth = None,
           charges = 100,
-          cleared = Cleared(payment = 10, credit = 20),
+          payments = 10,
+          credits = 20,
           balance = 100 - 30,
           dueDate = dueDate,
           codeText = None
@@ -140,7 +144,8 @@ class AnnualStatementJsonSpec extends WordSpec with Matchers {
           taxYear = taxYear,
           taxMonth = None,
           charges = 100,
-          cleared = Cleared(payment = 10, credit = 20),
+          payments = 10,
+          credits = 20,
           balance = 100 - 30,
           dueDate = dueDate,
           codeText = Some(code)
