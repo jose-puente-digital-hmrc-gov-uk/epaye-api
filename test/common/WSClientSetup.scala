@@ -19,7 +19,7 @@ package common
 import org.scalatest.Suite
 import org.scalatestplus.play.OneServerPerSuite
 import play.api.libs.ws.WSClient
-import uk.gov.hmrc.play.http.HeaderCarrier
+import uk.gov.hmrc.http.HeaderCarrier
 
 trait WSClientSetup extends OneServerPerSuite { self: Suite =>
   val baseUrl = s"http://localhost:$port"

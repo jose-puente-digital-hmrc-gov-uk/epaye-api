@@ -21,7 +21,7 @@ import org.scalatest.Matchers
 import play.api.libs.json.{JsValue, Json}
 import play.api.libs.ws.{WSClient, WSRequest}
 import uk.gov.hmrc.domain.EmpRef
-import uk.gov.hmrc.play.http.HttpResponse
+import uk.gov.hmrc.http.HttpResponse
 import uk.gov.hmrc.play.http.ws.WSHttpResponse
 
 import scala.concurrent.Await

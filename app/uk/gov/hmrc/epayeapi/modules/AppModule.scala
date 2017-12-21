@@ -23,17 +23,47 @@ import uk.gov.hmrc.auth.core._
 import uk.gov.hmrc.epayeapi.config._
 import uk.gov.hmrc.epayeapi.connectors.EpayeApiConfig
 import uk.gov.hmrc.epayeapi.connectors.stub.SandboxAuthConnector
+import uk.gov.hmrc.http.HttpPost
+import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.auth.microservice.connectors.{AuthConnector => PlayAuthConnector}
-import uk.gov.hmrc.play.config.inject.ServicesConfig
-import uk.gov.hmrc.play.http.HttpPost
-import uk.gov.hmrc.play.http.ws.WSHttp
+import uk.gov.hmrc.play.config.RunMode
+import uk.gov.hmrc.play.config.ServicesConfig
 
 class AppModule() extends AbstractModule {
   def configure(): Unit = {
-    bind(classOf[HttpPost]).to(classOf[WSHttpImpl]).asEagerSingleton()
     bind(classOf[PlayAuthConnector]).to(classOf[MicroserviceAuthConnector]).asEagerSingleton()
-    bind(classOf[WSHttp]).to(classOf[WSHttpImpl]).asEagerSingleton()
+//    bind(classOf[WSHttp]).to(classOf[WSHttp]).asEagerSingleton()
     bind(classOf[Startup]).to(classOf[AppStartup]).asEagerSingleton()
+  }
+
+  @Provides
+  @Singleton
+  def provideServicesConfig: ServicesConfig = {
+    new ServicesConfig {}
+  }
+
+  @Provides
+  @Singleton
+  def provideRunMode: RunMode = {
+    MicroserviceAuditConnector
+  }
+
+  @Provides
+  @Singleton
+  def provideAuditConnector: AuditConnector = {
+    MicroserviceAuditConnector
+  }
+
+  @Provides
+  @Singleton
+  def provideHttpPost: HttpPost = {
+    WSHttp
+  }
+
+  @Provides
+  @Singleton
+  def provideWSHttp: WSHttp = {
+    WSHttp
   }
 
   @Provides

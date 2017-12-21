@@ -23,15 +23,13 @@ import net.ceedubs.ficus.Ficus._
 import play.api.inject.ApplicationLifecycle
 import play.api.{Application, Configuration, Logger}
 import uk.gov.hmrc.epayeapi.connectors.ServiceLocatorConnector
-import uk.gov.hmrc.play.audit.filters.AuditFilter
+import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.auth.controllers.AuthParamsControllerConfig
 import uk.gov.hmrc.play.auth.microservice.filters.AuthorisationFilter
-import uk.gov.hmrc.play.config.ControllerConfig
-import uk.gov.hmrc.play.config.inject.RunMode
-import uk.gov.hmrc.play.filters.MicroserviceFilterSupport
-import uk.gov.hmrc.play.http.HeaderCarrier
-import uk.gov.hmrc.play.http.logging.filters.LoggingFilter
+import uk.gov.hmrc.play.config.{ControllerConfig, RunMode}
 import uk.gov.hmrc.play.microservice.bootstrap.DefaultMicroserviceGlobal
+import uk.gov.hmrc.play.microservice.filters.{AuditFilter, LoggingFilter, MicroserviceFilterSupport}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -53,7 +51,7 @@ case class AuthParamsControllerConfiguration @Inject() (config: ControllerConfig
 case class MicroserviceAuditFilter @Inject() (
   context: AppContext,
   config: ControllerConfiguration,
-  auditConnector: MicroserviceAuditConnector
+  auditConnector: AuditConnector
 )
   extends AuditFilter
   with MicroserviceFilterSupport {
@@ -90,7 +88,7 @@ case class MicroserviceAuthFilter @Inject() (
 @Singleton
 case class MicroserviceGlobal @Inject() (
   mode: RunMode,
-  auditConnector: MicroserviceAuditConnector,
+  auditConnector: AuditConnector,
   authFilterPure: MicroserviceAuthFilter,
   loggingFilter: MicroserviceLoggingFilter,
   microserviceAuditFilter: MicroserviceAuditFilter,

@@ -22,11 +22,10 @@ import org.mockito.Mockito._
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.mock.MockitoSugar
 import play.api.http.Status
-import uk.gov.hmrc.domain.EmpRef
+import uk.gov.hmrc.epayeapi.config.WSHttp
 import uk.gov.hmrc.epayeapi.models.in._
 import uk.gov.hmrc.epayeapi.models.{JsonFixtures, TaxYear}
-import uk.gov.hmrc.play.http.ws.WSHttp
-import uk.gov.hmrc.play.http.{HeaderCarrier, HttpResponse}
+import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 import uk.gov.hmrc.play.test.UnitSpec
 
 import scala.concurrent.Await

@@ -16,8 +16,8 @@
 
 package uk.gov.hmrc.epayeapi.config
 
-import play.api.{Application, Configuration, Mode}
 import play.api.inject.guice.GuiceApplicationBuilder
+import play.api.{Application, Mode}
 import unit.AppSpec
 
 class AppContextSpec extends AppSpec {

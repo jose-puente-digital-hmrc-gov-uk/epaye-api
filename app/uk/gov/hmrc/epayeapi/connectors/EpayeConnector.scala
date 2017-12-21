@@ -19,11 +19,11 @@ package uk.gov.hmrc.epayeapi.connectors
 import javax.inject.{Inject, Singleton}
 
 import uk.gov.hmrc.domain.EmpRef
+import uk.gov.hmrc.epayeapi.config.WSHttp
 import uk.gov.hmrc.epayeapi.models.Formats._
 import uk.gov.hmrc.epayeapi.models.in._
 import uk.gov.hmrc.epayeapi.models.{TaxMonth, TaxYear}
-import uk.gov.hmrc.play.http.HeaderCarrier
-import uk.gov.hmrc.play.http.ws.WSHttp
+import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.concurrent.{ExecutionContext, Future}
 
