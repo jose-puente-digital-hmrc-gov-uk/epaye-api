@@ -16,12 +16,12 @@
 
 package common
 
-import org.scalatest.Suite
-import org.scalatestplus.play.OneServerPerSuite
+import org.scalatest.TestSuite
+import org.scalatestplus.play.guice.GuiceOneServerPerSuite
 import play.api.libs.ws.WSClient
 import uk.gov.hmrc.http.HeaderCarrier
 
-trait WSClientSetup extends OneServerPerSuite { self: Suite =>
+trait WSClientSetup extends GuiceOneServerPerSuite { self: TestSuite =>
   val baseUrl = s"http://localhost:$port"
 
   implicit val hc = HeaderCarrier()

@@ -18,7 +18,7 @@ package uk.gov.hmrc.epayeapi.connectors
 
 import org.mockito.Mockito.when
 import org.scalatest.concurrent.ScalaFutures
-import org.scalatest.mock.MockitoSugar
+import org.scalatest.mockito.MockitoSugar
 import play.api.http.Status
 import play.api.libs.json.{JsError, JsPath, Json}
 import uk.gov.hmrc.epayeapi.models.in._

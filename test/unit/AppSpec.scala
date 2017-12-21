@@ -19,8 +19,8 @@ package unit
 import akka.stream.Materializer
 import akka.util.ByteString
 import org.scalatest.concurrent.{Eventually, IntegrationPatience, ScalaFutures}
-import org.scalatest.mock.MockitoSugar
-import org.scalatest.{OptionValues, ShouldMatchers, fixture}
+import org.scalatest.mockito.MockitoSugar
+import org.scalatest.{Matchers, OptionValues, fixture}
 import org.scalatestplus.play.{MixedFixtures, WsScalaTestClient}
 import play.api.Application
 import play.api.inject.bind
@@ -34,7 +34,7 @@ import scala.reflect.ClassTag
 
 abstract class AppSpec
   extends fixture.WordSpec
-  with ShouldMatchers
+  with Matchers
   with MockitoSugar
   with ScalaFutures
   with OptionValues
