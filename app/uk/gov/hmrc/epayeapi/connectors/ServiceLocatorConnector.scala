@@ -20,9 +20,8 @@ import javax.inject.{Inject, Singleton}
 
 import play.api.Logger
 import uk.gov.hmrc.api.domain.Registration
-import uk.gov.hmrc.epayeapi.config.AppContext
-import uk.gov.hmrc.play.http.{HeaderCarrier, HttpPost}
-import uk.gov.hmrc.play.http.ws.WSHttp
+import uk.gov.hmrc.epayeapi.config.{AppContext, WSHttp}
+import uk.gov.hmrc.http.{HeaderCarrier, HttpPost}
 
 import scala.concurrent.{ExecutionContext, Future}
 

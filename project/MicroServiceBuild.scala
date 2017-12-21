@@ -5,19 +5,18 @@ private object AppDependencies {
   import play.sbt.PlayImport._
 
   private val apiPlatformlibVersion = "1.3.0"
-  private val domainVersion = "4.1.0"
+  private val domainVersion = "5.1.0"
   private val hmrcTestVersion = "2.3.0"
   private val logbackJsonLoggerVersion = "3.1.0"
   private val metricsGraphiteVersion = "3.0.2"
-  private val microserviceBootstrapVersion = "5.15.0"
+  private val microserviceBootstrapVersion = "6.15.0"
   private val pegdownVersion = "1.6.0"
   private val playConfigVersion = "4.3.0"
   private val playGraphiteVersion = "3.1.0"
   private val playHealthVersion = "2.1.0"
   private val playUrlBindersVersion = "2.1.0"
   private val scalaTestVersion = "2.2.6"
-  private val playAuthVersion = "1.0.0"
-  private val playAuthorisationVersion = "4.3.0"
+  private val authClientVersion = "2.5.0"
 
   val compile = Seq(
     ws,
@@ -25,8 +24,7 @@ private object AppDependencies {
     "uk.gov.hmrc" %% "domain" % domainVersion,
     "uk.gov.hmrc" %% "logback-json-logger" % logbackJsonLoggerVersion,
     "uk.gov.hmrc" %% "microservice-bootstrap" % microserviceBootstrapVersion,
-    "uk.gov.hmrc" %% "play-auth" % playAuthVersion,
-    "uk.gov.hmrc" %% "play-authorisation" % playAuthorisationVersion,
+    "uk.gov.hmrc" %% "auth-client" % authClientVersion,
     "uk.gov.hmrc" %% "play-config" % playConfigVersion,
     "uk.gov.hmrc" %% "play-graphite" % playGraphiteVersion,
     "uk.gov.hmrc" %% "play-health" % playHealthVersion,

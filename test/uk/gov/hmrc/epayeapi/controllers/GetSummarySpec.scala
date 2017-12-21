@@ -28,9 +28,9 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.auth.core.{ConfidenceLevel, Enrolment, EnrolmentIdentifier}
 import uk.gov.hmrc.domain.EmpRef
+import uk.gov.hmrc.epayeapi.config.WSHttp
 import uk.gov.hmrc.epayeapi.connectors.EpayeApiConfig
-import uk.gov.hmrc.play.http.ws.WSHttp
-import uk.gov.hmrc.play.http.{HeaderCarrier, HttpResponse}
+import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 import unit.AppSpec
 import unit.auth.AuthComponents.AuthOk
 
@@ -49,13 +49,13 @@ class GetSummarySpec extends AppSpec with BeforeAndAfterEach {
     .update(_.overrides(bind(classOf[WSHttp]).toInstance(http)))
 
   val activeEnrolment =
-    AuthOk(Enrolment("IR-PAYE", Seq(ton, tor), "activated", ConfidenceLevel.L300))
+    AuthOk(Enrolment("IR-PAYE", Seq(ton, tor), "activated", Some("300")))
 
   val inactiveEnrolment =
     AuthOk(activeEnrolment.data.copy(state = "inactive"))
 
   val differentEnrolment =
-    AuthOk(Enrolment("IR-Else", Seq(ton, tor), "activated", ConfidenceLevel.L300))
+    AuthOk(Enrolment("IR-Else", Seq(ton, tor), "activated", Some("300")))
 
   def config(implicit a: Application): EpayeApiConfig =
     inject[EpayeApiConfig]
@@ -75,7 +75,7 @@ class GetSummarySpec extends AppSpec with BeforeAndAfterEach {
                       s"/${empRef.encodedValue}" +
                       s"/api/v1/annual-statement"
 
-      when(http.GET[HttpResponse](Matchers.eq(firstUrl))(anyObject(), anyObject())).thenReturn {
+      when(http.GET[HttpResponse](Matchers.eq(firstUrl))(anyObject(), anyObject(), anyObject())).thenReturn {
         successful {
           HttpResponse(OK, responseString = Some(
             """

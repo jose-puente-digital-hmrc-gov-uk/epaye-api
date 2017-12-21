@@ -16,24 +16,23 @@
 
 package uk.gov.hmrc.epayeapi.controllers
 
+import uk.gov.hmrc.epayeapi.models.Formats._
 import akka.stream.Materializer
 import play.api.libs.json.Json
 import play.api.libs.streams.Accumulator
 import play.api.mvc._
-import uk.gov.hmrc.auth.core.Retrievals._
 import uk.gov.hmrc.auth.core._
+import uk.gov.hmrc.auth.core.retrieve.{Retrieval, Retrievals}
 import uk.gov.hmrc.domain.EmpRef
 import uk.gov.hmrc.epayeapi.models.out.ApiErrorJson.{AuthorizationHeaderInvalid, InsufficientEnrolments, InvalidEmpRef}
 import uk.gov.hmrc.play.binders.SimpleObjectBinder
 import uk.gov.hmrc.play.microservice.controller.BaseController
-import uk.gov.hmrc.epayeapi.models.Formats._
-
 
 import scala.concurrent.{ExecutionContext, Future}
 
 trait ApiController extends BaseController with AuthorisedFunctions {
   val epayeEnrolment = Enrolment("IR-PAYE")
-  val epayeRetrieval = authorisedEnrolments
+  val epayeRetrieval = Retrievals.authorisedEnrolments
   def authConnector: AuthConnector
   implicit def ec: ExecutionContext
   implicit def mat: Materializer

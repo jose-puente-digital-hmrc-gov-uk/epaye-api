@@ -16,6 +16,7 @@
 
 package uk.gov.hmrc.epayeapi.controllers
 
+import akka.util.ByteString
 import org.mockito.Matchers._
 import org.mockito.Mockito.reset
 import org.mockito.{Matchers, Mockito}
@@ -23,15 +24,16 @@ import org.scalatest.BeforeAndAfterEach
 import play.api.Application
 import play.api.inject.bind
 import play.api.libs.json.{JsValue, Json}
+import play.api.libs.streams.Accumulator
 import play.api.mvc.Result
 import play.api.test.FakeRequest
 import play.api.test.Helpers.{status, _}
-import uk.gov.hmrc.auth.core.{ConfidenceLevel, Enrolment, EnrolmentIdentifier}
+import uk.gov.hmrc.auth.core.{Enrolment, EnrolmentIdentifier}
 import uk.gov.hmrc.domain.EmpRef
+import uk.gov.hmrc.epayeapi.config.WSHttp
 import uk.gov.hmrc.epayeapi.connectors.EpayeApiConfig
 import uk.gov.hmrc.epayeapi.models.{TaxMonth, TaxYear}
-import uk.gov.hmrc.play.http.ws.WSHttp
-import uk.gov.hmrc.play.http.{HeaderCarrier, HttpResponse}
+import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 import unit.AppSpec
 import unit.auth.AuthComponents.AuthOk
 
@@ -53,14 +55,14 @@ class MonthlyStatementSpec extends AppSpec with BeforeAndAfterEach {
     builder
       .update { _.overrides(bind(classOf[WSHttp]).toInstance(http)) }
 
-  val activeEnrolment = AuthOk(Enrolment("IR-PAYE", Seq(ton, tor), "activated", ConfidenceLevel.L300))
+  val activeEnrolment = AuthOk(Enrolment("IR-PAYE", Seq(ton, tor), "activated", Some("300")))
   val inactiveEnrolment = AuthOk(activeEnrolment.data.copy(state = "inactive"))
-  val differentEnrolment = AuthOk(Enrolment("IR-Else", Seq(ton, tor), "activated", ConfidenceLevel.L300))
+  val differentEnrolment = AuthOk(Enrolment("IR-Else", Seq(ton, tor), "activated", Some("300")))
 
   def config(implicit a: Application): EpayeApiConfig =
     inject[EpayeApiConfig]
 
-  def request(implicit a: Application): Future[Result] =
+  def request(implicit a: Application): Accumulator[ByteString, Result] =
     inject[GetMonthlyStatementController].getStatement(empRef, taxYear, taxMonth)(FakeRequest())
 
   override protected def beforeEach(): FixtureParam = {
@@ -80,7 +82,7 @@ class MonthlyStatementSpec extends AppSpec with BeforeAndAfterEach {
           s"/epaye/${empRef.encodedValue}" +
           s"/api/v1" +
           s"/monthly-statement/${taxYear.asString}/${taxMonth.asString}"
-      Mockito.when(http.GET[HttpResponse](Matchers.eq(epayeUrl))(anyObject(), anyObject())).thenReturn {
+      Mockito.when(http.GET[HttpResponse](Matchers.eq(epayeUrl))(anyObject(), anyObject(), anyObject())).thenReturn {
         successful {
           HttpResponse(NOT_FOUND)
         }
@@ -95,7 +97,7 @@ class MonthlyStatementSpec extends AppSpec with BeforeAndAfterEach {
           s"/epaye/${empRef.encodedValue}" +
           s"/api/v1" +
           s"/monthly-statement/${taxYear.asString}/${taxMonth.asString}"
-      Mockito.when(http.GET[HttpResponse](Matchers.eq(epayeUrl))(anyObject(), anyObject())).thenReturn {
+      Mockito.when(http.GET[HttpResponse](Matchers.eq(epayeUrl))(anyObject(), anyObject(), anyObject())).thenReturn {
         successful {
           HttpResponse(OK, responseString = Some(inputJsonString))
         }

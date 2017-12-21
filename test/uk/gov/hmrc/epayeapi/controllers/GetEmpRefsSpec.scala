@@ -35,13 +35,13 @@ class GetEmpRefsSpec extends AppSpec {
   val tor = EnrolmentIdentifier("TaxOfficeReference", "GZ00064")
 
   val activeEnrolment: Enrolment =
-    Enrolment("IR-PAYE", Seq(ton, tor), "activated", ConfidenceLevel.L300)
+    Enrolment("IR-PAYE", Seq(ton, tor), "activated", Some("300"))
 
   val inactiveEnrolment: Enrolment =
     activeEnrolment.copy(state = "inactive")
 
   val differentEnrolment =
-    Enrolment("IR-Else", Seq(ton, tor), "activated", ConfidenceLevel.L300)
+    Enrolment("IR-Else", Seq(ton, tor), "activated", Some("300"))
 
 
   def request(implicit a: Application): Future[Result] =

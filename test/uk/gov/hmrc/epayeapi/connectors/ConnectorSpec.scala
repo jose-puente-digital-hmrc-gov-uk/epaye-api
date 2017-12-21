@@ -22,8 +22,7 @@ import org.scalatest.mock.MockitoSugar
 import play.api.http.Status
 import play.api.libs.json.{JsError, JsPath, Json}
 import uk.gov.hmrc.epayeapi.models.in._
-import uk.gov.hmrc.play.http.hooks.HttpHook
-import uk.gov.hmrc.play.http._
+import uk.gov.hmrc.http._
 import uk.gov.hmrc.play.test.UnitSpec
 
 import scala.concurrent.ExecutionContext.Implicits.global

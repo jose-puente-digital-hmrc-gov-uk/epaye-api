@@ -21,7 +21,7 @@ import play.api.http.Status
 import play.api.libs.json.{JsError, JsSuccess, Reads}
 import uk.gov.hmrc.epayeapi.models.in._
 import uk.gov.hmrc.epayeapi.syntax.json._
-import uk.gov.hmrc.play.http._
+import uk.gov.hmrc.http._
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -33,7 +33,7 @@ trait ConnectorBase {
     Logger.debug(s"ApiClient GET request: url=$url headers=$headers")
 
     val result = for {
-      response <- http.GET[HttpResponse](url)(HttpReads.readRaw, headers)
+      response <- http.GET[HttpResponse](url)(HttpReads.readRaw, headers, ec)
     } yield reader(jsonReader).read("GET", url, response)
 
     result.recover({
